@@ -1,7 +1,10 @@
 { pkgs, system, ... }:
 let
-  inherit (pkgs) pog;
   inherit (pkgs.lib) getExe' getExe;
+  pog = if isFunctor pkgs.pog then pkgs.pog else pkgs.pog.pog;
+  isAttrSet = value: builtins.isAttrs value;
+  hasAttrKey = key: value: (isAttrSet value) && (builtins.hasAttr key value);
+  isFunctor = hasAttrKey "__functor";
   core = "${pkgs.coreutils}/bin";
   hexcast =
     let
