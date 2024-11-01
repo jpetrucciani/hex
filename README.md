@@ -2,7 +2,7 @@
 
 [![uses nix](https://img.shields.io/badge/uses-nix-%237EBAE4)](https://nixos.org/)
 
-`hex` is an opinionated abstraction layer that brings the power of [Nix](https://nixos.org/) to [Kubernetes](https://kubernetes.io/) configuration management. It allows you to write declarative, composable "spells" that generate Kubernetes resources with all the benefits of the Nix ecosystem. Get your YAML nightmare under control, and keep things [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)!
+`hex` is an opinionated abstraction layer that brings the magic of [Nix](https://nixos.org/) to [Kubernetes](https://kubernetes.io/) configuration management. It allows you to write declarative, composable "spells" that generate Kubernetes resources with all the benefits of the Nix ecosystem. Get your YAML nightmare under control, and keep things [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)!
 
 ## ✨ Features
 
