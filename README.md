@@ -162,8 +162,6 @@ hex --force -t specs.nix
 
 # clientside diff. available in case you need it, but I would avoid!
 hex --clientside -t specs.nix
-
-# evaluate all
 ```
 
 ## 📚 Components
