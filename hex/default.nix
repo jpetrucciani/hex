@@ -1,4 +1,4 @@
-{ pkgs, system, ... }:
+{ pkgs, ... }:
 let
   inherit (pkgs.lib) getExe' getExe;
   pog = if isFunctor pkgs.pog then pkgs.pog else pkgs.pog.pog;

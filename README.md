@@ -63,12 +63,14 @@ with flakes:
   outputs = { self, nixpkgs, hex, ... }:
     let
       system = "x86_64-linux";
+      pkgs = nixpkgs { inherit system; };
     in
     {
-      packages = nixpkgs { inherit system; };
-      devShells.${system}.default = pkgs.mkShell {nativeBuildInputs = [
-        hex.hex
-      ];};
+      devShells.${system}.default = pkgs.mkShell {
+        nativeBuildInputs = [
+          hex.hex
+        ];
+      };
     };
 }
 ```
