@@ -1,0 +1,7 @@
+result*
+.direnv
+
+# bun/node
+node_modules/
+docs/.vitepress/dist
+docs/.vitepress/cache
