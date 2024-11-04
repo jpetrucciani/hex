@@ -17,7 +17,7 @@ let
     (fetchTarball {
       name = "hex-2024-10-31";
       # note, you'll probably want to grab a commit sha for this instead of `main`!
-      url = "https://github.com/jpetrucciani/hex/main.tar.gz";
+      url = "https://github.com/jpetrucciani/hex/archive/main.tar.gz";
       # this is necessary, but you can find it by letting nix try to evaluate this!
       sha256 = "";
     })
