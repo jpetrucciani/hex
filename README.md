@@ -39,7 +39,7 @@ let
       # this is necessary, but you can find it by letting nix try to evaluate this!
       sha256 = "";
     })
-    { };
+    { };  # if you override pkgs for this, you _must_ have pog available
   paths = with _hex; [
     hex
     hexcast # not needed, unless you want to use this directly!
@@ -64,11 +64,12 @@ with flakes:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs { inherit system; };
+      _hex = hex.packages.${system};
     in
     {
       devShells.${system}.default = pkgs.mkShell {
         nativeBuildInputs = [
-          hex.hex
+          _hex.hex
         ];
       };
     };

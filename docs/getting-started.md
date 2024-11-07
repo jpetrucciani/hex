@@ -48,11 +48,12 @@ or if you want to add it as an overlay to nixpkgs, you can add `pog.overlays.${s
     let
       system = "x86_64-linux";
       pkgs = nixpkgs { inherit system; };
+      _hex = hex.packages.${system};
     in
     {
       devShells.${system}.default = pkgs.mkShell {
         nativeBuildInputs = [
-          hex.hex
+          _hex.hex
         ];
       };
     };
