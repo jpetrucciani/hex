@@ -35,6 +35,62 @@ let
       chart_url = version: "${repo_url}-ui/${defaults.name}-${version}.tgz";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
+
+    # an example function for creating dbs with this operator - not fully complete!
+    db =
+      { name
+      , user ? "user"
+      , dbName ? name
+      , version ? "16"
+      , namespace ? "default"
+      , team ? "team"
+      , cpuRequest ? "500m"
+      , cpuLimit ? "2000m"
+      , memoryRequest ? "4Gi"
+      , memoryLimit ? "8Gi"
+      , storageClass ? "local-path"  # change this if not on k3s!
+      , size ? "64Gi"
+      , parameters ? { }
+      , logicalBackups ? false
+      , allowedSourceRanges ? null
+      }:
+      let
+        spec = {
+          apiVersion = "acid.zalan.do/v1";
+          kind = "postgresql";
+          metadata = {
+            inherit name namespace;
+            labels = { inherit team; };
+          };
+          spec = {
+            ${if allowedSourceRanges != null then "allowedSourceRanges" else null} = allowedSourceRanges;
+            databases."${dbName}" = user;
+            enableLogicalBackup = logicalBackups;
+            numberOfInstances = 1;
+            postgresql = {
+              inherit version parameters;
+            };
+            resources = {
+              limits = {
+                cpu = cpuLimit;
+                memory = memoryLimit;
+              };
+              requests = {
+                cpu = cpuRequest;
+                memory = memoryRequest;
+              };
+            };
+            teamId = team;
+            users = {
+              "${user}" = [ "superuser" "createdb" ];
+            };
+            volume = {
+              inherit size storageClass;
+            };
+          };
+        };
+      in
+      hex.toYAMLDoc spec;
   };
 in
 postgres
