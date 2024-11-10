@@ -13,6 +13,7 @@
 , autoscale ? false
 , extraEnv ? [ ]
 , extraEnvAttrs ? { }
+, extraVolumes ? [ ]
 , port ? 4000
 , secretName ? "litellm-secret"
 , readinessProbe ? null
@@ -63,7 +64,7 @@ let
       mountPath = "/etc/conf";
     }
     hex.k8s.services.components.volumes.tmp
-  ];
+  ] ++ extraVolumes;
   service = hex.k8s.services.build
     (recursiveUpdate
       {
