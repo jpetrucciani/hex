@@ -35,8 +35,8 @@ hex.k8s.services.build (recursiveUpdate
 {
   inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge;
   envAttrs = {
-    LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES = toString experimentalFeatures;
-    TELEMETRY_ENABLED = toString telemetryEnabled;
+    LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES = hex.boolToString experimentalFeatures;
+    TELEMETRY_ENABLED = hex.boolToString telemetryEnabled;
     PORT = toString port;
     HEX = "true";
   } // extraEnvAttrs;
