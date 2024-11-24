@@ -1,4 +1,5 @@
 # [otf](https://github.com/jpetrucciani/otf) is an open source terraform cloud alternative
+### NOTE: USE TOFUTF (./tofutf.nix) INSTEAD!
 { hex, ... }:
 let
   name = "otf";

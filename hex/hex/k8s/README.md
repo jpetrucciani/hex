@@ -114,6 +114,8 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 [otf](https://github.com/jpetrucciani/otf) is an open source terraform cloud alternative
 
+**NOTE: USE [TOFUTF](./tofutf.nix) INSTEAD!**
+
 ### [postgres.nix](./postgres.nix)
 
 [postgres-operator](https://github.com/zalando/postgres-operator) creates and manages PostgreSQL clusters running in Kubernetes
