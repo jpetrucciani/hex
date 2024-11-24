@@ -45,9 +45,9 @@ let
       , namespace ? "default"
       , team ? "team"
       , cpuRequest ? "500m"
-      , cpuLimit ? "2000m"
-      , memoryRequest ? "4Gi"
-      , memoryLimit ? "8Gi"
+      , cpuLimit ? "1000m"
+      , memoryRequest ? "2Gi"
+      , memoryLimit ? "4Gi"
       , storageClass ? "local-path"  # change this if not on k3s!
       , size ? "64Gi"
       , parameters ? { }
@@ -68,7 +68,8 @@ let
             enableLogicalBackup = logicalBackups;
             numberOfInstances = 1;
             postgresql = {
-              inherit version parameters;
+              inherit version;
+              ${if logicalBackups != { } then "parameters" else ""} = parameters;
             };
             resources = {
               limits = {
