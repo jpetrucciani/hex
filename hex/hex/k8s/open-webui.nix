@@ -12,6 +12,7 @@ let
     version = rec {
       _v = hex.k8s._.version chart;
       latest = v4-0-0;
+      v4-0-6 = _v "4.0.6" "1z97b6fb61bki224b2az9c281i2ldfval8b92dywqf8mjsmhflml"; # 2024-12-02
       v4-0-0 = _v "4.0.0" "16g43mwla6mlgyn6jm8iajav31rk9435xyh7kfq5qjlin7w6gmcx"; # 2024-11-20
       v3-6-0 = _v "3.6.0" "0qkzxcvbf38j9naxgl19m6v6nyl2308a58j5nx1yvhkikrqikf6k"; # 2024-11-07
       v3-5-1 = _v "3.5.1" "1akgy4v47a168cl6wzhk1n7dkn24bpdg7id7xigf9zyxfd7vdx7d"; # 2024-11-05
