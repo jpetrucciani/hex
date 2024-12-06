@@ -100,4 +100,73 @@ in
       ${toYAMLDoc rb}
       ${cron}
     '';
+
+  mountpoint-s3-csi-driver = {
+    chart =
+      let
+        name = "aws-mountpoint-s3-csi-driver";
+      in
+      rec {
+        defaults = {
+          inherit name;
+          namespace = "kube-system";
+        };
+        version = rec {
+          _v = hex.k8s._.version chart;
+          latest = v1-11-0;
+          v1-11-0 = _v "1.11.0" "0bc913wy3gk4p3d2vhpjax0g3696wnhxr5vcqzbih4ml24sa182a"; # 2024-12-05
+        };
+        chart_url = version: "https://github.com/awslabs/mountpoint-s3-csi-driver/releases/download/helm-chart-${name}-${version}/${name}-${version}.tgz";
+        chart = hex.k8s._.chart { inherit defaults chart_url; };
+      };
+
+    # see examples here: https://github.com/awslabs/mountpoint-s3-csi-driver/tree/main/examples/kubernetes/static_provisioning
+    bucket = { name, bucket, allowDelete ? false, prefix ? "", namespace ? "default", volumeHandle ? "s3-csi-${name}", region ? "us-east-2", pvSuffix ? "-pv", pvcSuffix ? "-pvc", accessMode ? "ReadWriteMany" }:
+      let
+        pv_name = "${name}${pvSuffix}";
+        pvc_name = "${name}${pvcSuffix}";
+        size = "1234Gi"; # this is ignored, but a required field
+        pv = {
+          apiVersion = "v1";
+          kind = "PersistentVolume";
+          metadata = {
+            name = pv_name;
+          };
+          spec = {
+            accessModes = [ accessMode ];
+            capacity.storage = size;
+            claimRef = {
+              inherit namespace;
+              name = pvc_name;
+            };
+            csi = {
+              inherit volumeHandle;
+              driver = "s3.csi.aws.com";
+              volumeAttributes.bucketName = bucket;
+            };
+            mountOptions = [
+              "region ${region}"
+            ] ++ (if allowDelete then [ "allow-delete" ] else [ ]) ++ (if prefix != "" then [ "prefix ${prefix}" ] else [ ]);
+            storageClassName = "";
+          };
+        };
+        pvc = {
+          apiVersion = "v1";
+          kind = "PersistentVolumeClaim";
+          metadata = {
+            name = pvc_name;
+          };
+          spec = {
+            accessModes = [ accessMode ];
+            resources.requests.storage = size;
+            storageClassName = "";
+            volumeName = pv_name;
+          };
+        };
+      in
+      ''
+        ${toYAMLDoc pv}
+        ${toYAMLDoc pvc}
+      '';
+  };
 }
