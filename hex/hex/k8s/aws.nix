@@ -121,8 +121,24 @@ in
       };
 
     # see examples here: https://github.com/awslabs/mountpoint-s3-csi-driver/tree/main/examples/kubernetes/static_provisioning
-    bucket = { name, bucket, allowDelete ? false, prefix ? "", namespace ? "default", volumeHandle ? "s3-csi-${name}", region ? "us-east-2", pvSuffix ? "-pv", pvcSuffix ? "-pvc", accessMode ? "ReadWriteMany" }:
+    bucket =
+      { name
+      , bucket
+      , uid ? -1
+      , gid ? -1
+      , allowDelete ? false
+      , allowOther ? true
+      , prefix ? ""
+      , extraMountOptions ? [ ]
+      , namespace ? "default"
+      , volumeHandle ? "s3-csi-${name}"
+      , region ? "us-east-2"
+      , pvSuffix ? "-pv"
+      , pvcSuffix ? "-pvc"
+      , accessMode ? "ReadWriteMany"
+      }:
       let
+        listIf = cond: value: if cond then value else [ ];
         pv_name = "${name}${pvSuffix}";
         pvc_name = "${name}${pvcSuffix}";
         size = "1234Gi"; # this is ignored, but a required field
@@ -144,9 +160,13 @@ in
               driver = "s3.csi.aws.com";
               volumeAttributes.bucketName = bucket;
             };
-            mountOptions = [
-              "region ${region}"
-            ] ++ (if allowDelete then [ "allow-delete" ] else [ ]) ++ (if prefix != "" then [ "prefix ${prefix}" ] else [ ]);
+            mountOptions = [ "region ${region}" ] ++
+              (listIf allowDelete [ "allow-delete" ]) ++
+              (listIf allowOther [ "allow-other" ]) ++
+              (listIf (prefix != "") [ "prefix ${prefix}" ]) ++
+              (listIf (uid != -1) [ "uid=${toString uid}" ]) ++
+              (listIf (gid != -1) [ "gid=${toString gid}" ]) ++
+              extraMountOptions;
             storageClassName = "";
           };
         };
