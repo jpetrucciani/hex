@@ -154,6 +154,7 @@ in
           apiVersion = "v1";
           kind = "PersistentVolumeClaim";
           metadata = {
+            inherit namespace;
             name = pvc_name;
           };
           spec = {
