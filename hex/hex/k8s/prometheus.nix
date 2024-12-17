@@ -71,6 +71,19 @@ in
     chart_url = prom_chart "kube-prometheus-stack";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
+  adapter = rec {
+    defaults = {
+      name = "prometheus-adapter";
+      namespace = "default";
+    };
+    version = rec {
+      _v = hex.k8s._.version chart;
+      latest = v4-11-0;
+      v4-11-0 = _v "4.11.0" "1g69cgmbgqsnabg75jvp2d8vzi05x6k5q1aal1pvqriy0mjy20lg"; # 2024-08-10
+    };
+    chart_url = prom_chart "prometheus-adapter";
+    chart = hex.k8s._.chart { inherit defaults chart_url; };
+  };
   pushgateway = rec {
     defaults = {
       name = "prometheus-pushgateway";
