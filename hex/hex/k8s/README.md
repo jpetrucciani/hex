@@ -140,6 +140,10 @@ Helpers for [prometheus](https://github.com/prometheus/prometheus) related thing
 
 [robusta](https://github.com/robusta-dev/robusta) is a Kubernetes observability and automation, with an awesome Prometheus integration
 
+### [searxng.nix](./searxng.nix)
+
+[searxng](https://github.com/searxng/searxng/) is a free internet metasearch engine which aggregates results from various search services and databases
+
 ### [sentry.nix](./sentry.nix)
 
 [sentry](https://github.com/getsentry/sentry) is a Developer-first error tracking and performance monitoring platform.
