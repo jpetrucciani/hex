@@ -470,6 +470,13 @@ let
             inherit name mountPath readOnly;
             ${ifNotNull subPath "subPath"} = subPath;
           };
+          uniqueByName = list:
+            let
+              names = map (x: x.name) list;
+              uniqueNames = pkgs.lib.lists.unique names;
+              getFirstByName = name: builtins.head (builtins.filter (x: x.name == name) list);
+            in
+            map getFirstByName uniqueNames;
         in
         { name
         , labels
@@ -609,7 +616,7 @@ let
                   securityContext.capabilities.add = [ "NET_ADMIN" ];
                 }] else [ ]);
                 serviceAccountName = "${name}${saSuffix}";
-                ${ifNotEmptyList volumes "volumes"} = map volumeDef volumes;
+                ${ifNotEmptyList volumes "volumes"} = uniqueByName (map volumeDef volumes);
                 ${ifNotEmptyList hostAliases "hostAliases"} = hostAliases;
               };
             };
