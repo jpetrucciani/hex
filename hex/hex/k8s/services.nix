@@ -466,8 +466,9 @@ let
             ${ifNotNull hostPath "hostPath"}.path = hostPath;
             ${attrIf emptyDir "emptyDir"} = { };
           };
-          volumeMountDef = { name, mountPath, readOnly ? true, ... }: {
+          volumeMountDef = { name, mountPath, readOnly ? true, subPath ? null, ... }: {
             inherit name mountPath readOnly;
+            ${ifNotNull subPath "subPath"} = subPath;
           };
         in
         { name
