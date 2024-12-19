@@ -105,10 +105,11 @@ let
       , ephemeralStorageLimit ? null
       , command ? null
       , args ? null
-      , env ? [ ]
-      , envAttrs ? { }
-      , envFrom ? [ ]
-      , volumes ? [ ]
+      , env ? [ ]              # env vars, standard spec
+      , envAttrs ? { }         # env vars, as a nix attrset
+      , envFrom ? [ ]          # envFrom standard spec
+      , volumes ? [ ]          # our custom format for volume
+      , initContainers ? null  # will only add to main container
       , ip ? null
       , service ? true
       , loadBalancer ? false
@@ -201,7 +202,7 @@ let
           ingress = ingressPolicy;
         }) // extraNP;
         dep = (components.deployment {
-          inherit name namespace labels image replicas revisionHistoryLimit port maxSurge maxUnavailable depSuffix saSuffix daemonSet lifecycle imagePullSecrets affinity;
+          inherit name namespace labels image replicas revisionHistoryLimit port maxSurge maxUnavailable depSuffix saSuffix daemonSet lifecycle imagePullSecrets affinity initContainers;
           inherit cpuRequest memoryRequest ephemeralStorageRequest cpuLimit memoryLimit ephemeralStorageLimit command args volumes subdomain nodeSelector livenessProbe readinessProbe securityContext;
           inherit env envAttrs envFrom extraContainer extraPodAnnotations appArmor tailscaleSidecar tailscale_image_base tailscale_image_tag tsSuffix hostAliases __init pre1_30;
         }) // extraDep;
@@ -502,6 +503,7 @@ let
         , envAttrs ? { }
         , envFrom ? [ ]
         , volumes ? [ ]
+        , initContainers ? null
         , subdomain ? null
         , nodeSelector ? null
         , livenessProbe ? null
@@ -573,6 +575,7 @@ let
                 ${ifNotEmptyList imagePullSecrets "imagePullSecrets"} = imagePullSecrets;
                 ${ifNotNull subdomain "subdomain"} = subdomain;
                 ${ifNotNull nodeSelector "nodeSelector"} = nodeSelector;
+                ${ifNotNull initContainers "initContainers"} = initContainers;
                 containers = [
                   ({
                     inherit image name;
