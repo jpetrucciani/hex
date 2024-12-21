@@ -62,6 +62,10 @@ This module contains an [elastic operator](https://github.com/elastic/cloud-on-k
 
 [fission](https://github.com/fission/fission) is a serverless function platform for k8s
 
+### [fleet.nix](./fleet.nix)
+
+[fleet](https://github.com/fleetdm/fleet) is an open-source platform for IT, security, and infrastructure teams
+
 ### [flipt.nix](./flipt.nix)
 
 [flipt](https://github.com/flipt-io/flipt) is a feature flag service built with Go

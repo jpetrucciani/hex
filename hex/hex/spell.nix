@@ -20,6 +20,7 @@ let
     elastic = import ./k8s/elastic.nix params;
     external-secrets = import ./k8s/external-secrets.nix params;
     fission = import ./k8s/fission.nix params;
+    fleet = import ./k8s/fleet.nix params;
     flipt = import ./k8s/flipt.nix params;
     gateway-api = import ./k8s/gateway-api.nix params;
     gitlab-runner = import ./k8s/gitlab-runner.nix params;
