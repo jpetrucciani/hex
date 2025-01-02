@@ -2,7 +2,7 @@
 { name ? "lobe-chat"
 , namespace ? "default"
 , image_base ? "lobehub/lobe-chat${if database then "-database" else ""}"
-, image_tag ? "v1.37.2"
+, image_tag ? "v1.42.3"
 , image ? "${image_base}:${image_tag}"
 , database ? false
 , replicas ? 1
