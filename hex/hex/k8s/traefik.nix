@@ -57,6 +57,7 @@ let
       , exposeMetrics ? false
       , portMetrics ? 9100
       , allowExternalNameServices ? false
+      , extraPorts ? { }
       , extraValues ? { }
       , additionalArguments ? [ ]
       }:
@@ -117,7 +118,7 @@ let
               port = 9100;
               protocol = proto.tcp;
             } // (if pre27 then { expose = exposeMetrics; } else { expose.default = exposeMetrics; });
-          };
+          } // extraPorts;
           providers = {
             kubernetesCRD = {
               inherit allowExternalNameServices;
