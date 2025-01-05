@@ -3,7 +3,7 @@
 , namespace ? "default"
 , labels ? { inherit name; app = name; tier = "haproxy"; }
 , image_base ? "haproxy"
-, image_tag ? "3.0.3"
+, image_tag ? "3.1.1"
 , image ? "${image_base}:${image_tag}"
 , port ? 8443
 , altPort ? null
