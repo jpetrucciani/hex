@@ -128,10 +128,6 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 Helpers for [prometheus](https://github.com/prometheus/prometheus) related things in k8s land!
 
-### [quickwit.nix](./quickwit.nix)
-
-[quickwit](https://github.com/quickwit-oss/quickwit) is a Cloud-native search engine for observability. An open-source alternative to Datadog, Elasticsearch, Loki, and Tempo
-
 ### [rancher.nix](./rancher.nix)
 
 [rancher](https://github.com/rancher/rancher) is an open-source multi-cluster orchestration platform
