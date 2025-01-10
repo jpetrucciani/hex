@@ -16,7 +16,6 @@ let
     cron = import ./k8s/cron.nix params;
     custom-pod-autoscaler = import ./k8s/custom-pod-autoscaler.nix params;
     dask = import ./k8s/dask.nix params;
-    datadog = import ./k8s/datadog.nix params;
     elastic = import ./k8s/elastic.nix params;
     external-secrets = import ./k8s/external-secrets.nix params;
     fission = import ./k8s/fission.nix params;

@@ -46,10 +46,6 @@ This hex spell allows concise cron job declaration in Kubernetes.
 
 [dask](https://docs.dask.org/en/stable/) is a python library/framework for parallel and distributed computing
 
-### [datadog.nix](./datadog.nix)
-
-[datadog](https://github.com/DataDog/helm-charts) provides helm charts to add logging and monitoring to your clusters. WARNING - extremely expensive!
-
 ### [elastic.nix](./elastic.nix)
 
 This module contains an [elastic operator](https://github.com/elastic/cloud-on-k8s/)
