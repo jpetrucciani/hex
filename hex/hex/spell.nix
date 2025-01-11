@@ -31,6 +31,7 @@ let
     langflow = import ./k8s/langflow.nix params;
     mongo = import ./k8s/mongo.nix params;
     nginx-ingress = import ./k8s/nginx-ingress.nix params;
+    odoo = import ./k8s/odoo.nix params;
     oneuptime = import ./k8s/oneuptime.nix params;
     open-webui = import ./k8s/open-webui.nix params;
     otf = import ./k8s/otf.nix params;
