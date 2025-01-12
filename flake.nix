@@ -15,7 +15,7 @@
       let
         pkgs = import nixpkgs { inherit system; overlays = [ pog.overlays.${system}.default ]; };
         hex = import ./. { inherit pkgs system; };
-        hexpkgs = { inherit (hex) hex hexcast nixrender; };
+        hexpkgs = { inherit (hex) hex hexcast nixrender deps test; };
       in
       {
         packages = hexpkgs;
