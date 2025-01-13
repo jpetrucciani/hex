@@ -59,7 +59,7 @@ let
       , repo
       , path
       , targetRevision ? "main"
-      , pluginName ? "hex-v0.0.8"
+      , pluginName ? "hex-v0.0.9"
       , namespace ? defaults.namespace
       , syncOptions ? [ ]
       , defaultSyncOptions ? [ "ServerSideApply=true" ]

@@ -94,6 +94,23 @@ rec {
     };
   };
 
+  updater = {
+    utils =
+      let
+        _script = name: script: "${pkgs.writers.writeBashBin name script}/bin/${name}";
+        scripts = {
+          github_latest_tag = ''
+            owner="$1"
+            repo="$2"
+            api_url="https://api.github.com/repos/$owner/$repo"
+            ${pkgs.curl}/bin/curl -s "$api_url/releases/latest" | ${pkgs.jq}/bin/jq '.tag_name'
+          '';
+        };
+      in
+      pkgs.lib.mapAttrs _script scripts;
+    script = pkgs.writers.writeBashBin "updater";
+  };
+
   yq_filters = {
     docs_eq = key: values:
       let

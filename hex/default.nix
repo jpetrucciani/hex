@@ -19,7 +19,7 @@ let
     in
     pog {
       name = "hexcast";
-      version = "0.0.5";
+      version = "0.0.6";
       description = "a quick and easy way to use nix to render (cast) various other types of config files!";
       flags = [
         {
@@ -73,7 +73,7 @@ in
 
   hex =
     let
-      version = "0.0.8";
+      version = "0.0.9";
     in
     pog {
       inherit version;
