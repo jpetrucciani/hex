@@ -10,15 +10,28 @@ let
   test =
     let
       heval = "${hex.hex}/bin/hex -r -e";
-      tests = [
-        "svc.litellm {}"
-        ''svc.metabase {domain = "meme.com";}''
-        "external-secrets.version.latest {}"
+      mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
+      tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
+        { name = "litellm"; spec = "hex.k8s.svc.litellm {}"; check = num_docs 5; }
+        { name = "lobe-chat"; spec = "hex.k8s.svc.lobe-chat {}"; check = num_docs 4; }
+        { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 4; }
+        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.latest {}"; check = num_docs 34; }
       ];
-      test_case = x: ''
-        echo "testing '${x}'"
-        ${heval} 'hex.k8s.${x}' | ${pkgs.yq-go}/bin/yq e 'document_index' | ${pkgs.coreutils}/bin/tail -n 1
-      '';
+      test_case = x:
+        let
+          log = text: ''echo "[${x.name}] ${text}"'';
+        in
+        ''
+          ${log "test"}
+          rendered="$(${mktemp})"
+          ${heval} '${x.spec}' >$rendered
+          ${log "rendered to $rendered"}
+          exit_code=$?
+          num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index' $rendered | ${pkgs.coreutils}/bin/tail -n 1)"
+          ${log "exit code: $exit_code"}
+          ${log "num docs: $num_docs"}
+          ${x.check or ""}
+        '';
       test_script = pkgs.lib.concatStringsSep "\n" (map test_case tests);
     in
     pkgs.writers.writeBashBin "test" test_script;

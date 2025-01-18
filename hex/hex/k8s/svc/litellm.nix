@@ -5,7 +5,7 @@ let
     , namespace ? "default"
     , image_registry ? "ghcr.io/berriai"
     , image_base ? "litellm-database"
-    , image_tag ? "main-v1.58.0"
+    , image_tag ? "main-v1.58.4"
     , image ? "${image_registry}/${image_base}:${image_tag}"
     , replicas ? 1
     , cpuRequest ? "0.5"
@@ -91,7 +91,9 @@ let
 in
 {
   __functor = _: litellm;
-  passthru = {
-    update = pkgs.writers.writeBashBin "update" ''${hex.updater.utils.github_latest_tag} berriai litellm'';
-  };
+  updater =
+    let
+      inherit (hex.updater.utils) github_latest_tag;
+    in
+    pkgs.writers.writeBashBin "update" ''${github_latest_tag} berriai litellm'';
 }

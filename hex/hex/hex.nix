@@ -97,18 +97,34 @@ rec {
   updater = {
     utils =
       let
-        _script = name: script: "${pkgs.writers.writeBashBin name script}/bin/${name}";
-        scripts = {
+        bb = pkgs.busybox;
+        _ = {
+          sko = "${pkgs.skopeo}/bin/skopeo";
+          jq = "${pkgs.jq}/bin/jq";
+          curl = "${pkgs.curl}/bin/curl";
+          sort = "${bb}/bin/sort";
+          head = "${bb}/bin/head";
+        };
+        scripts = pkgs.lib.mapAttrs pkgs.writers.writeBash {
           github_latest_tag = ''
             owner="$1"
             repo="$2"
             api_url="https://api.github.com/repos/$owner/$repo"
-            ${pkgs.curl}/bin/curl -s "$api_url/releases/latest" | ${pkgs.jq}/bin/jq '.tag_name'
+            ${_.curl} -s "$api_url/releases/latest" #| ${_.jq} -r '.tag_name'
+          '';
+          dockerhub_latest_tag = ''
+            org="$1"
+            image="$2"
+            ${_.sko} list-tags "docker://docker.io/$org/$image" | ${_.jq} -r '.Tags[]' | ${_.sort} -rV | ${_.head} -1
+          '';
+          ghcr_latest_tag = ''
+            org="$1"
+            image="$2"
+            ${_.sko} list-tags "docker://ghcr.io/$org/$image" | ${_.jq} -r '.Tags[]' | ${_.sort} -rV | ${_.head} -1
           '';
         };
       in
-      pkgs.lib.mapAttrs _script scripts;
-    script = pkgs.writers.writeBashBin "updater";
+      scripts;
   };
 
   yq_filters = {
