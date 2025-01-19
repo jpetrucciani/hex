@@ -110,7 +110,7 @@ rec {
             owner="$1"
             repo="$2"
             api_url="https://api.github.com/repos/$owner/$repo"
-            ${_.curl} -s "$api_url/releases/latest" #| ${_.jq} -r '.tag_name'
+            ${_.curl} -s "$api_url/releases/latest" | ${_.jq} -r '.tag_name'
           '';
           dockerhub_latest_tag = ''
             org="$1"
