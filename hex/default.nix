@@ -136,6 +136,12 @@ in
           short = "";
           bool = true;
         }
+        {
+          name = "repl";
+          description = "open a repl to with hex expressions";
+          short = "";
+          bool = true;
+        }
       ];
       script =
         let
@@ -166,6 +172,10 @@ in
           EOF
           fi
           side="true"
+          if ${flag "repl"};then
+            nix repl --impure --expr "import ${./hex}/spell.nix ${pkgs.path} { isRepl = true; } \"\""
+            exit
+          fi
           ${flag "clientside"} && side="false"
           rendered=$(${_.mktemp})
           diffed=$(${_.mktemp})
