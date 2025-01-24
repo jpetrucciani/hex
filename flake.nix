@@ -19,7 +19,7 @@
       in
       {
         packages = hexpkgs;
-        defaultPackage = hex;
+        defaultPackage = hex.hex;
 
         devShells = {
           default = pkgs.mkShell {

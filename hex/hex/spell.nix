@@ -1,10 +1,16 @@
 # this is the nix function that is actually run when you run the `hex` command
-nixpkgs: SPELL:
+nixpkgs: arg:
 let
   inherit (builtins) functionArgs isFunction intersectAttrs;
-  pkgs = import nixpkgs { };
+  pkgs = import nixpkgs { config = { }; overlays = [ ]; };
   deps = import ./deps.nix { inherit pkgs; };
-  spell = import SPELL;
-  output = if isFunction spell then spell (intersectAttrs (functionArgs spell) deps.params) else spell;
 in
-output
+(f: if arg.isRepl or false then _: deps.params else f arg)
+  (
+    SPELL:
+    let
+      spell = import SPELL;
+      output = if isFunction spell then spell (intersectAttrs (functionArgs spell) deps.params) else spell;
+    in
+    output
+  )
