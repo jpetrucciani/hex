@@ -82,7 +82,7 @@ let
       extraService);
 in
 {
-  __functor = metabase;
+  __functor = _: metabase;
   updater =
     let
       inherit (hex.updater.utils) dockerhub_latest_tag;
