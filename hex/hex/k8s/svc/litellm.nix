@@ -5,7 +5,7 @@ let
     , namespace ? "default"
     , image_registry ? "ghcr.io/berriai"
     , image_base ? "litellm-database"
-    , image_tag ? "main-v1.60.2"
+    , image_tag ? "main-v1.60.4"
     , image ? "${image_registry}/${image_base}:${image_tag}"
     , replicas ? 1
     , cpuRequest ? "0.5"
