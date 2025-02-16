@@ -75,9 +75,16 @@ let
               annotations = {
                 "cloud.google.com/load-balancer-type" = "Internal";
                 "service.beta.kubernetes.io/aws-load-balancer-internal" = "true";
+                "service.beta.kubernetes.io/aws-load-balancer-scheme" = "internal";
               } // hex.annotations;
             };
-          } else { };
+          } else {
+            service = {
+              annotations = {
+                "service.beta.kubernetes.io/aws-load-balancer-scheme" = "internet-facing";
+              } // hex.annotations;
+            };
+          };
         values = {
           additionalArguments = [
             "--log.level=${logLevel}"
