@@ -2,7 +2,7 @@
 { hex, pkgs }:
 let
   inherit (builtins) isFunction readFile;
-  inherit (hex) concatMapStrings _if fetchOCIChart;
+  inherit (hex) concatMapStrings _if fetchGitChart fetchOCIChart;
   inherit (hex._) prettier sed yaml_sort yq;
   helm = rec {
     constants = {
@@ -46,14 +46,20 @@ let
       , postRender ? ""
       , prettify ? true
       , sortYaml ? false
-      , kubeVersion ? "1.30"
+      , kubeVersion ? "1.31"
       , apiVersions ? ""
+      , rev ? "" # only used for git charts
+      , subPath ? "" # only used for git charts
       }:
       let
-        chartFiles = (if useOCI then fetchOCIChart else fetchTarball) {
-          inherit sha256 url;
-        };
+        chartFiles =
+          if useGit then fetchGitChart { inherit sha256 url subPath rev; }
+          else
+            (if useOCI then fetchOCIChart else fetchTarball) {
+              inherit sha256 url;
+            };
         useOCI = pkgs.lib.hasPrefix "oci://" url;
+        useGit = pkgs.lib.hasSuffix ".git" url;
         apiVersionOverrides = if apiVersions != "" then ''--api-versions '${apiVersions}' '' else "";
         allValues = values ++
           (if defaultValuesAttrs != null then [ (hex.valuesFile defaultValuesAttrs) ] else [ ]) ++

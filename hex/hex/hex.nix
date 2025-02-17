@@ -167,6 +167,20 @@ rec {
       outputHash = sha256;
     };
 
+  fetchGitChart = { url, rev, sha256, subPath ? "" }:
+    let
+      files = pkgs.fetchgit { inherit url rev; hash = sha256; };
+    in
+    pkgs.stdenv.mkDerivation {
+      name = "git-chart";
+      buildInputs = with pkgs; [ ];
+      phases = [ "buildPhase" ];
+      buildPhase = ''
+        mkdir -p $out
+        cp -r ${files}/${subPath}/. $out
+      '';
+    };
+
   patchYAML =
     { url
     , sha256
