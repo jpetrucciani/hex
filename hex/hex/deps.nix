@@ -55,10 +55,12 @@ let
             , sortYaml ? false
             , preRender ? defaults.preRender or ""
             , postRender ? defaults.postRender or ""
-            , kubeVersion ? "1.30"
+            , kubeVersion ? "1.31"
             , apiVersions ? ""
+            , rev ? "" # only used for git charts
+            , subPath ? "" # only used for git charts
             }: hex.k8s.helm.build {
-              inherit name namespace values valuesAttrs defaultValuesAttrs version sha256 forceNamespace sortYaml preRender postRender kubeVersion apiVersions;
+              inherit name namespace values valuesAttrs defaultValuesAttrs version sha256 forceNamespace sortYaml preRender postRender kubeVersion apiVersions rev subPath;
               extraFlags = extraFlags ++ [ "--version=${version}" ];
               sets = sets ++ extraSets;
               url = chart_url version;
