@@ -92,6 +92,10 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 Helpers for [prometheus](https://github.com/prometheus/prometheus) related things in k8s land!
 
+### [questdb.nix](./questdb.nix)
+
+This module contains a [questdb](https://github.com/questdb/questdb) chart
+
 ### [rancher.nix](./rancher.nix)
 
 [rancher](https://github.com/rancher/rancher) is an open-source multi-cluster orchestration platform
@@ -99,6 +103,10 @@ Helpers for [prometheus](https://github.com/prometheus/prometheus) related thing
 ### [redis.nix](./redis.nix)
 
 [redis-operator](https://github.com/spotahome/redis-operator) creates/configures/manages high availability redis with sentinel automatic failover atop Kubernetes
+
+### [redpanda.nix](./redpanda.nix)
+
+This module contains a [redpanda](https://github.com/redpanda-data/redpanda) chart
 
 ### [robusta.nix](./robusta.nix)
 
