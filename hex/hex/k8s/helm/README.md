@@ -96,10 +96,6 @@ Helpers for [prometheus](https://github.com/prometheus/prometheus) related thing
 
 This module contains a [questdb](https://github.com/questdb/questdb) chart
 
-### [rancher.nix](./rancher.nix)
-
-[rancher](https://github.com/rancher/rancher) is an open-source multi-cluster orchestration platform
-
 ### [redis.nix](./redis.nix)
 
 [redis-operator](https://github.com/spotahome/redis-operator) creates/configures/manages high availability redis with sentinel automatic failover atop Kubernetes

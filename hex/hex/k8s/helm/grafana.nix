@@ -15,7 +15,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v6-16-0;
+      latest = v6-27-0;
+      v6-27-0 = _v "6.27.0" "179xi3jmjg1qsmb7jddd2rd0974iw7karmc0bnkkngqnp1r2c1qw"; # 2025-02-14
       v6-16-0 = _v "6.16.0" "0lhy43syl9zhddm9jfjzbbc0z561lsla4q4h4rspgx8xkzv9qz4i"; # 2024-09-30
       v6-15-0 = _v "6.15.0" "184nx1fkqb4dypy713n110yfar3mhv2962njndd1f779pmgwxmx6"; # 2024-09-26
       v6-12-0 = _v "6.12.0" "1fm61h3xbawih946pmqr41md65ypwh03mknpnvjiqnch90hl8jv1"; # 2024-09-03
@@ -534,8 +535,11 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v5-3-0;
-      v5-3-0 = _v "5.3.0" "1amv2qmpidsk6gl40pf7rfckmhvxqjzl7rc97b8p7h75wmwglhj4"; # 2024-04-10
+      latest = v5-6-0;
+      v5-6-0 = _v "5.6.0" "1y3vcs18yh08ncfdrj4p3jsbfm2r5li4n4c7izdpgiq7pfcfk7zj"; # 2025-01-16
+      v5-5-1 = _v "5.5.1" "1a66zb2sdgx5c2g8kq6yi6wl04xnhcnx4kcpib9j4ba8bg3hqfr7"; # 2024-10-21
+      v5-4-1 = _v "5.4.1" "0046ylyjjdjafrpbfa4k2i7gk1dk03dqp7vbhb0vqv30nqycdp6x"; # 2024-08-15
+      v5-3-1 = _v "5.3.1" "1h29kf5y0w7pfzc2h4a73ivls7hmcxlqcjmzypz12maa6chz0izy"; # 2024-09-09
       v5-2-3 = _v "5.2.3" "0d8snrg661fwm2p621h0wf8l8aygyc492xkdc5yxl89i33d29nbx"; # 2024-03-15
       v5-1-2 = _v "5.1.2" "0frz4fs0za92flb81cgpxhjrkrsmypykz6ynn5j4z1vafqs4ckhq";
     };
@@ -552,7 +556,11 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v1-9-22;
+      latest = v1-15-2;
+      v1-15-2 = _v "1.15.2" "151bsplwa035cr27hig0a8qkfnr0mzq7hz62l92dqgsdk6ppjzha"; # 2025-03-06
+      v1-14-4 = _v "1.14.4" "1ij5bjbqkx1gmk9qxz02ilr1397ibl4ppr9nd9w5wihcps96piib"; # 2025-02-14
+      v1-13-11 = _v "1.13.11" "14w4nbx4v0s6wh66brl98dkc3h0hlnsq6xz0vrihdgpla1lg495a"; # 2024-12-16
+      v1-12-1 = _v "1.12.1" "02kzzlappaaxp753inih3v7s4mwv5h3ps0n6pc55pad0x7myvc2v"; # 2024-11-06
       v1-9-22 = _v "1.9.22" "01r59filgn5zygpp96lw036w6kl295xvyiz8j09pmdwca5vgk5ya"; # 2024-09-04
       v1-9-18 = _v "1.9.18" "0kdjr3h8kc6hvjb74n9ywklgd59jj3i1zxd60xp8hhrc13sab9am"; # 2024-08-29
       v1-8-13 = _v "1.8.13" "1jnvq2zyi4ncqw6l8i4cg1ixqhq16zwzbwbxfy9dqb0ml8ypssz9"; # 2024-08-15

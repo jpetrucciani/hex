@@ -10,7 +10,8 @@ let
       };
       version = rec {
         _v = hex.k8s._.version chart;
-        latest = v1-12-2;
+        latest = v1-14-0;
+        v1-14-0 = _v "1.14.0" "1h1n7aasn8ivahx1hb9vm9vpvkw7anx717b12yvrpxcras1d27al"; # 2024-12-23
         v1-12-2 = _v "1.12.2" "19fxzl2r3aj53cql7w01p6pvq6k19lkrjr8yq1jvz8896vhnrcnw"; # 2024-06-14
         v1-11-0 = _v "1.11.0" "0ypjzvikjq085yvh7m6c74x9dk8zark0gmdj2f34lph9hm78al1x"; # 2024-03-27
         v1-10-1 = _v "1.10.1" "04wpirx90j7jvnkv1pr99pyhn3jhp3mcp8529qhkfmpjjl76w0kk";
@@ -26,7 +27,8 @@ let
       };
       version = rec {
         _v = hex.k8s._.version chart;
-        latest = v1-12-2;
+        latest = v1-14-0;
+        v1-14-0 = _v "1.14.0" "08jzxyny9hbnc4dyabv6ssbz5vf6rsjja1r46rlyfxs529532wf8"; # 2024-12-23
         v1-12-2 = _v "1.12.2" "1sxm4p8phay65gxxrqdkhfb0f05vh8jrs4w8jmw0b1f5di4r6jsa"; # 2024-06-14
         v1-11-0 = _v "1.11.0" "035ri6b4mjvdlhrwl8fpyw173bf9ny9qla5fvql9c4yj7gw4j2q2"; # 2024-03-14
         v1-10-1 = _v "1.10.1" "04sfk6habw9w1laci5rynzhxqvgpkxmadcxzabk98v03dds9gjl8";
