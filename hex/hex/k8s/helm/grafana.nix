@@ -15,7 +15,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v6-27-0;
+      latest = v6-28-0;
+      v6-28-0 = _v "6.28.0" "0fdf99b5jn6qg28z1qrf821b4m7fwkprzhrgx5vjwjgc8637771g"; # 2025-03-10
       v6-27-0 = _v "6.27.0" "179xi3jmjg1qsmb7jddd2rd0974iw7karmc0bnkkngqnp1r2c1qw"; # 2025-02-14
       v6-16-0 = _v "6.16.0" "0lhy43syl9zhddm9jfjzbbc0z561lsla4q4h4rspgx8xkzv9qz4i"; # 2024-09-30
       v6-15-0 = _v "6.15.0" "184nx1fkqb4dypy713n110yfar3mhv2962njndd1f779pmgwxmx6"; # 2024-09-26
@@ -531,7 +532,7 @@ let
     };
     chart = hex.k8s._.chart {
       inherit defaults;
-      chart_url = version: _chart_url { inherit version; inherit (defaults) name; };
+      chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
     };
     version = rec {
       _v = hex.k8s._.version chart;
