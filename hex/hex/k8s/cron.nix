@@ -15,6 +15,7 @@ let
       { name
       , image ? "curlimages/curl:8.5.0"
       , schedule ? "0 * * * *"  # hourly at :00
+      , timeZone ? "UTC"        # UTC - use tz like "America/New_York" for EST
       , labels ? [ ]
       , namespace ? "default"
       , failedJobsHistoryLimit ? 3
@@ -63,7 +64,7 @@ let
             ${ifNotEmptyList labels "labels"} = labels;
           };
           spec = {
-            inherit failedJobsHistoryLimit successfulJobsHistoryLimit schedule;
+            inherit failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
             jobTemplate = {
               spec = {
                 template = {
