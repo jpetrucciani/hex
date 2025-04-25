@@ -3,7 +3,7 @@
 , namespace ? "default"
 , image_registry ? "ghcr.io"
 , image_base ? "mvisonneau/gitlab-ci-pipelines-exporter"
-, image_tag ? "v0.5.9" # or latest?
+, image_tag ? "v0.5.10" # or latest?
 , image ? "${image_registry}/${image_base}:${image_tag}"
 , replicas ? 1
 , cpuRequest ? "0.2"
