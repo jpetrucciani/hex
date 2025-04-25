@@ -15,7 +15,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v6-28-0;
+      latest = v6-29-0;
+      v6-29-0 = _v "6.29.0" "1cppwhqdl0phhh33h1a5wlk0xwpk1dx60ga6vanc16fixzdr367s"; # 2025-03-26
       v6-28-0 = _v "6.28.0" "0fdf99b5jn6qg28z1qrf821b4m7fwkprzhrgx5vjwjgc8637771g"; # 2025-03-10
       v6-27-0 = _v "6.27.0" "179xi3jmjg1qsmb7jddd2rd0974iw7karmc0bnkkngqnp1r2c1qw"; # 2025-02-14
       v6-16-0 = _v "6.16.0" "0lhy43syl9zhddm9jfjzbbc0z561lsla4q4h4rspgx8xkzv9qz4i"; # 2024-09-30
@@ -536,7 +537,9 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v5-6-0;
+      latest = v5-7-0;
+      v5-7-0 = _v "5.7.0" "0da9pjrs5b43ssn0yhig2cq14lzdaagrm2758zj2n26z3r8xj5m9"; # 2025-04-10
+      v5-6-1 = _v "5.6.1" "0jqwqpxbc9l89d29bk8lrrlca6fcypxvg77353fvh9rjpg7yqjbj"; # 2025-04-16
       v5-6-0 = _v "5.6.0" "1y3vcs18yh08ncfdrj4p3jsbfm2r5li4n4c7izdpgiq7pfcfk7zj"; # 2025-01-16
       v5-5-1 = _v "5.5.1" "1a66zb2sdgx5c2g8kq6yi6wl04xnhcnx4kcpib9j4ba8bg3hqfr7"; # 2024-10-21
       v5-4-1 = _v "5.4.1" "0046ylyjjdjafrpbfa4k2i7gk1dk03dqp7vbhb0vqv30nqycdp6x"; # 2024-08-15
@@ -557,7 +560,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v1-15-2;
+      latest = v1-15-6;
+      v1-15-6 = _v "1.15.6" "1n49svkb1v30pavhr3r13xlin38nmbkshwbc42q6zc6hlcnkhwdp"; # 2025-04-18
       v1-15-2 = _v "1.15.2" "151bsplwa035cr27hig0a8qkfnr0mzq7hz62l92dqgsdk6ppjzha"; # 2025-03-06
       v1-14-4 = _v "1.14.4" "1ij5bjbqkx1gmk9qxz02ilr1397ibl4ppr9nd9w5wihcps96piib"; # 2025-02-14
       v1-13-11 = _v "1.13.11" "14w4nbx4v0s6wh66brl98dkc3h0hlnsq6xz0vrihdgpla1lg495a"; # 2024-12-16
