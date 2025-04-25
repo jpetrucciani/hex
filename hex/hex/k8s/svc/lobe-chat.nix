@@ -6,7 +6,7 @@ let
     { name ? "lobe-chat"
     , namespace ? "default"
     , image_base ? "lobehub/lobe-chat${if database then "-database" else ""}"
-    , image_tag ? "1.79.8"
+    , image_tag ? "1.82.7"
     , image ? "${image_base}:${image_tag}"
     , database ? false
     , replicas ? 1
