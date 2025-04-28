@@ -6,4 +6,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
       - uses: cachix/install-nix-action@v31
-      - run: nix run -f . test
+      - run: nix run .#test
