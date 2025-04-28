@@ -1,0 +1,9 @@
+name: check
+on: { workflow_dispatch, push: { branches: [main] }, pull_request }
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: cachix/install-nix-action@v31
+      - run: nix run -f . test

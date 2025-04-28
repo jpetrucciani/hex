@@ -535,6 +535,7 @@ let
       inherit defaults;
       chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
     };
+    # values: https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml
     version = rec {
       _v = hex.k8s._.version chart;
       latest = v5-7-0;
@@ -546,6 +547,30 @@ let
       v5-3-1 = _v "5.3.1" "1h29kf5y0w7pfzc2h4a73ivls7hmcxlqcjmzypz12maa6chz0izy"; # 2024-09-09
       v5-2-3 = _v "5.2.3" "0d8snrg661fwm2p621h0wf8l8aygyc492xkdc5yxl89i33d29nbx"; # 2024-03-15
       v5-1-2 = _v "5.1.2" "0frz4fs0za92flb81cgpxhjrkrsmypykz6ynn5j4z1vafqs4ckhq";
+    };
+  };
+  tempo = rec {
+    defaults = {
+      name = "tempo";
+      chart_name = "tempo-distributed";
+      namespace = "tempo";
+    };
+    chart = hex.k8s._.chart {
+      inherit defaults;
+      chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
+    };
+    # values: https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml
+    version = rec {
+      _v = hex.k8s._.version chart;
+      latest = v1-38-2;
+      v1-38-2 = _v "1.38.2" "1zccjg9yk3nwpj03ai3l6j1424kcmn0fmvbf6b7lk39bcz8m8l6x"; # 2025-04-21
+      v1-38-1 = _v "1.38.1" "1bq75ymrrvdy7plm55k3pl6s3nym8p2aaxz82akvybb8vdh2dcak"; # 2025-04-17
+      v1-37-0 = _v "1.37.0" "1716d7jjlyl9f9fhp9xf77m8jrg563w46jl0llnqgz2x8rknypa5"; # 2025-04-14
+      v1-36-0 = _v "1.36.0" "052gkcg5fnxdl62ma18a8x2iw14csg744g2pkx1l8372ap4fqb45"; # 2025-04-14
+      v1-35-0 = _v "1.35.0" "0iicga1k2jvy1zir86bxbrj47hx4j6z26r9jlwdg52lhssc2j64n"; # 2025-04-09
+      v1-34-0 = _v "1.34.0" "0a61vi1ayw0hfznkav09i8gy1s27h22pyxccv312yzpyglqgk3bw"; # 2025-04-07
+      v1-33-0 = _v "1.33.0" "0d281s60y6s7rkszg58kpjg5pz9hmv105bsg54jbcrn9qkc75pb9"; # 2025-03-24
+      v1-32-7 = _v "1.32.7" "1qpxwwkjaljbjbbbhxzjr3ml4jg32f178p79837251h4rvh13azq"; # 2025-03-14
     };
   };
   oncall = rec {
@@ -580,4 +605,4 @@ let
     };
   };
 in
-{ inherit loki mimir oncall; }
+{ inherit loki mimir tempo oncall; }

@@ -11,17 +11,30 @@ let
     let
       heval = "${hex.hex}/bin/hex -r -e";
       mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
-      tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
+      tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "[$name] not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
         { name = "litellm"; spec = "hex.k8s.svc.litellm {}"; check = num_docs 5; }
         { name = "lobe-chat"; spec = "hex.k8s.svc.lobe-chat {}"; check = num_docs 4; }
         { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 4; }
-        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.latest {}"; check = num_docs 34; }
+        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.latest {}"; check = num_docs 38; }
+        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 65; }
+        { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 19; }
+        {
+          name = "loki";
+          spec = ''hex.k8s.grafana.loki.version.latest {
+            valuesAttrs.loki = {
+              schemaConfig = { configs = [ { from = "2024-04-01"; index = { period = "24h"; prefix = "loki_index_"; }; object_store = "s3"; schema = "v13"; store = "tsdb"; } ]; };
+              storage = {type="s3"; bucketNames=let b = "bucket"; in {admin=b;chunks=b;ruler=b;};};
+            };
+          }'';
+          check = num_docs 31;
+        }
       ];
       test_case = x:
         let
           log = text: ''echo "[${x.name}] ${text}"'';
         in
         ''
+          name=${x.name}
           ${log "test"}
           rendered="$(${mktemp})"
           ${heval} '${x.spec}' >$rendered
