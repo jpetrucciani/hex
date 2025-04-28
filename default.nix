@@ -38,14 +38,17 @@ let
           ${log "test"}
           rendered="$(${mktemp})"
           ${heval} '${x.spec}' >$rendered
-          ${log "rendered to $rendered"}
           exit_code=$?
+          ${log "rendered to $rendered"}
           num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index' $rendered | ${pkgs.coreutils}/bin/tail -n 1)"
           ${log "exit code: $exit_code"}
           ${log "num docs: $num_docs"}
           ${x.check or ""}
         '';
-      test_script = pkgs.lib.concatStringsSep "\n" (map test_case tests);
+      test_script = ''
+        ${pkgs.lib.concatStringsSep "\n" (map test_case tests)}
+        exit 0
+      '';
     in
     pkgs.writers.writeBashBin "test" test_script;
 in
