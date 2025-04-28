@@ -36,6 +36,7 @@ let
       , imagePullPolicy ? "Always"
       , imagePullSecrets ? [ ]
       , volumes ? [ ]
+      , securityContext ? { }
       , extra ? { } # extra escape hatch to use any other options!
       }:
       let
@@ -70,7 +71,7 @@ let
                 template = {
                   spec = {
                     serviceAccountName = sa;
-                    inherit restartPolicy;
+                    inherit restartPolicy securityContext;
                     containers = [
                       {
                         inherit name image imagePullPolicy;
