@@ -8,7 +8,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v0-42-1;
+      latest = v1-0-5;
+      v1-0-5 = _v "1.0.5" "1rfkgp76f1mzwjb7y2b7z8d0g39cpyny7p2v32zifg1i7f48ivyn"; # 2025-04-28
       v0-42-1 = _v "0.42.1" "1p718y7fg85j59f6mr3jnv4izhb7xr290ijd0zpfbqqx3hssjiix"; # 2025-02-05
     };
     chart_url = version: "https://questdb.github.io/questdb-kubernetes/questdb-${version}.tgz";
