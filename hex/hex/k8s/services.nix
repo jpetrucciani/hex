@@ -137,6 +137,7 @@ let
       , pre1_30 ? false
       , host ? null
       , extraContainer ? { }
+      , extraDeploymentAnnotations ? { }
       , extraServiceAccountAnnotations ? { }
       , extraServiceAnnotations ? { }
       , extraIngressAnnotations ? { }
@@ -204,7 +205,7 @@ let
         dep = (components.deployment {
           inherit name namespace labels image replicas revisionHistoryLimit port maxSurge maxUnavailable depSuffix saSuffix daemonSet lifecycle imagePullSecrets affinity initContainers;
           inherit cpuRequest memoryRequest ephemeralStorageRequest cpuLimit memoryLimit ephemeralStorageLimit command args volumes subdomain nodeSelector livenessProbe readinessProbe securityContext;
-          inherit env envAttrs envFrom extraContainer extraPodAnnotations appArmor tailscaleSidecar tailscale_image_base tailscale_image_tag tsSuffix hostAliases __init pre1_30;
+          inherit env envAttrs envFrom extraContainer extraDeploymentAnnotations extraPodAnnotations appArmor tailscaleSidecar tailscale_image_base tailscale_image_tag tsSuffix hostAliases __init pre1_30;
         }) // extraDep;
         hpa = (components.hpa { inherit name namespace labels min max cpuUtilization hpaSuffix; }) // extraHPA;
         svc =
@@ -514,6 +515,7 @@ let
         , imagePullSecrets ? [ ]
         , affinity ? { }
         , extraContainer ? { }
+        , extraDeploymentAnnotations ? { }
         , extraPodAnnotations ? { }
         , appArmor ? if pre1_30 then "unconfined" else "Unconfined"
         , tailscaleSidecar ? false
@@ -548,7 +550,7 @@ let
           metadata = {
             inherit namespace labels;
             name = depName;
-            annotations = { } // hex.annotations;
+            annotations = extraDeploymentAnnotations // hex.annotations;
           };
           spec = {
             inherit revisionHistoryLimit;
