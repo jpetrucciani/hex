@@ -19,6 +19,7 @@
     tier = "exporter";
   }
 , extraService ? { } # escape hatch to inject other service spec
+, extraDeploymentAnnotations ? { }
 , secret ? ""
 , githubToken ? ""
 , githubAppId ? ""
@@ -45,7 +46,7 @@ assert usingApp -> !usingToken;
 hex.k8s.services.build (
   recursiveUpdate
   {
-    inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes;
+    inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes extraDeploymentAnnotations;
     envAttrs = {
       GITHUB_API_URL = githubApiUrl;
       GITHUB_REFRESH = toString githubRefresh;
