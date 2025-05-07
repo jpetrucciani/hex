@@ -9,6 +9,7 @@ rec {
   annotations = {
     source = "hex";
   };
+  attrHash = attrs: builtins.hashString "sha256" (builtins.toJSON attrs);
   flatten = x:
     if isList x
     then concatMap flatten x
