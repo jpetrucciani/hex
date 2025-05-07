@@ -39,6 +39,7 @@ let
         tier = "api";
       }
     , extraService ? { } # escape hatch to inject other service spec
+    , extraDeploymentAnnotations ? { }
     }:
     let
       inherit (hex) toYAMLDoc;
@@ -72,6 +73,7 @@ let
         (recursiveUpdate
           {
             inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge;
+            extraDeploymentAnnotations = extraDeploymentAnnotations // { litellm_config_hash = hex.attrHash litellm_config; };
             command = [ "litellm" ];
             args = [ "--config" "/etc/conf/config.yaml" ];
             envAttrs = {

@@ -27,9 +27,10 @@ let
         tier = "app";
       }
     , extraService ? { } # escape hatch to inject other service spec
+    , extraDeploymentAnnotations ? { }
     }: hex.k8s.services.build (recursiveUpdate
       {
-        inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge;
+        inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge extraDeploymentAnnotations;
         envAttrs = {
           PORT = toString port;
           HEX = "true";

@@ -24,13 +24,14 @@
 , maxUnavailable ? 0
 , maxSurge ? "50%"
 , extraService ? { } # escape hatch to inject other service spec
+, extraDeploymentAnnotations ? { }
 }:
 let
   inherit (hex) toYAMLDoc;
   inherit (pkgs.lib) recursiveUpdate;
   haproxy = hex.k8s.services.build (recursiveUpdate
     {
-      inherit name namespace port altPort command labels image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale hostAliases readinessProbe maxUnavailable maxSurge envAttrs;
+      inherit name namespace port altPort command labels image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale hostAliases readinessProbe maxUnavailable maxSurge envAttrs extraDeploymentAnnotations;
       env = extraEnv;
       envFrom = [
         { secretRef.name = secret; }

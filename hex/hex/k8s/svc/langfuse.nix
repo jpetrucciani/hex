@@ -25,6 +25,7 @@
   # langfuse specific
 , telemetryEnabled ? false
 , experimentalFeatures ? true
+, extraDeploymentAnnotations ? { }
 }:
 let
   inherit (pkgs.lib) recursiveUpdate;
@@ -33,7 +34,7 @@ let
 in
 hex.k8s.services.build (recursiveUpdate
 {
-  inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge;
+  inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge extraDeploymentAnnotations;
   envAttrs = {
     LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES = hex.boolToString experimentalFeatures;
     TELEMETRY_ENABLED = hex.boolToString telemetryEnabled;

@@ -22,6 +22,7 @@
 , secret ? ""
 , gcpe-cfg ? ""
 , configSecret ? if gcpe-cfg != "" then "gcpe-cfg-${name}" else ""
+, extraDeploymentAnnotations ? { }
 }:
 let
   inherit (hex) toYAMLDoc;
@@ -51,7 +52,7 @@ let
   ];
   gcpe = hex.k8s.services.build (recursiveUpdate
     {
-      inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes;
+      inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes extraDeploymentAnnotations;
       envAttrs = {
         PORT = toString port;
         HEX = "true";

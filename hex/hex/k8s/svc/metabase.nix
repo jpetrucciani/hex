@@ -40,6 +40,7 @@ let
     , googleAuthDomain ? ""
     , googleAuthClientId ? ""
     , extraService ? { } # escape hatch to inject other service spec
+    , extraDeploymentAnnotations ? { }
     }:
     let
       inherit (hex) boolToString ifSet;
@@ -58,7 +59,7 @@ let
     in
     hex.k8s.services.build (recursiveUpdate
       {
-        inherit name namespace port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale labels;
+        inherit name namespace port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale labels extraDeploymentAnnotations;
         softAntiAffinity = true;
         env = extraEnv;
         envAttrs = {

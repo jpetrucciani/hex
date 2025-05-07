@@ -19,6 +19,7 @@
     tier = "api";
   }
 , extraService ? { } # escape hatch to inject other service spec
+, extraDeploymentAnnotations ? { }
 }:
 let
   inherit (hex) boolToString;
@@ -27,7 +28,7 @@ let
 in
 hex.k8s.services.build (recursiveUpdate
 {
-  inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes;
+  inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes extraDeploymentAnnotations;
   envAttrs = {
     DISABLE_GUI = boolToString disableGui;
     PORT = toString port;

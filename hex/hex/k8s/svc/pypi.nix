@@ -32,13 +32,14 @@ let
         tier = "infra";
       }
     , extraService ? { } # escape hatch to inject other service spec
+    , extraDeploymentAnnotations ? { }
     }:
     let
       htpasswd = if htpasswdEnabled then ''-P <(echo ${htpasswdEnvVar})'' else "";
     in
     hex.k8s.services.build (recursiveUpdate
       {
-        inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge;
+        inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge extraDeploymentAnnotations;
         command = "/bin/bash";
         args = [
           "-c"
