@@ -26,10 +26,10 @@ let
         model_list = [
           {
             litellm_params = {
-              model = "groq/llama-3.1-70b-versatile";
+              model = "groq/meta-llama/llama-4-scout-17b-16e-instruct";
               drop_params = true;
             };
-            model_name = "llama-3.1-70b-versatile";
+            model_name = "llama-4-scout-17b";
           }
         ];
       }
