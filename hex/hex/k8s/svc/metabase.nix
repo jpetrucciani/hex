@@ -51,7 +51,7 @@ let
           path = "/api/health";
         };
         failureThreshold = 3;
-        initialDelaySeconds = 30;
+        initialDelaySeconds = 60;
         periodSeconds = 10;
         successThreshold = 1;
         timeoutSeconds = 4;
