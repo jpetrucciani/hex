@@ -12,7 +12,7 @@ let
     version = rec {
       _v = hex.k8s._.version chart;
       latest = v0-17-0;
-      v0-17-0 = _v "0.17.0" "0bcn9iwd6i7jfsmcjwly5i3h3wlbcdbnk4b8phm1dvsg545kph1q"; # 2025-05-15
+      v0-17-0 = _v "0.17.0" "0bcn9iwd6i7jfsmcjwly5i3h3wlbcdbnk4b8phm1dvsg545kph1q"; # 2025-05-15  # THIS RELEASE ONWARDS REQUIRES v1 instead of v1beta!
       v0-16-2 = _v "0.16.2" "0h4gbwg9yk9r7xrrn5zsh3478yc241idqa12m939hnmkc1pni95a"; # 2025-05-07
       v0-16-1 = _v "0.16.1" "0dpv9529caksc0mpjmd0gqpfhvzgka9a9d04nw647qhpvxqn6ajc"; # 2025-04-16
       v0-16-0 = _v "0.16.0" "1wbr0v0wi0sfiyxsbzcwwjn9c5j0vs4z1w12glwf22101q1ci8z5"; # 2025-04-14
@@ -72,9 +72,11 @@ let
         , secret
         , filename
         , namespace
+        , _beta ? false
+        , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
         }:
         {
-          apiVersion = "external-secrets.io/v1beta1";
+          inherit apiVersion;
           kind = "ClusterSecretStore";
           metadata = {
             inherit name namespace;
@@ -134,6 +136,8 @@ let
         , extra_data ? [ ]
         , labels ? { }
         , string_data ? { }
+        , _beta ? false
+        , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
         }: toYAMLDoc (secret { inherit name filename env store store_kind refresh_interval secret_ref namespace extract decoding_strategy metadata_policy conversion_strategy extra_data labels string_data; });
 
       secret =
@@ -152,12 +156,14 @@ let
         , extra_data
         , labels
         , string_data
+        , _beta
+        , apiVersion
         }:
         let
           all_labels = labels // { HEX = "true"; };
         in
         {
-          apiVersion = "external-secrets.io/v1beta1";
+          inherit apiVersion;
           kind = "ExternalSecret";
           metadata = {
             inherit name namespace;
