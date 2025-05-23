@@ -138,7 +138,7 @@ let
         , string_data ? { }
         , _beta ? false
         , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
-        }: toYAMLDoc (secret { inherit name filename env store store_kind refresh_interval secret_ref namespace extract decoding_strategy metadata_policy conversion_strategy extra_data labels string_data; });
+        }@args: toYAMLDoc (secret args);
 
       secret =
         { name
