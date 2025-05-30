@@ -62,7 +62,9 @@ let
         , secret ? "${name}-creds"
         , filename ? "${name}-creds.json"
         , namespace ? "external-secrets"
-        }: toYAMLDoc (store { inherit name aws aws_region aws_role gcp_project secret filename namespace; });
+        , _beta ? false
+        , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
+        }: toYAMLDoc (store { inherit name aws aws_region aws_role gcp_project secret filename namespace _beta apiVersion; });
       store =
         { name
         , aws
@@ -72,8 +74,8 @@ let
         , secret
         , filename
         , namespace
-        , _beta ? false
-        , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
+        , _beta
+        , apiVersion
         }:
         {
           inherit apiVersion;
