@@ -56,6 +56,7 @@ let
       , internal ? false
       , sortYaml ? false
       , logLevel ? "DEBUG"
+      , valuesAttrs ? null
         # other options
       , replicas ? 3
       , exposeTraefik ? false
@@ -161,7 +162,7 @@ let
       hex.k8s.helm.build {
         inherit name namespace sets version sha256 extraFlags forceNamespace sortYaml;
         url = chart_url version;
-        values = [ values_file ];
+        values = [ values_file (if valuesAttrs != null then [ (hex.valuesFile valuesAttrs) ] else [ ]) ];
       };
 
     # middlewares https://doc.traefik.io/traefik/middlewares/http/overview/
