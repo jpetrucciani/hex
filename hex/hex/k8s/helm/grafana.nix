@@ -525,6 +525,22 @@ let
         ${toYAMLDoc daemonset}
       '';
   };
+  alloy = rec {
+    defaults = {
+      name = "alloy";
+      namespace = "default";
+    };
+    chart = hex.k8s._.chart {
+      inherit defaults;
+      chart_url = version: _chart_url { inherit version; inherit (defaults) name; };
+    };
+    # values: https://github.com/grafana/alloy/blob/main/operations/helm/charts/alloy/values.yaml
+    version = rec {
+      _v = hex.k8s._.version chart;
+      latest = v1-1-1;
+      v1-1-1 = _v "1.1.1" "0pjirqpc4frggs0zicm6grwiv26dv6dqyn600nsakw79jmkzvll8"; # 2025-06-05
+    };
+  };
   mimir = rec {
     defaults = {
       name = "mimir";
@@ -576,7 +592,6 @@ let
   oncall = rec {
     defaults = {
       name = "oncall";
-      chart_name = "oncall";
       namespace = "oncall";
     };
     chart = hex.k8s._.chart {
@@ -605,4 +620,4 @@ let
     };
   };
 in
-{ inherit loki mimir tempo oncall; }
+{ inherit alloy loki mimir tempo oncall; }
