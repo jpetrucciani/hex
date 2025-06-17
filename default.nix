@@ -12,12 +12,12 @@ let
       heval = "${hex.hex}/bin/hex -r -e";
       mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
       tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "[$name] not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
-        { name = "litellm"; spec = "hex.k8s.svc.litellm {}"; check = num_docs 5; }
-        { name = "lobe-chat"; spec = "hex.k8s.svc.lobe-chat {}"; check = num_docs 4; }
-        { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 4; }
-        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.latest {}"; check = num_docs 38; }
-        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 65; }
-        { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 19; }
+        { name = "litellm"; spec = "hex.k8s.svc.litellm {}"; check = num_docs 6; }
+        { name = "lobe-chat"; spec = "hex.k8s.svc.lobe-chat {}"; check = num_docs 5; }
+        { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 5; }
+        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.latest {}"; check = num_docs 39; }
+        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 66; }
+        { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 20; }
         {
           name = "loki";
           spec = ''hex.k8s.grafana.loki.version.latest {
@@ -26,8 +26,9 @@ let
               storage = {type="s3"; bucketNames=let b = "bucket"; in {admin=b;chunks=b;ruler=b;};};
             };
           }'';
-          check = num_docs 31;
+          check = num_docs 32;
         }
+        { name = "coroot-node-agent"; spec = ''hex.k8s.coroot.node-agent.version.latest {}''; check = num_docs 1; }
       ];
       test_case = x:
         let
@@ -40,7 +41,7 @@ let
           ${heval} '${x.spec}' >$rendered
           exit_code=$?
           ${log "rendered to $rendered"}
-          num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index' $rendered | ${pkgs.coreutils}/bin/tail -n 1)"
+          num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index + 1' $rendered | ${pkgs.coreutils}/bin/tail -n 1)"
           ${log "exit code: $exit_code"}
           ${log "num docs: $num_docs"}
           ${x.check or ""}
