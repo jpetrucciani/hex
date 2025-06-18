@@ -1,6 +1,7 @@
 # This hex spell allows concise cron job declaration in Kubernetes.
-{ hex, ... }:
+{ hex, pkgs, ... }:
 let
+  inherit (pkgs.lib) recursiveUpdate;
   inherit (hex) ifNotNull ifNotEmptyList toYAMLDoc;
 
   cron = {
@@ -36,6 +37,7 @@ let
       , imagePullPolicy ? "Always"
       , imagePullSecrets ? [ ]
       , volumes ? [ ]
+      , concurrencyPolicy ? "Allow" # Allow, Forbid, Replace
       , securityContext ? { }
       , extra ? { } # extra escape hatch to use any other options!
       }:
@@ -56,55 +58,57 @@ let
         volumeMountDef = { name, mountPath, readOnly ? true, ... }: {
           inherit name mountPath readOnly;
         };
-        cron = {
-          apiVersion = "batch/v1";
-          kind = "CronJob";
-          metadata = {
-            inherit name namespace;
-            annotations = { } // hex.annotations;
-            ${ifNotEmptyList labels "labels"} = labels;
-          };
-          spec = {
-            inherit failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
-            jobTemplate = {
-              spec = {
-                template = {
-                  spec = {
-                    serviceAccountName = sa;
-                    inherit restartPolicy securityContext;
-                    containers = [
-                      {
-                        inherit name image imagePullPolicy;
-                        env = with hex.defaults.env; [
-                          pod_ip
-                          pod_name
-                        ] ++ [{ name = "HEX"; value = "true"; }] ++ env ++ (hex.envAttrToNVP envAttrs);
-                        ${ifNotEmptyList envFrom "envFrom"} = envFrom;
-                        ${ifNotNull command "command"} = if builtins.isString command then [ command ] else command;
-                        ${ifNotNull args "args"} = args;
-                        resources = {
-                          ${if (memoryLimit != null || cpuLimit != null || ephemeralStorageLimit != null) then "limits" else null} = {
-                            ${ifNotNull memoryLimit "memory"} = memoryLimit;
-                            ${ifNotNull cpuLimit "cpu"} = cpuLimit;
-                            ${ifNotNull ephemeralStorageLimit "ephemeral-storage"} = ephemeralStorageLimit;
+        cron = (recursiveUpdate
+          {
+            apiVersion = "batch/v1";
+            kind = "CronJob";
+            metadata = {
+              inherit name namespace;
+              annotations = { } // hex.annotations;
+              ${ifNotEmptyList labels "labels"} = labels;
+            };
+            spec = {
+              inherit concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
+              jobTemplate = {
+                spec = {
+                  template = {
+                    spec = {
+                      serviceAccountName = sa;
+                      inherit restartPolicy securityContext;
+                      containers = [
+                        {
+                          inherit name image imagePullPolicy;
+                          env = with hex.defaults.env; [
+                            pod_ip
+                            pod_name
+                          ] ++ [{ name = "HEX"; value = "true"; }] ++ env ++ (hex.envAttrToNVP envAttrs);
+                          ${ifNotEmptyList envFrom "envFrom"} = envFrom;
+                          ${ifNotNull command "command"} = if builtins.isString command then [ command ] else command;
+                          ${ifNotNull args "args"} = args;
+                          resources = {
+                            ${if (memoryLimit != null || cpuLimit != null || ephemeralStorageLimit != null) then "limits" else null} = {
+                              ${ifNotNull memoryLimit "memory"} = memoryLimit;
+                              ${ifNotNull cpuLimit "cpu"} = cpuLimit;
+                              ${ifNotNull ephemeralStorageLimit "ephemeral-storage"} = ephemeralStorageLimit;
+                            };
+                            ${if (memoryRequest != null || cpuRequest != null || ephemeralStorageRequest != null) then "requests" else null} = {
+                              ${ifNotNull cpuRequest "cpu"} = cpuRequest;
+                              ${ifNotNull memoryRequest "memory"} = memoryRequest;
+                              ${ifNotNull ephemeralStorageRequest "ephemeral-storage"} = ephemeralStorageRequest;
+                            };
                           };
-                          ${if (memoryRequest != null || cpuRequest != null || ephemeralStorageRequest != null) then "requests" else null} = {
-                            ${ifNotNull cpuRequest "cpu"} = cpuRequest;
-                            ${ifNotNull memoryRequest "memory"} = memoryRequest;
-                            ${ifNotNull ephemeralStorageRequest "ephemeral-storage"} = ephemeralStorageRequest;
-                          };
-                        };
-                        ${ifNotEmptyList volumes "volumeMounts"} = map volumeMountDef volumes;
-                      }
-                    ];
-                    ${if imagePullSecrets != [ ] then "imagePullSecrets" else null} = imagePullSecrets;
-                    ${ifNotEmptyList volumes "volumes"} = map volumeDef volumes;
+                          ${ifNotEmptyList volumes "volumeMounts"} = map volumeMountDef volumes;
+                        }
+                      ];
+                      ${if imagePullSecrets != [ ] then "imagePullSecrets" else null} = imagePullSecrets;
+                      ${ifNotEmptyList volumes "volumes"} = map volumeDef volumes;
+                    };
                   };
                 };
               };
             };
-          };
-        } // extra;
+          }
+          extra);
       in
       toYAMLDoc cron;
 
@@ -137,6 +141,7 @@ let
         , command ? "bash"
         , args ? [ "-c" ''kubectl get pods'' ]
         , restartPolicy ? "OnFailure"
+        , concurrencyPolicy ? "Allow" # Allow, Forbid, Replace
         , extraCron ? { } # extra escape hatch to use any other options!
         , extraCronContainer ? { } # extra escape hatch to use any other options!
         }:
@@ -179,51 +184,55 @@ let
               }
             ];
           };
-          cron = {
-            apiVersion = "batch/v1";
-            kind = "CronJob";
-            metadata = {
-              inherit name namespace;
-              ${ifNotEmptyList labels "labels"} = labels;
-            };
-            spec = {
-              inherit failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
-              jobTemplate = {
-                spec = {
-                  template = {
-                    spec = {
-                      containers = [
-                        ({
-                          inherit image name;
-                          env = with hex.defaults.env; [
-                            pod_ip
-                            pod_name
-                          ] ++ [{ name = "HEX"; value = "true"; }] ++ env ++ (hex.envAttrToNVP envAttrs);
-                          ${ifNotEmptyList envFrom "envFrom"} = envFrom;
-                          ${ifNotNull command "command"} = if builtins.isString command then [ command ] else command;
-                          ${ifNotNull args "args"} = args;
-                          resources = {
-                            ${if (memoryLimit != null || cpuLimit != null || ephemeralStorageLimit != null) then "limits" else null} = {
-                              ${ifNotNull memoryLimit "memory"} = memoryLimit;
-                              ${ifNotNull cpuLimit "cpu"} = cpuLimit;
-                              ${ifNotNull ephemeralStorageLimit "ephemeral-storage"} = ephemeralStorageLimit;
-                            };
-                            ${if (memoryRequest != null || cpuRequest != null || ephemeralStorageRequest != null) then "requests" else null} = {
-                              ${ifNotNull cpuRequest "cpu"} = cpuRequest;
-                              ${ifNotNull memoryRequest "memory"} = memoryRequest;
-                              ${ifNotNull ephemeralStorageRequest "ephemeral-storage"} = ephemeralStorageRequest;
-                            };
-                          };
-                        } // extraCronContainer)
-                      ];
-                      inherit restartPolicy;
-                      serviceAccountName = sa_name;
+          cron = (recursiveUpdate
+            {
+              apiVersion = "batch/v1";
+              kind = "CronJob";
+              metadata = {
+                inherit name namespace;
+                ${ifNotEmptyList labels "labels"} = labels;
+              };
+              spec = {
+                inherit concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
+                jobTemplate = {
+                  spec = {
+                    template = {
+                      spec = {
+                        containers = [
+                          (recursiveUpdate
+                            {
+                              inherit image name;
+                              env = with hex.defaults.env; [
+                                pod_ip
+                                pod_name
+                              ] ++ [{ name = "HEX"; value = "true"; }] ++ env ++ (hex.envAttrToNVP envAttrs);
+                              ${ifNotEmptyList envFrom "envFrom"} = envFrom;
+                              ${ifNotNull command "command"} = if builtins.isString command then [ command ] else command;
+                              ${ifNotNull args "args"} = args;
+                              resources = {
+                                ${if (memoryLimit != null || cpuLimit != null || ephemeralStorageLimit != null) then "limits" else null} = {
+                                  ${ifNotNull memoryLimit "memory"} = memoryLimit;
+                                  ${ifNotNull cpuLimit "cpu"} = cpuLimit;
+                                  ${ifNotNull ephemeralStorageLimit "ephemeral-storage"} = ephemeralStorageLimit;
+                                };
+                                ${if (memoryRequest != null || cpuRequest != null || ephemeralStorageRequest != null) then "requests" else null} = {
+                                  ${ifNotNull cpuRequest "cpu"} = cpuRequest;
+                                  ${ifNotNull memoryRequest "memory"} = memoryRequest;
+                                  ${ifNotNull ephemeralStorageRequest "ephemeral-storage"} = ephemeralStorageRequest;
+                                };
+                              };
+                            }
+                            extraCronContainer)
+                        ];
+                        inherit restartPolicy;
+                        serviceAccountName = sa_name;
+                      };
                     };
                   };
                 };
               };
-            };
-          } // extraCron;
+            }
+            extraCron);
         in
         ''
           ${toYAMLDoc sa}
