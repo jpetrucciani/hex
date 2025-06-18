@@ -12,6 +12,7 @@ let
       heval = "${hex.hex}/bin/hex -r -e";
       mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
       tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "[$name] not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
+        { name = "cronjob"; spec = ''hex.k8s.cron.build {name = "test"; extra={spec.timeZone ="America/Chicago";};}''; check = num_docs 1; }
         { name = "litellm"; spec = "hex.k8s.svc.litellm {}"; check = num_docs 6; }
         { name = "lobe-chat"; spec = "hex.k8s.svc.lobe-chat {}"; check = num_docs 5; }
         { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 5; }

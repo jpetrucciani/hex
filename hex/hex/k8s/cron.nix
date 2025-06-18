@@ -58,7 +58,7 @@ let
         volumeMountDef = { name, mountPath, readOnly ? true, ... }: {
           inherit name mountPath readOnly;
         };
-        cron = (recursiveUpdate
+        cron = recursiveUpdate
           {
             apiVersion = "batch/v1";
             kind = "CronJob";
@@ -108,7 +108,7 @@ let
               };
             };
           }
-          extra);
+          extra;
       in
       toYAMLDoc cron;
 
@@ -184,7 +184,7 @@ let
               }
             ];
           };
-          cron = (recursiveUpdate
+          cron = recursiveUpdate
             {
               apiVersion = "batch/v1";
               kind = "CronJob";
@@ -232,7 +232,7 @@ let
                 };
               };
             }
-            extraCron);
+            extraCron;
         in
         ''
           ${toYAMLDoc sa}
