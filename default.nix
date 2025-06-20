@@ -20,6 +20,7 @@ let
         { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.v0-18-0 {}"; check = num_docs 40; }
         { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 66; }
         { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 20; }
+        { name = "semaphore"; spec = "hex.k8s.semaphore.version.latest {}"; check = num_docs 9; }
         {
           name = "loki";
           spec = ''hex.k8s.grafana.loki.version.latest {
