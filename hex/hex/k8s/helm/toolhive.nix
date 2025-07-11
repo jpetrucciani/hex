@@ -64,8 +64,9 @@ in
             inherit name namespace;
           };
           spec = {
-            inherit image port transport permissionProfile secrets;
-            env = env ++ (hex.envAttrToNVP envAttrs);
+            inherit image port transport permissionProfile;
+            env = (hex.envAttrToNVP { HEX = "1"; }) ++ env ++ (hex.envAttrToNVP envAttrs);
+            ${if secrets != [ ] then "secrets" else null} = secrets;
             ${if transport == "sse" then "targetPort" else null} = targetPort;
             resources = {
               limits = {
