@@ -55,7 +55,7 @@ let
             , sortYaml ? false
             , preRender ? defaults.preRender or ""
             , postRender ? defaults.postRender or ""
-            , kubeVersion ? "1.31"
+            , kubeVersion ? "1.33"
             , apiVersions ? ""
             , rev ? "" # only used for git charts
             , subPath ? "" # only used for git charts

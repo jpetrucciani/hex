@@ -132,6 +132,10 @@ K8s Helm module for running a [StackStorm](https://stackstorm.com) cluster in HA
 
 [tofutf](https://github.com/tofutf/tofutf) is an open source terraform cloud alternative
 
+### [toolhive.nix](./toolhive.nix)
+
+[toolhive](https://github.com/stacklok/toolhive) makes deploying MCP servers easy, secure and fun
+
 ### [traefik.nix](./traefik.nix)
 
 [Traefik](https://github.com/traefik/traefik-helm-chart) is a modern HTTP reverse proxy and load balancer made to deploy microservices with ease.
