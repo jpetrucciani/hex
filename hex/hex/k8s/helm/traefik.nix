@@ -59,7 +59,7 @@ let
       , extraFlags ? [ "--create-namespace" ]
       , internal ? false
       , sortYaml ? false
-      , logLevel ? "DEBUG"
+      , logLevel ? "INFO"
       , valuesAttrs ? null
         # other options
       , replicas ? 3
