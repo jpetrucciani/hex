@@ -209,6 +209,12 @@ let
             };
           };
         };
+        ip_allowlist = { ips, name ? "ip-allowlist", extraSpec ? { } }: build {
+          inherit name extraSpec;
+          spec = {
+            ipAllowList.sourceRange = ips;
+          };
+        };
         ip_whitelist = { ips, name ? "ip-whitelist", extraSpec ? { } }: build {
           inherit name extraSpec;
           spec = {
