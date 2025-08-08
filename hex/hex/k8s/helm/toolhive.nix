@@ -14,7 +14,8 @@ in
     rec {
       version = rec {
         _v = hex.k8s._.version chart;
-        latest = v0-0-9;
+        latest = v0-0-13;
+        v0-0-13 = _v "0.0.13" "sha256-nBT+07OgsSt3MCGPxa3j0vpj9AiEhs5ni6UFr7XAhYs=";
         v0-0-9 = _v "0.0.9" "sha256-b1BynUY3//GIVVFBcebPoQjnN9gYtZnJAPAFRGGoBEk=";
       };
       chart_url = version: "oci://ghcr.io/stacklok/toolhive/toolhive-operator-crds:${version}";
@@ -30,7 +31,8 @@ in
     rec {
       version = rec {
         _v = hex.k8s._.version chart;
-        latest = v0-1-5;
+        latest = v0-2-1;
+        v0-2-1 = _v "0.2.1" "sha256-5NtmoFp5xGxBaysRZZ9nhg6wlTIatkUKje0eXyUF8co=";
         v0-1-5 = _v "0.1.5" "sha256-56xJAUzhdAPHlPwo/VYeeVu1j4lUMgfluAnPDGCSTaY=";
       };
       chart_url = version: "oci://ghcr.io/stacklok/toolhive/toolhive-operator:${version}";
