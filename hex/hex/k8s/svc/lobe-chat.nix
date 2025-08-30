@@ -1,6 +1,6 @@
 { hex, pkgs, ... }:
 let
-  inherit (pkgs.lib) recursiveUpdate;
+  inherit (hex) recursiveUpdate;
   volumes = [ hex.k8s.services.components.volumes.tmp ];
   lobechat =
     { name ? "lobe-chat"

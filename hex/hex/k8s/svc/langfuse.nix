@@ -1,4 +1,4 @@
-{ hex, pkgs, ... }:
+{ hex, ... }:
 { name ? "langfuse"
 , namespace ? "default"
 , image_base ? "langfuse/langfuse"
@@ -28,7 +28,7 @@
 , extraDeploymentAnnotations ? { }
 }:
 let
-  inherit (pkgs.lib) recursiveUpdate;
+  inherit (hex) recursiveUpdate;
   volumes = [ hex.k8s.services.components.volumes.tmp ];
   # other env settings can be found here: https://github.com/langfuse/langfuse/blob/main/docker-compose.yml
 in

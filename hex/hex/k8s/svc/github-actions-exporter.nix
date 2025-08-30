@@ -1,4 +1,4 @@
-{ hex, pkgs, ... }:
+{ hex, ... }:
 { name ? "github-actions-exporter"
 , namespace ? "default"
 , image_registry ? "ghcr.io"
@@ -33,7 +33,7 @@
 , githubExportFields ? "repo,id,node_id,head_branch,head_sha,run_number,workflow_id,workflow,event,status"
 }:
 let
-  inherit (pkgs.lib) recursiveUpdate;
+  inherit (hex) recursiveUpdate;
   volumes = [
     hex.k8s.services.components.volumes.tmp
   ] ++ (if usingApp then [{ name = "private-key"; secret = githubPrivateKeySecret; mountPath = "/secrets"; }] else [ ]);

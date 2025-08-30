@@ -1,6 +1,7 @@
 # [argocd](https://github.com/argoproj/argo-cd) is declarative continuous deployment for kubernetes
 { hex, ... }:
 let
+  inherit (hex) recursiveUpdate;
   argocd = rec {
     defaults = {
       name = "argocd";
@@ -66,22 +67,25 @@ let
       , defaultSyncOptions ? [ "ServerSideApply=true" ]
       , project ? "default"
       , destination ? "in-cluster"
+      , extraSpec ? { }
       }: hex.toYAMLDoc {
         apiVersion = "argoproj.io/v1alpha1";
         kind = "Application";
         metadata = {
           inherit name namespace;
         };
-        spec = {
-          destination.name = destination;
-          inherit project;
-          source = {
-            inherit targetRevision path;
-            plugin.name = pluginName;
-            repoURL = repo;
-          };
-          syncPolicy.syncOptions = defaultSyncOptions ++ syncOptions;
-        };
+        spec = recursiveUpdate
+          {
+            destination.name = destination;
+            inherit project;
+            source = {
+              inherit targetRevision path;
+              plugin.name = pluginName;
+              repoURL = repo;
+            };
+            syncPolicy.syncOptions = defaultSyncOptions ++ syncOptions;
+          }
+          extraSpec;
       };
   };
 in

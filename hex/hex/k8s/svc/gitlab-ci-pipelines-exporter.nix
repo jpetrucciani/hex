@@ -1,4 +1,4 @@
-{ hex, pkgs, ... }:
+{ hex, ... }:
 { name ? "gitlab-ci-pipelines-exporter"
 , namespace ? "default"
 , image_registry ? "ghcr.io"
@@ -25,8 +25,7 @@
 , extraDeploymentAnnotations ? { }
 }:
 let
-  inherit (hex) toYAMLDoc;
-  inherit (pkgs.lib) recursiveUpdate;
+  inherit (hex) toYAMLDoc recursiveUpdate;
   config = {
     apiVersion = "v1";
     stringData = {

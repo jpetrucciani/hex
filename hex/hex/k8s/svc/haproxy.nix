@@ -1,4 +1,4 @@
-{ hex, pkgs, ... }:
+{ hex, ... }:
 { name
 , namespace ? "default"
 , labels ? { inherit name; app = name; tier = "haproxy"; }
@@ -27,8 +27,7 @@
 , extraDeploymentAnnotations ? { }
 }:
 let
-  inherit (hex) toYAMLDoc;
-  inherit (pkgs.lib) recursiveUpdate;
+  inherit (hex) toYAMLDoc recursiveUpdate;
   haproxy = hex.k8s.services.build (recursiveUpdate
     {
       inherit name namespace port altPort command labels image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale hostAliases readinessProbe maxUnavailable maxSurge envAttrs extraDeploymentAnnotations;

@@ -3,6 +3,7 @@ pkgs:
 rec {
   inherit (pkgs.lib) isList isAttrs isInt isBool isFloat isPath;
   inherit (pkgs.lib) attrNames concatMap concatStringsSep filter substring replaceStrings stringLength;
+  inherit (pkgs.lib) recursiveUpdate;
   inherit (pkgs.lib.strings) fileContents hasSuffix toJSON toLower trim;
   inherit (pkgs.lib.trivial) isFunction;
   inherit (pkgs._std.serde) toTOML;

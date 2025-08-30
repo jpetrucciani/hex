@@ -1,8 +1,7 @@
 # This hex spell allows concise cron job declaration in Kubernetes.
-{ hex, pkgs, ... }:
+{ hex, ... }:
 let
-  inherit (pkgs.lib) recursiveUpdate;
-  inherit (hex) ifNotNull ifNotEmptyList toYAMLDoc;
+  inherit (hex) ifNotNull ifNotEmptyList toYAMLDoc recursiveUpdate;
 
   cron = {
     enum = {

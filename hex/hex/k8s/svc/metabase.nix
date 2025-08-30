@@ -43,8 +43,7 @@ let
     , extraDeploymentAnnotations ? { }
     }:
     let
-      inherit (hex) boolToString ifSet;
-      inherit (pkgs.lib) recursiveUpdate;
+      inherit (hex) boolToString ifSet recursiveUpdate;
       probe = {
         httpGet = {
           inherit port;
