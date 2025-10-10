@@ -74,6 +74,10 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 [mongodb-operator](https://github.com/mongodb/mongodb-kubernetes-operator) is a way to deploy and maintain mongodb deployments on k8s
 
+### [onyx.nix](./onyx.nix)
+
+[onyx](https://github.com/onyx-dot-app/onyx) is an open source AI platform for indexing and querying data
+
 ### [open-webui.nix](./open-webui.nix)
 
 [open-webui](https://github.com/open-webui/open-webui) is a user-friendly AI interface
