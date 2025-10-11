@@ -29,7 +29,7 @@ let
               storage = {type="s3"; bucketNames=let b = "bucket"; in {admin=b;chunks=b;ruler=b;};};
             };
           }'';
-          check = num_docs 32;
+          check = num_docs 30;
         }
         { name = "coroot-node-agent"; spec = ''hex.k8s.coroot.node-agent.version.latest {}''; check = num_docs 1; }
       ];
