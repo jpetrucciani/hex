@@ -15,7 +15,24 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v6-29-0;
+      latest = v6-42-0;
+      v6-42-0 = _v "6.42.0" "014vvryd1m9i09ya3ffqkikakr410gh94jj1bca7lpmrwh5hccqr"; # 2025-10-02
+      v6-41-1 = _v "6.41.1" "0xk3h6hvki1k8gkkvshzida4s29c7rw69s4jnx83pxp7af9xz141"; # 2025-09-25
+      v6-41-0 = _v "6.41.0" "1k8afvd5vimqfwc9j5fkikyw3cdzc8kq8cs7sajn0nmzb9skngmm"; # 2025-09-24
+      v6-40-0 = _v "6.40.0" "1qisyr9gxbf4j3vbic329fyvqy4bw8kcgr91515gvadl8lq12q40"; # 2025-09-09
+      v6-39-0 = _v "6.39.0" "1yc40831z46ki9pwjj088w9x5bw7hkzf3f1hxzzv4xhhnj4r9569"; # 2025-09-04
+      v6-38-0 = _v "6.38.0" "18212vxgydha9qdc5jaalgmsb868n5wmvg0ymjbjd5hbv2nmz065"; # 2025-08-27
+      v6-37-0 = _v "6.37.0" "1jjw2k0s3kaplgl20rdbxyky8xz0mwb84dwb1dd9adrda0jhbhcg"; # 2025-08-21
+      v6-36-1 = _v "6.36.1" "0sc1w5hgwbg7hh0jlq3s4qxxavhfr0qz7z1qmr5qxwg3nz1accnc"; # 2025-08-15
+      v6-36-0 = _v "6.36.0" "0ii6ylnllp6qqa20fyl6x0i3mvxifvbqr6gjpq61bxv58s0rhs1z"; # 2025-08-14
+      v6-35-1 = _v "6.35.1" "0qx0qia1xmk98gjh0dci6wp9sav1arvhdscj0s3pvrrzzf0lvwk3"; # 2025-08-06
+      v6-35-0 = _v "6.35.0" "15am0fk8an2zyscigvixhl237ipxcz1cx348arfx5083dwljhvqg"; # 2025-08-05
+      v6-34-0 = _v "6.34.0" "0hzxdblvx9pf0xqs4nq46ajxcw7kkggbsjd4zx4v72mcyknbhgl7"; # 2025-07-29
+      v6-33-0 = _v "6.33.0" "0k04ar81g3w1x75gss9c9lb7p59vikj5bhmvrww2iz6ybwax961c"; # 2025-07-23
+      v6-32-0 = _v "6.32.0" "0sz8pf976iiqyagzsy36fcj91aw7p70vf3lnmmixfn078n7qlbiz"; # 2025-07-15
+      v6-31-0 = _v "6.31.0" "07g6h2kr6a4jqfnfc6ag4lhi3ckh2bfdhpmb80b7l2ygz5lmnap2"; # 2025-07-08
+      v6-30-1 = _v "6.30.1" "1wbdhs740q9h94v4b056gxk26gb9y4vnv073g9lnhrji1gzmmpg7"; # 2025-05-28
+      v6-30-0 = _v "6.30.0" "0n4s9biqva4lwskywfmagr79kyqdr7lfrbkd8fspz04dz1f5yxqb"; # 2025-05-21
       v6-29-0 = _v "6.29.0" "1cppwhqdl0phhh33h1a5wlk0xwpk1dx60ga6vanc16fixzdr367s"; # 2025-03-26
       v6-28-0 = _v "6.28.0" "0fdf99b5jn6qg28z1qrf821b4m7fwkprzhrgx5vjwjgc8637771g"; # 2025-03-10
       v6-27-0 = _v "6.27.0" "179xi3jmjg1qsmb7jddd2rd0974iw7karmc0bnkkngqnp1r2c1qw"; # 2025-02-14
@@ -554,7 +571,8 @@ let
     # values: https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v5-7-0;
+      latest = v5-8-0;
+      v5-8-0 = _v "5.8.0" "15dn9dxxf2rx6g2wgq4h0fhbhvvggcdzkn2agyrxp4xi6hrj79ls"; # 2025-08-20
       v5-7-0 = _v "5.7.0" "0da9pjrs5b43ssn0yhig2cq14lzdaagrm2758zj2n26z3r8xj5m9"; # 2025-04-10
       v5-6-1 = _v "5.6.1" "0jqwqpxbc9l89d29bk8lrrlca6fcypxvg77353fvh9rjpg7yqjbj"; # 2025-04-16
       v5-6-0 = _v "5.6.0" "1y3vcs18yh08ncfdrj4p3jsbfm2r5li4n4c7izdpgiq7pfcfk7zj"; # 2025-01-16
@@ -578,7 +596,27 @@ let
     # values: https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v1-38-2;
+      latest = v1-47-4;
+      v1-48-0 = _v "1.48.0" "1zjbpy5k9g184snijkj9s5ph09c312563js5zqi1ww9jgh9y6mm1"; # 2025-09-18
+      v1-47-4 = _v "1.47.4" "18kq76fcdlw5xkg7i0h4ncz1ypj44isjg1p28mrmn2pwdnzfikvj"; # 2025-09-17
+      v1-47-3 = _v "1.47.3" "1yghqj1ng39anmcb8w441xm8i3r479nrw15yy80yrwj6cb85p2iw"; # 2025-09-12
+      v1-47-2 = _v "1.47.2" "0drq0kb8glpfp8dk313yf8ky8kh5xnsb82awdvh2rkpk5g0psxpr"; # 2025-09-11
+      v1-47-1 = _v "1.47.1" "0c5ri85l3jqrncw2jvd5q6rsmhh7353n5ixxwk8x79kg3skp5zll"; # 2025-08-29
+      v1-47-0 = _v "1.47.0" "0vqzrjysvc64ys2bjl6dyxw21hhy3f4hiz65lxnqwq3lyi2kr292"; # 2025-08-26
+      v1-46-5 = _v "1.46.5" "0r0m2wnf3nrhrxdc4q191p7m7p89r7jcglb3w69v1m1h4k8a2wqs"; # 2025-08-26
+      v1-46-4 = _v "1.46.4" "0w5w735f7kcivzlx0wli4h8afg9x105725hdkbs61wqp96p8xik9"; # 2025-08-18
+      v1-46-3 = _v "1.46.3" "1wq6gkw7fqs89p4mcf5pxyzyyrjp3r9wiax5f8adpgs9hp7y6sxp"; # 2025-08-07
+      v1-46-2 = _v "1.46.2" "113rqn2fm7vrwfapxaizf0riqf48c8mv85wxhn6ly0hiyabswgcw"; # 2025-07-31
+      v1-46-1 = _v "1.46.1" "1zndllxvmwln5r1da7mmirhzzx01a6y75vw11axj3h7x7c1ygrj9"; # 2025-07-29
+      v1-46-0 = _v "1.46.0" "1il5wqwgknmk1xcyakq55hpx6681lcdqgxyzgr3ici34j27n4zsh"; # 2025-07-19
+      v1-45-0 = _v "1.45.0" "0bw7lvpnkmhk9a2fmlbx1jkrk2dn3yr791v9f5n4003i42gc1mk6"; # 2025-07-11
+      v1-44-1 = _v "1.44.1" "1zcj76vw0vz5jj05pp2vdn54pfp3sidn1d8dx8887scylzl057j6"; # 2025-07-09
+      v1-44-0 = _v "1.44.0" "0kclap1kwar52qw3m0z7sr5hvwhngv4xcwpg587g24canpicbzsl"; # 2025-07-08
+      v1-43-0 = _v "1.43.0" "0cr2i7yh72z5j8awm0xrd2bp4wkj6sj48d935bw4xg3gd34l3kjr"; # 2025-07-04
+      v1-42-3 = _v "1.42.3" "0s8q8m0nvb1crh6zmqdspfa9x5659jpwsghf6wpxpqn0s4gl7gr3"; # 2025-06-24
+      v1-42-2 = _v "1.42.2" "16gljcvzcp691wd1m9j91w2x6z54pcc8j93aa1l1277zni38zgg3"; # 2025-06-17
+      v1-42-1 = _v "1.42.1" "0ccljvrsayiblbxq4v07qjyhh46bd56bb545amvhd5lzk4bjksq5"; # 2025-06-14
+      v1-42-0 = _v "1.42.0" "1h0lqd2ld1x896igkb79qfp5r051xi37chn8p0k9dp1sfzxy96x8"; # 2025-06-11
       v1-38-2 = _v "1.38.2" "1zccjg9yk3nwpj03ai3l6j1424kcmn0fmvbf6b7lk39bcz8m8l6x"; # 2025-04-21
       v1-38-1 = _v "1.38.1" "1bq75ymrrvdy7plm55k3pl6s3nym8p2aaxz82akvybb8vdh2dcak"; # 2025-04-17
       v1-37-0 = _v "1.37.0" "1716d7jjlyl9f9fhp9xf77m8jrg563w46jl0llnqgz2x8rknypa5"; # 2025-04-14
