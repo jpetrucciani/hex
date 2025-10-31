@@ -15,7 +15,11 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v6-42-0;
+      latest = v6-45-1;
+      v6-45-1 = _v "6.45.1" "03w9bakgl8nz73ay04j52ysl44x4s1g1cc5ra5kalvp0np6ywj8y"; # 2025-10-30
+      v6-45-0 = _v "6.45.0" "16ir0xkim2lb6s39vgdglvf1y20iipsq35l3hqmrcgx3x3lba4m1"; # 2025-10-30
+      v6-44-0 = _v "6.44.0" "0la4az5ky3mmwwxb3aj2qh3ip1x7hha9hx8sic5bcn8q4pwgdj9l"; # 2025-10-23
+      v6-43-0 = _v "6.43.0" "1982mpfvspn801p7s95k4h99c6d074b84g87sg7bm73427m3pr7z"; # 2025-10-15
       v6-42-0 = _v "6.42.0" "014vvryd1m9i09ya3ffqkikakr410gh94jj1bca7lpmrwh5hccqr"; # 2025-10-02
       v6-41-1 = _v "6.41.1" "0xk3h6hvki1k8gkkvshzida4s29c7rw69s4jnx83pxp7af9xz141"; # 2025-09-25
       v6-41-0 = _v "6.41.0" "1k8afvd5vimqfwc9j5fkikyw3cdzc8kq8cs7sajn0nmzb9skngmm"; # 2025-09-24
@@ -554,7 +558,13 @@ let
     # values: https://github.com/grafana/alloy/blob/main/operations/helm/charts/alloy/values.yaml
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v1-1-1;
+      latest = v1-4-0;
+      v1-4-0 = _v "1.4.0" "1p5sxllwghn5h6jghg74icrjnynpkd2iw6yhlrg2cmac3v1zwdw9"; # 2025-10-27
+      v1-3-1 = _v "1.3.1" "0rxrc7f3kdx1r6v0xfnc4x2dx92zjifip02sbgmxgnjbnf26l4wn"; # 2025-10-14
+      v1-3-0 = _v "1.3.0" "064pnbv52smfvm0fllvkxza2z6jjzg0ckqp2080v9gn46rbx633l"; # 2025-09-30
+      v1-2-1 = _v "1.2.1" "1sbqb68139dz9iswnvfi147aslmqiw6bgdrl5qk3dp52i3kvzni3"; # 2025-08-07
+      v1-2-0 = _v "1.2.0" "1i3749xa6jhliqr2nnkb9sf9ywqd27w0jifi3bndnz2w53i7qbk1"; # 2025-07-18
+      v1-1-2 = _v "1.1.2" "1gcgsn4wbczhfjqb3sqbxg0az1cgnqkd3b2j1ix8346fyd7vkvil"; # 2025-06-27
       v1-1-1 = _v "1.1.1" "0pjirqpc4frggs0zicm6grwiv26dv6dqyn600nsakw79jmkzvll8"; # 2025-06-05
     };
   };
@@ -596,7 +606,19 @@ let
     # values: https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v1-47-4;
+      latest = v1-52-4;
+      v1-52-5 = _v "1.52.5" "1xgdlsbz9gid94cb96wrd643g7pzvdn7sq1fb42qhz1qc5xr712m"; # 2025-10-31
+      v1-52-4 = _v "1.52.4" "16a0x73qnabgc3ad6s8z8xdh6qb0km0dyv62cram1gz22vdkpkiq"; # 2025-10-29
+      v1-52-3 = _v "1.52.3" "1bjy0y6s3g6chsvx8c0k42w2scx73rcwadfkp38x908bxrp1djc7"; # 2025-10-28
+      v1-52-2 = _v "1.52.2" "1wj4imgdprhq8fx4bzs6a0a9s4q08mlxq2v9nyqcgjs0f31rhh6f"; # 2025-10-27
+      v1-52-1 = _v "1.52.1" "0gmdxrlarvrg9j9j2gc9s4j8zndn1b0i6x1khnhgf7wbkp0ls21l"; # 2025-10-27
+      v1-52-0 = _v "1.52.0" "15rsjchmzj6hcvdbjhbgj01xlrjkh5xrprjn9pssq5rf8r0p7bnb"; # 2025-10-27
+      v1-51-2 = _v "1.51.2" "1l3r5zn518ayx79li9kcavz161y343cjdaxdb4h2xagh903vzwvw"; # 2025-10-27
+      v1-51-1 = _v "1.51.1" "1ni43wffwm8pdsmd7pxxl9r2y19a3pp6ks0d68c25f6gw2fqz7mi"; # 2025-10-26
+      v1-51-0 = _v "1.51.0" "18bnqbknpx7f7ynia1cdbyvm4az4g5s6kzfhxqnlaysixlzg3jjj"; # 2025-10-26
+      v1-50-0 = _v "1.50.0" "1k60azh6zkwkj1yy00hkbw3jigcwbns93drv9jxif1zs18gscs9b"; # 2025-10-25
+      v1-49-0 = _v "1.49.0" "1kpzynysi05mjrzg7ss3jqmafx3mp7ng9y7jfycf7f2hjmkplb7x"; # 2025-10-25
+      v1-48-1 = _v "1.48.1" "0m15mvfbdsyq1fzsp4g8jhs8jrczxmvfi04q879v3id3l8sf9jya"; # 2025-10-15
       v1-48-0 = _v "1.48.0" "1zjbpy5k9g184snijkj9s5ph09c312563js5zqi1ww9jgh9y6mm1"; # 2025-09-18
       v1-47-4 = _v "1.47.4" "18kq76fcdlw5xkg7i0h4ncz1ypj44isjg1p28mrmn2pwdnzfikvj"; # 2025-09-17
       v1-47-3 = _v "1.47.3" "1yghqj1ng39anmcb8w441xm8i3r479nrw15yy80yrwj6cb85p2iw"; # 2025-09-12
