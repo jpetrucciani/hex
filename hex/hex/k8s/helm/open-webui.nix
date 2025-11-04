@@ -11,7 +11,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v8-12-2;
+      latest = v8-12-3;
+      v8-12-3 = _v "8.12.3" "0wamz3gmhjrwjs7vzc2xbk5jd4yv17pb5257z544q38v72ix919r"; # 2025-11-03
       v8-12-2 = _v "8.12.2" "1zn5hn2261fk0q2m31ydldmb1pczcs5iagyb4wvrhhybr9sqmm6a"; # 2025-10-18
       v8-12-1 = _v "8.12.1" "1gzf8465pwvqfqmh6vpyn9nzzdckijx1lww8spiyrxp7vjzkxcbw"; # 2025-10-18
       v8-12-0 = _v "8.12.0" "09rlblnihnbrq9hxjqgdxcmmm6aipipyb3pij3qs2cl7cjh0h5qz"; # 2025-10-18
