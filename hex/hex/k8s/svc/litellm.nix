@@ -19,17 +19,34 @@ let
     , extraVolumes ? [ ]
     , port ? 4000
     , secretName ? "litellm-secret"
-    , readinessProbe ? null
+    , failureThreshold ? 3
+    , periodSeconds ? 10
+    , successThreshold ? 1
+    , timeoutSeconds ? 4
+    , livenessProbe ? {
+        httpGet = {
+          inherit port;
+          path = "/health/liveliness";
+        };
+        inherit failureThreshold periodSeconds successThreshold timeoutSeconds;
+      }
+    , readinessProbe ? {
+        httpGet = {
+          inherit port;
+          path = "/health/readiness";
+        };
+        inherit failureThreshold periodSeconds successThreshold timeoutSeconds;
+      }
     , maxUnavailable ? 0
     , maxSurge ? "50%"
     , litellm_config ? {
         model_list = [
           {
             litellm_params = {
-              model = "groq/meta-llama/llama-4-scout-17b-16e-instruct";
+              model = "groq/openai/gpt-oss-120b";
               drop_params = true;
             };
-            model_name = "llama-4-scout-17b";
+            model_name = "gpt-oss-120b";
           }
         ];
       }
@@ -71,7 +88,7 @@ let
       service = hex.k8s.services.build
         (recursiveUpdate
           {
-            inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes readinessProbe maxUnavailable maxSurge;
+            inherit name namespace labels port image replicas cpuRequest cpuLimit memoryRequest memoryLimit autoscale volumes livenessProbe readinessProbe maxUnavailable maxSurge;
             extraDeploymentAnnotations = extraDeploymentAnnotations // { litellm_config_hash = hex.attrHash litellm_config; };
             command = [ "litellm" ];
             args = [ "--config" "/etc/conf/config.yaml" ];
