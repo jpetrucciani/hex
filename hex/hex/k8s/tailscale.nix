@@ -18,11 +18,11 @@ let
         memory = "2Gi";
       };
       tailscale_image_base = "ghcr.io/tailscale/tailscale";
-      tailscale_image_tag = "v1.90.6";
+      tailscale_image_tag = "v1.90.8";
       busybox_image_base = "busybox";
       busybox_image_tag = "1.37.0";
       cloudsql_image_base = "gcr.io/cloudsql-docker/gce-proxy";
-      cloudsql_image_tag = "1.37.8";
+      cloudsql_image_tag = "1.37.10";
 
       tags = [ "k8s" "proxy" ];
       cidr = "100.64.0.0/10";
