@@ -1,4 +1,4 @@
-# 
+# [coroot](https://github.com/coroot/coroot) is an open source observability and APM tool
 { hex, ... }:
 let
   namespace = "coroot";

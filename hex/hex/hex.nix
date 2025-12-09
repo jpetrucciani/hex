@@ -175,7 +175,7 @@ rec {
     in
     pkgs.stdenv.mkDerivation {
       name = "git-chart";
-      buildInputs = with pkgs; [ ];
+      buildInputs = [ ];
       phases = [ "buildPhase" ];
       buildPhase = ''
         mkdir -p $out

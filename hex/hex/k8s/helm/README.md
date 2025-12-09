@@ -10,13 +10,29 @@ helm based hex modules
 
 a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipeline tool
 
+### [airflow.nix](./airflow.nix)
+
+[airflow](https://github.com/apache/airflow/) is a platform to programmatically author, schedule, and monitor workflows
+
 ### [argocd.nix](./argocd.nix)
 
 [argocd](https://github.com/argoproj/argo-cd) is declarative continuous deployment for kubernetes
 
+### [argo-workflows.nix](./argo-workflows.nix)
+
+[argo-workflows](https://github.com/argoproj/argo-workflows) is a workflow engine for kubernetes
+
 ### [authentik.nix](./authentik.nix)
 
 [Authentik](https://github.com/goauthentik/authentik) is an open source IDP written in go
+
+### [coroot.nix](./coroot.nix)
+
+[coroot](https://github.com/coroot/coroot) is an open source observability and APM tool
+
+### [csi-driver-smb.nix](./csi-driver-smb.nix)
+
+This module contains a [csi-driver-smb](https://github.com/kubernetes-csi/csi-driver-smb) chart
 
 ### [custom-pod-autoscaler.nix](./custom-pod-autoscaler.nix)
 
@@ -46,6 +62,10 @@ This module contains an [elastic operator](https://github.com/elastic/cloud-on-k
 
 [flipt](https://github.com/flipt-io/flipt) is a feature flag service built with Go
 
+### [gateway-api.nix](./gateway-api.nix)
+
+[k8s gateway api](https://github.com/kubernetes-sigs/gateway-api) CRDs
+
 ### [gitlab-runner.nix](./gitlab-runner.nix)
 
 This module contains the helm chart for the [GitLab Kubernetes Executor](https://docs.gitlab.com/runner/executors/kubernetes.html).
@@ -70,13 +90,25 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 [langflow](https://github.com/langflow-ai/langflow) is a visual framework for building multi-agent and RAG applications
 
+### [livekit.nix](./livekit.nix)
+
+[livekit](https://github.com/livekit/livekit) is an End-to-end realtime stack for connecting humans and AI
+
 ### [mongo.nix](./mongo.nix)
 
 [mongodb-operator](https://github.com/mongodb/mongodb-kubernetes-operator) is a way to deploy and maintain mongodb deployments on k8s
 
-### [onyx.nix](./onyx.nix)
+### [nats.nix](./nats.nix)
 
-[onyx](https://github.com/onyx-dot-app/onyx) is an open source AI platform for indexing and querying data
+[nats](https://github.com/nats-io/k8s) is a cloud and edge native messaging system
+
+### [netbox.nix](./netbox.nix)
+
+[netbox](https://netboxlabs.com/products/netbox/) is an IP address management (IPAM) and data center infrastructure management (DCIM) tool
+
+### [odoo.nix](./odoo.nix)
+
+This module contains an [odoo](https://github.com/odoo/odoo) chart
 
 ### [open-webui.nix](./open-webui.nix)
 
@@ -86,7 +118,9 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 [otf](https://github.com/jpetrucciani/otf) is an open source terraform cloud alternative
 
-**NOTE: USE [TOFUTF](./tofutf.nix) INSTEAD!**
+### [plane.nix](./plane.nix)
+
+[plane](https://github.com/makeplane/plane) is an Open Source JIRA, Linear and Asana Alternative
 
 ### [postgres.nix](./postgres.nix)
 
@@ -95,6 +129,10 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 ### [prometheus.nix](./prometheus.nix)
 
 Helpers for [prometheus](https://github.com/prometheus/prometheus) related things in k8s land!
+
+### [pulp.nix](./pulp.nix)
+
+[pulp](https://github.com/pulp/pulp-operator) is a platform for managing RPMs and other software artifacts
 
 ### [questdb.nix](./questdb.nix)
 
@@ -115,6 +153,10 @@ This module contains a [redpanda](https://github.com/redpanda-data/redpanda) cha
 ### [searxng.nix](./searxng.nix)
 
 [searxng](https://github.com/searxng/searxng/) is a free internet metasearch engine which aggregates results from various search services and databases
+
+### [semaphore.nix](./semaphore.nix)
+
+This module contains a [semaphore](https://github.com/semaphoreui/semaphore) chart
 
 ### [sentry.nix](./sentry.nix)
 
