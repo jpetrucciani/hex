@@ -46,7 +46,25 @@ in
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v79-5-0;
+      latest = v80-4-1;
+      v80-4-1 = _v "80.4.1" "09rinslnx8ysjnynr0a8z7cgabdhq9vawrmlhp8v3121m487kl4j"; # 2025-12-12
+      v80-3-1 = _v "80.3.1" "062l8h3n7wjjfpdlkg80sckdrrccq9n7ys24805h4kg9h84fbrvg"; # 2025-12-12
+      v80-3-0 = _v "80.3.0" "1vs2wh136hgaf4hj8mh18fq6js9n6vyiqg3f4zsw88462j29cy8z"; # 2025-12-12
+      v80-2-2 = _v "80.2.2" "1mdhicg1ri5cc4xmh514zhapldh6r5friygvdnaqqn3ykr1sap1g"; # 2025-12-12
+      v80-2-1 = _v "80.2.1" "09j47z4gyl2mxf82ksi1kkv5wjh8rr6wkicdjmibw6259qqd0njf"; # 2025-12-11
+      v80-2-0 = _v "80.2.0" "0mk1mbh6zlc6jyvsh3gwmn8qrhab6vma62j6qc39a42qmg5xivgc"; # 2025-12-09
+      v80-1-0 = _v "80.1.0" "0gpxfc6kd6sni2k94dlwzcjpwk4m6zpxzdpmj8bb28hz3qczfmmw"; # 2025-12-09
+      v80-0-0 = _v "80.0.0" "1gciag7ai8disk2zh1hswv2s81d4vk09akli6zjkqbrrh716b8p8"; # 2025-12-07
+      v79-12-0 = _v "79.12.0" "131vh3sqwk9d7srk4rxb7nnz1zsd0jj0ysfbrl9s997g94dyfk4v"; # 2025-12-05
+      v79-11-0 = _v "79.11.0" "07vcjw6yp8f97gxklliqvk376fc6mc039713yz5r6123z4mlf6hk"; # 2025-12-02
+      v79-10-0 = _v "79.10.0" "1nzx3wangn1r1k1747450msp3f2czdx9104mg4m1fwnz2cls03vs"; # 2025-12-01
+      v79-9-0 = _v "79.9.0" "0hgjnlyhpshmq2zsgrhf1ybbpn4pqwkdxnnkc3s457lhja6ppd57"; # 2025-11-28
+      v79-8-2 = _v "79.8.2" "0r2y0vnpbj4vk7zyab47zlpr8ishzk0bjrmgkrny5vzim2hxws2g"; # 2025-11-26
+      v79-8-1 = _v "79.8.1" "0k9f46f0lmqq00nb77yb8wvdk8x12bm19a5aksfis0da4ncf1k3p"; # 2025-11-25
+      v79-8-0 = _v "79.8.0" "0926b3qkxr48dfifayssmmy1xw8p1cg7vxf1sb40ymf3arcbpn8n"; # 2025-11-25
+      v79-7-1 = _v "79.7.1" "03bsfmyhdzil87fd3fyll46wgf7dzla25l96xxqdfym0xgd3y803"; # 2025-11-21
+      v79-7-0 = _v "79.7.0" "1gvwjf6b9zsgb0ir72dx2ddxkr9ccs8b9m3vjad13q5i2q0pv0j4"; # 2025-11-21
+      v79-6-1 = _v "79.6.1" "1shrbjbwij5znpd9q2c2js4fhc815s3g0f09d073lf9rnzfbikhy"; # 2025-11-19
       v79-5-0 = _v "79.5.0" "1jvnwqp0jfikyzay4a4jphy6ghnmb0r592r13k6clfb65ab2ykzb"; # 2025-11-11
       v79-4-1 = _v "79.4.1" "13m8dw6fkj7f2izv27bnarrgnbmvbhslpf0bmrlmngin2ibs2f6c"; # 2025-11-08
       v79-4-0 = _v "79.4.0" "0p40z42j9d72pw360bk8n18da4fvfxz6b10zm0dyc4clwiix6qrz"; # 2025-11-07
