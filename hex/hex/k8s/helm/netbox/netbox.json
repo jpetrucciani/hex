@@ -1,0 +1,77 @@
+[
+  {
+    "version": "7.2.16",
+    "date": "2025-12-08T06:41:48.177443564Z",
+    "sha256": "1vnar1p7vf6c0a8fxilcjq5580mid50211q2jys34329qfkyigwq"
+  },
+  {
+    "version": "7.2.15",
+    "date": "2025-11-26T07:55:39.717427008Z",
+    "sha256": "1hlg53xnz7vgkfaipk1nnrpv6f9pk1829hsysp83yrlcrdss5xpr"
+  },
+  {
+    "version": "7.2.14",
+    "date": "2025-11-25T10:21:21.009513499Z",
+    "sha256": "14a24carrqwq34kvjgmsbpq23f8fsy5l7wqz9g3rcifl2xliydgi"
+  },
+  {
+    "version": "7.2.13",
+    "date": "2025-11-25T02:09:40.055232622Z",
+    "sha256": "0rfq7pp3a2g8lw3zhy06la3ahmr9d8zp5ii3ipq96p3gq8myj31q"
+  },
+  {
+    "version": "7.2.12",
+    "date": "2025-11-20T10:48:25.140771674Z",
+    "sha256": "1rc215xl0hwrb6spyk0piwrhnss4gi796bhpngxf5kv89xpc00kd"
+  },
+  {
+    "version": "7.2.11",
+    "date": "2025-11-17T18:55:06.589822582Z",
+    "sha256": "12gh5c055xzkjs2kz20yppzrxmvmjlnx16xb1gp9q8zsqgix6x15"
+  },
+  {
+    "version": "7.2.10",
+    "date": "2025-11-15T06:18:24.210223087Z",
+    "sha256": "1nxf377p4h4xna0qrrhgfwa5mbmnfpf9q4ydx4kkdwldf6gqhccn"
+  },
+  {
+    "version": "7.2.9",
+    "date": "2025-11-14T22:57:14.090768183Z",
+    "sha256": "1fqxh36qvy0dhlq93d1zhs3ax554ff0a4h9h9bx941mn0ivk6v2z"
+  },
+  {
+    "version": "7.2.8",
+    "date": "2025-11-12T14:50:06.79832733Z",
+    "sha256": "03qn1fq953dhqxrqhrpjqa01mb6f3glaz7350g06vb562schzxf1"
+  },
+  {
+    "version": "7.2.7",
+    "date": "2025-11-12T07:11:52.751096857Z",
+    "sha256": "1nd83paqnmc8wnqjsvyc3yr11sgy41gf4bxz4qki29y704nxl4qx"
+  },
+  {
+    "version": "7.2.6",
+    "date": "2025-11-08T15:59:34.859659287Z",
+    "sha256": "0x6zdsvigwgfbkn6r8sc34ijpa0cn3vd0fnnr7l91w8kfp0y88cp"
+  },
+  {
+    "version": "7.2.5",
+    "date": "2025-11-08T13:43:25.968095902Z",
+    "sha256": "1l2vayfm2cn7riz4h4y1pdr94rc1p7xbh9xg50lvv7yjavx8yd1r"
+  },
+  {
+    "version": "7.2.4",
+    "date": "2025-11-08T07:44:03.40944674Z",
+    "sha256": "0k66b2f40yddr1spdc5h4ndwx71ravqkb50z9fmnrz88n3j6kwq9"
+  },
+  {
+    "version": "7.2.3",
+    "date": "2025-11-07T23:52:58.45409179Z",
+    "sha256": "0wcfcixypjdkli57q9jg3sglj1ipkqwbz9v2pf0sqb2a3hwgg73z"
+  },
+  {
+    "version": "7.2.2",
+    "date": "2025-11-07T16:11:55.990097927Z",
+    "sha256": "1j3a9kclv7xxmjf593z8swpha8k3x0vjsr1bn6ksyb4q52qyqrqk"
+  }
+]

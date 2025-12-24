@@ -21,6 +21,7 @@ let
         { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 66; }
         { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 20; }
         { name = "semaphore"; spec = "hex.k8s.semaphore.version.latest {}"; check = num_docs 9; }
+        { name = "netbox"; spec = "hex.k8s.netbox.version.latest {}"; check = num_docs 33; }
         {
           name = "loki";
           spec = ''hex.k8s.grafana.loki.version.latest {

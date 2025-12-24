@@ -3,6 +3,8 @@
 let
   inherit (hex) attrIf ifNotEmptyAttr toYAMLDoc;
 
+  _apiVersion = beta: if beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1";
+
   external-secrets = rec {
     defaults = {
       name = "external-secrets";
@@ -11,7 +13,8 @@ let
     };
     version = rec {
       _v = hex.k8s._.version chart;
-      latest = v1-1-1;
+      latest = v1-2-0;
+      v1-2-0 = _v "1.2.0" "1cyn25kdwzlnkn4ppl43gs7yssl5sjg5vmmm61yp9g4n873ijmpj"; # 2025-12-19
       v1-1-1 = _v "1.1.1" "0x73d6jk47lq3nz8gnkah9vqv7sx0ply75vvavai3iv558mgg7y9"; # 2025-12-05
       v1-1-0 = _v "1.1.0" "17m8mcyaqxd3ybggvafc2v5r727yw3npjm62xwgqw55ll6d43r78"; # 2025-11-21
       v1-0-0 = _v "1.0.0" "1x7dikk79gmi2sbnvrij84ayp48b07iwgnvdj4fgzqnkm4am3vji"; # 2025-11-07
@@ -76,8 +79,8 @@ let
         , filename ? "${name}-creds.json"
         , namespace ? "external-secrets"
         , _beta ? false
-        , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
-        }: toYAMLDoc (store { inherit name aws aws_region aws_role gcp_project secret filename namespace _beta apiVersion; });
+        , apiVersion ? _apiVersion _beta
+        }: toYAMLDoc (store { inherit name aws aws_region aws_role gcp_project secret filename namespace apiVersion; });
       store =
         { name
         , aws
@@ -87,7 +90,6 @@ let
         , secret
         , filename
         , namespace
-        , _beta
         , apiVersion
         }:
         {
@@ -152,7 +154,7 @@ let
         , labels ? { }
         , string_data ? { }
         , _beta ? false
-        , apiVersion ? if _beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1"
+        , apiVersion ? _apiVersion _beta
         }: toYAMLDoc (secret { inherit name filename env store store_kind refresh_interval secret_ref namespace extract decoding_strategy metadata_policy conversion_strategy extra_data labels string_data _beta apiVersion; });
 
       secret =
@@ -172,7 +174,7 @@ let
         , labels
         , string_data
         , _beta
-        , apiVersion
+        , apiVersion ? _apiVersion _beta
         }:
         let
           all_labels = labels // { HEX = "true"; };

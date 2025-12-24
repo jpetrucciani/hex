@@ -37,37 +37,57 @@ let
     nginx-ingress = import ./k8s/nginx-ingress.nix params;
     storage = import ./k8s/storage.nix params;
     tailscale = import ./k8s/tailscale.nix params;
-    _ = {
-      version = chart_url_fn: v: s: args: chart_url_fn (args // { version = v; sha256 = s; });
-      chart = { defaults, chart_url, extraSets ? [ ] }:
-        let
-          fn =
-            { name ? defaults.name or ""
-            , namespace ? defaults.namespace or "default"
-            , values ? [ ]
-            , valuesAttrs ? null
-            , defaultValuesAttrs ? defaults.valuesAttrs or null
-            , sets ? [ ]
-            , version ? defaults.version or ""
-            , sha256 ? defaults.sha256 or ""
-            , forceNamespace ? true
-            , extraFlags ? [ ]
-            , sortYaml ? false
-            , preRender ? defaults.preRender or ""
-            , postRender ? defaults.postRender or ""
-            , kubeVersion ? "1.33"
-            , apiVersions ? ""
-            , rev ? "" # only used for git charts
-            , subPath ? "" # only used for git charts
-            }: hex.k8s.helm.build {
-              inherit name namespace values valuesAttrs defaultValuesAttrs version sha256 forceNamespace sortYaml preRender postRender kubeVersion apiVersions rev subPath;
-              extraFlags = extraFlags ++ [ "--version=${version}" ];
-              sets = sets ++ extraSets;
-              url = chart_url version;
-            };
-        in
-        { __functor = _: fn; passthru.update = defaults.update or "echo 'no update script set!"; };
-    };
+    _ =
+      let
+        version = chart_url_fn: v: s: args: chart_url_fn (args // { version = v; sha256 = s; });
+      in
+      {
+        inherit version;
+        versionMap = { chart, versionFile }:
+          let
+            _v = hex.k8s._.version chart;
+            versions = builtins.fromJSON (builtins.readFile versionFile);
+            versionToAttr = v: "v${builtins.replaceStrings ["."] ["-"] v}";
+            versionAttrs = builtins.listToAttrs (map
+              (entry: {
+                name = versionToAttr entry.version;
+                value = _v entry.version entry.sha256;
+              })
+              versions);
+          in
+          versionAttrs // {
+            inherit _v;
+            latest = versionAttrs.${versionToAttr (builtins.head versions).version};
+          };
+        chart = { defaults, chart_url, extraSets ? [ ] }:
+          let
+            fn =
+              { name ? defaults.name or ""
+              , namespace ? defaults.namespace or "default"
+              , values ? [ ]
+              , valuesAttrs ? null
+              , defaultValuesAttrs ? defaults.valuesAttrs or null
+              , sets ? [ ]
+              , version ? defaults.version or ""
+              , sha256 ? defaults.sha256 or ""
+              , forceNamespace ? true
+              , extraFlags ? [ ]
+              , sortYaml ? false
+              , preRender ? defaults.preRender or ""
+              , postRender ? defaults.postRender or ""
+              , kubeVersion ? "1.33"
+              , apiVersions ? ""
+              , rev ? "" # only used for git charts
+              , subPath ? "" # only used for git charts
+              }: hex.k8s.helm.build {
+                inherit name namespace values valuesAttrs defaultValuesAttrs version sha256 forceNamespace sortYaml preRender postRender kubeVersion apiVersions rev subPath;
+                extraFlags = extraFlags ++ [ "--version=${version}" ];
+                sets = sets ++ extraSets;
+                url = chart_url version;
+              };
+          in
+          { __functor = _: fn; passthru.update = defaults.update or "echo 'no update script set!"; };
+      };
   };
 in
 {
