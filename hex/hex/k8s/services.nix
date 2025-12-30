@@ -117,6 +117,7 @@ let
       , nodePort ? false
       , subdomain ? null
       , nodeSelector ? null
+      , tolerations ? null
       , lifecycle ? null
       , livenessProbe ? null
       , readinessProbe ? null
@@ -205,7 +206,7 @@ let
         dep = (components.deployment {
           inherit name namespace labels image replicas revisionHistoryLimit port maxSurge maxUnavailable depSuffix saSuffix daemonSet lifecycle imagePullSecrets affinity initContainers;
           inherit cpuRequest memoryRequest ephemeralStorageRequest cpuLimit memoryLimit ephemeralStorageLimit command args volumes subdomain nodeSelector livenessProbe readinessProbe securityContext;
-          inherit env envAttrs envFrom extraContainer extraDeploymentAnnotations extraPodAnnotations appArmor tailscaleSidecar tailscale_image_base tailscale_image_tag tsSuffix hostAliases __init pre1_30;
+          inherit env envAttrs envFrom extraContainer extraDeploymentAnnotations extraPodAnnotations appArmor tailscaleSidecar tailscale_image_base tailscale_image_tag tsSuffix hostAliases __init pre1_30 tolerations;
         }) // extraDep;
         hpa = (components.hpa { inherit name namespace labels min max cpuUtilization hpaSuffix; }) // extraHPA;
         svc =
@@ -507,6 +508,7 @@ let
         , initContainers ? null
         , subdomain ? null
         , nodeSelector ? null
+        , tolerations ? null
         , livenessProbe ? null
         , readinessProbe ? null
         , securityContext ? null
@@ -578,6 +580,7 @@ let
                 ${ifNotNull subdomain "subdomain"} = subdomain;
                 ${ifNotNull nodeSelector "nodeSelector"} = nodeSelector;
                 ${ifNotNull initContainers "initContainers"} = initContainers;
+                ${ifNotNull tolerations "tolerations"} = tolerations;
                 containers = [
                   ({
                     inherit image name;
