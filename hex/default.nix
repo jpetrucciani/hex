@@ -14,7 +14,7 @@ let
         yq = "${pkgs.yq-go}/bin/yq";
         prettier = "${pkgs.nodePackages.prettier}/bin/prettier --write --config ${../prettier.config.js}";
         mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
-        nix = "${pkgs.lix}/bin/nix";
+        nix = "${pkgs.nixVersions.nix_2_32}/bin/nix";
       };
     in
     pog {
@@ -55,7 +55,7 @@ in
   inherit hexcast;
   nixrender =
     let
-      nix = "${pkgs.lix}/bin/nix";
+      nix = "${pkgs.nixVersions.nix_2_32}/bin/nix";
     in
     pog {
       name = "nixrender";
