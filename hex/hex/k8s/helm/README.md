@@ -6,6 +6,18 @@ helm based hex modules
 
 ## In this directory
 
+### [grafana/](./grafana/)
+
+This module contains helm charts under the [grafana](https://grafana.com/) observability umbrella. This includes things like [loki](https://github.com/grafana/loki), [mimir](https://github.com/grafana/mimir), and [oncall](https://github.com/grafana/oncall).
+
+### [netbox/](./netbox/)
+
+[netbox](https://netboxlabs.com/products/netbox/) is an IP address management (IPAM) and data center infrastructure management (DCIM) tool
+
+### [netbox-diode/](./netbox-diode/)
+
+TODO
+
 ### [airbyte.nix](./airbyte.nix)
 
 a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipeline tool
@@ -70,10 +82,6 @@ This module contains an [elastic operator](https://github.com/elastic/cloud-on-k
 
 This module contains the helm chart for the [GitLab Kubernetes Executor](https://docs.gitlab.com/runner/executors/kubernetes.html).
 
-### [grafana.nix](./grafana.nix)
-
-This module contains helm charts under the [grafana](https://grafana.com/) observability umbrella. This includes things like [loki](https://github.com/grafana/loki), [mimir](https://github.com/grafana/mimir), and [oncall](https://github.com/grafana/oncall).
-
 ### [infisical.nix](./infisical.nix)
 
 This module contains an [infisical](https://github.com/Infisical/infisical) helm chart
@@ -101,10 +109,6 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 ### [nats.nix](./nats.nix)
 
 [nats](https://github.com/nats-io/k8s) is a cloud and edge native messaging system
-
-### [netbox.nix](./netbox.nix)
-
-[netbox](https://netboxlabs.com/products/netbox/) is an IP address management (IPAM) and data center infrastructure management (DCIM) tool
 
 ### [odoo.nix](./odoo.nix)
 
