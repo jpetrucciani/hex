@@ -13,58 +13,8 @@ let
       inherit defaults;
       chart_url = version: _chart_url { inherit version; inherit (defaults) name; prefix = "helm-"; };
     };
-    version = rec {
-      _v = hex.k8s._.version chart;
-      latest = v6-49-0;
-      v6-49-0 = _v "6.49.0" "0s5bpbh1r8gb1mwdmiq2239dj35xdvd8mxvrm5lsc5fi4i4s01gi"; # 2025-12-12
-      v6-48-0 = _v "6.48.0" "169aa35107phhrnivplvhyny1xh34kv66n7f884bbn2l89dj4cfc"; # 2025-12-09
-      v6-46-0 = _v "6.46.0" "0mmqlza31fdciih56b5mydnzbmpq7dmxzi183y56d958m1h8bi3q"; # 2025-11-05
-      v6-45-2 = _v "6.45.2" "1lw49b3ijxw1jcwz7jdbpjf6cy33arca305bvmp56w0lipqw1p02"; # 2025-10-31
-      v6-45-1 = _v "6.45.1" "03w9bakgl8nz73ay04j52ysl44x4s1g1cc5ra5kalvp0np6ywj8y"; # 2025-10-30
-      v6-45-0 = _v "6.45.0" "16ir0xkim2lb6s39vgdglvf1y20iipsq35l3hqmrcgx3x3lba4m1"; # 2025-10-30
-      v6-44-0 = _v "6.44.0" "0la4az5ky3mmwwxb3aj2qh3ip1x7hha9hx8sic5bcn8q4pwgdj9l"; # 2025-10-23
-      v6-43-0 = _v "6.43.0" "1982mpfvspn801p7s95k4h99c6d074b84g87sg7bm73427m3pr7z"; # 2025-10-15
-      v6-42-0 = _v "6.42.0" "014vvryd1m9i09ya3ffqkikakr410gh94jj1bca7lpmrwh5hccqr"; # 2025-10-02
-      v6-41-1 = _v "6.41.1" "0xk3h6hvki1k8gkkvshzida4s29c7rw69s4jnx83pxp7af9xz141"; # 2025-09-25
-      v6-41-0 = _v "6.41.0" "1k8afvd5vimqfwc9j5fkikyw3cdzc8kq8cs7sajn0nmzb9skngmm"; # 2025-09-24
-      v6-40-0 = _v "6.40.0" "1qisyr9gxbf4j3vbic329fyvqy4bw8kcgr91515gvadl8lq12q40"; # 2025-09-09
-      v6-39-0 = _v "6.39.0" "1yc40831z46ki9pwjj088w9x5bw7hkzf3f1hxzzv4xhhnj4r9569"; # 2025-09-04
-      v6-38-0 = _v "6.38.0" "18212vxgydha9qdc5jaalgmsb868n5wmvg0ymjbjd5hbv2nmz065"; # 2025-08-27
-      v6-37-0 = _v "6.37.0" "1jjw2k0s3kaplgl20rdbxyky8xz0mwb84dwb1dd9adrda0jhbhcg"; # 2025-08-21
-      v6-36-1 = _v "6.36.1" "0sc1w5hgwbg7hh0jlq3s4qxxavhfr0qz7z1qmr5qxwg3nz1accnc"; # 2025-08-15
-      v6-36-0 = _v "6.36.0" "0ii6ylnllp6qqa20fyl6x0i3mvxifvbqr6gjpq61bxv58s0rhs1z"; # 2025-08-14
-      v6-35-1 = _v "6.35.1" "0qx0qia1xmk98gjh0dci6wp9sav1arvhdscj0s3pvrrzzf0lvwk3"; # 2025-08-06
-      v6-35-0 = _v "6.35.0" "15am0fk8an2zyscigvixhl237ipxcz1cx348arfx5083dwljhvqg"; # 2025-08-05
-      v6-34-0 = _v "6.34.0" "0hzxdblvx9pf0xqs4nq46ajxcw7kkggbsjd4zx4v72mcyknbhgl7"; # 2025-07-29
-      v6-33-0 = _v "6.33.0" "0k04ar81g3w1x75gss9c9lb7p59vikj5bhmvrww2iz6ybwax961c"; # 2025-07-23
-      v6-32-0 = _v "6.32.0" "0sz8pf976iiqyagzsy36fcj91aw7p70vf3lnmmixfn078n7qlbiz"; # 2025-07-15
-      v6-31-0 = _v "6.31.0" "07g6h2kr6a4jqfnfc6ag4lhi3ckh2bfdhpmb80b7l2ygz5lmnap2"; # 2025-07-08
-      v6-30-1 = _v "6.30.1" "1wbdhs740q9h94v4b056gxk26gb9y4vnv073g9lnhrji1gzmmpg7"; # 2025-05-28
-      v6-30-0 = _v "6.30.0" "0n4s9biqva4lwskywfmagr79kyqdr7lfrbkd8fspz04dz1f5yxqb"; # 2025-05-21
-      v6-29-0 = _v "6.29.0" "1cppwhqdl0phhh33h1a5wlk0xwpk1dx60ga6vanc16fixzdr367s"; # 2025-03-26
-      v6-28-0 = _v "6.28.0" "0fdf99b5jn6qg28z1qrf821b4m7fwkprzhrgx5vjwjgc8637771g"; # 2025-03-10
-      v6-27-0 = _v "6.27.0" "179xi3jmjg1qsmb7jddd2rd0974iw7karmc0bnkkngqnp1r2c1qw"; # 2025-02-14
-      v6-16-0 = _v "6.16.0" "0lhy43syl9zhddm9jfjzbbc0z561lsla4q4h4rspgx8xkzv9qz4i"; # 2024-09-30
-      v6-15-0 = _v "6.15.0" "184nx1fkqb4dypy713n110yfar3mhv2962njndd1f779pmgwxmx6"; # 2024-09-26
-      v6-12-0 = _v "6.12.0" "1fm61h3xbawih946pmqr41md65ypwh03mknpnvjiqnch90hl8jv1"; # 2024-09-03
-      v6-11-0 = _v "6.11.0" "1gq1wjx6x7qjrqyy6jdg95y45kgnz0znjpvi2pig3vbd7fd66sj7"; # 2024-09-02
-      v6-10-2 = _v "6.10.2" "0rbkkkjk58ssi7a6zfvh9n0xbra12is2qca6pvg5lm684fm7kvnh"; # 2024-08-29
-      v6-9-0 = _v "6.9.0" "0qznl7jcmdqf1dvwvvpk9mdqwr2pha01d8xvvxwx8rsc3n6ipsji"; # 2024-08-07
-      v6-8-0 = _v "6.8.0" "1f4w10y86d01nfx771rxig5fkzyi35gyvsjinbhmb06drwz09kql"; # 2024-08-05
-      v6-7-4 = _v "6.7.4" "1nbdrwvpdmj84h08d7ghxd9mss5gz26kkmmb35axjn5zimq0ck7z"; # 2024-08-05
-      v6-6-6 = _v "6.6.6" "0s03v0gbjpn34k1jb2pq3dp47w0j7pynngxc4scqmk5b0v702cz2"; # 2024-07-11
-      v6-6-5 = _v "6.6.5" "1mj0psnsswd04vaskxc6xqq0q0n5lir6j192ca1rgk3l8dlgyq9x"; # 2024-07-03
-      v6-5-2 = _v "6.5.2" "00ydqpmgdhbclnian59nwlf4yjq4lqwmsfh0a7qm9267mxd37crc"; # 2024-05-10
-      v6-4-2 = _v "6.4.2" "1yfk8m9yabyzv6lijymgf025069mbiswd4d55lldavzcqq96s5yk"; # 2024-04-30
-      v6-3-4 = _v "6.3.4" "1130nycffid25rbnlgffsihhjiz75356iii0lmhkzrb8nlca8q7d"; # 2024-04-22
-      v6-0-0 = _v "6.0.0" "08hy2fwr6rlqc0cf6g815fly45nmf1kv3ngfgmy4k2jyf5rd8z50"; # 2024-04-08
-      v5-47-2 = _v "5.47.2" "0wax65hy9gc56gch0ypgm10a9qya5r6ygnnv3klna1a94nf32d4n"; # 2024-03-28
-      v5-47-1 = _v "5.47.1" "171iwpniwc7q35vd5vgz9jzd8j24az4f3gsxgdlp1a4r5y5kxjm9"; # 2024-03-22
-      v5-44-4 = _v "5.44.4" "124fms4hpqyr40a9jb5bvh48m5dvqi7m7xyq234c7d2jbqm0w201"; # 2024-03-18
-      v5-43-7 = _v "5.43.7" "1n8mbv198kjx4drbvv6alh3l2vr86spvv3zik99ppajfpi8pv0rv"; # 2024-03-14
-      v5-42-3 = _v "5.42.3" "0qkbivgpwbx7ffwh7szs725qhvla2bh1h66ja5zdnyry5wagcz8k"; # 2024-02-14
-    };
-    # this agent is useful for pushing k8s logs into loki
+    version = hex.k8s._.versionMap { inherit chart; versionFile = ./loki.json; };
+    # this agent is deprecated! use alloy instead!
     agent =
       { cluster  # cluster name to report
       , lokiHost ? "loki-write.loki.svc.cluster.local:3100"  # default for a base install of the helm chart
@@ -297,15 +247,17 @@ let
       in
       assert basicAuth -> basicAuthUser != "";
       assert basicAuth -> basicAuthPassword != "";
-      ''
-        ${toYAMLDoc config}
-        ${toYAMLDoc sa}
-        ${toYAMLDoc cluster_role}
-        ${toYAMLDoc cluster_role_binding}
-        ${toYAMLDoc service}
-        ${toYAMLDoc statefulset}
-      '';
+      builtins.warn "grafana agent is deprecated! use alloy instead!"
+        ''
+          ${toYAMLDoc config}
+          ${toYAMLDoc sa}
+          ${toYAMLDoc cluster_role}
+          ${toYAMLDoc cluster_role_binding}
+          ${toYAMLDoc service}
+          ${toYAMLDoc statefulset}
+        '';
 
+    # promtail is deprecated! use alloy instead!
     # promtail will tail all the stderr and stdout of logs in the cluster to the specified loki endpoint
     promtail =
       { cluster  # cluster name to report
@@ -542,13 +494,14 @@ let
       in
       assert basicAuth -> basicAuthUser != "";
       assert basicAuth -> basicAuthPassword != "";
-      ''
-        ${toYAMLDoc sa}
-        ${toYAMLDoc clusterrole}
-        ${toYAMLDoc clusterrolebinding}
-        ${toYAMLDoc configmap}
-        ${toYAMLDoc daemonset}
-      '';
+      builtins.warn "promtail is deprecated! use alloy instead!"
+        ''
+          ${toYAMLDoc sa}
+          ${toYAMLDoc clusterrole}
+          ${toYAMLDoc clusterrolebinding}
+          ${toYAMLDoc configmap}
+          ${toYAMLDoc daemonset}
+        '';
   };
   alloy = rec {
     defaults = {
@@ -560,19 +513,7 @@ let
       chart_url = version: _chart_url { inherit version; inherit (defaults) name; };
     };
     # values: https://github.com/grafana/alloy/blob/main/operations/helm/charts/alloy/values.yaml
-    version = rec {
-      _v = hex.k8s._.version chart;
-      latest = v1-5-1;
-      v1-5-1 = _v "1.5.1" "1am5v4wjdchix3ldx0v92nya33xi0cp14aq6fn569dyk4ys1jx8f"; # 2025-12-16
-      v1-5-0 = _v "1.5.0" "0w9rblnv0i861ff12gjsc9jvj8671v3ri2hsfymk6lcxl5nkl730"; # 2025-12-02
-      v1-4-0 = _v "1.4.0" "1p5sxllwghn5h6jghg74icrjnynpkd2iw6yhlrg2cmac3v1zwdw9"; # 2025-10-27
-      v1-3-1 = _v "1.3.1" "0rxrc7f3kdx1r6v0xfnc4x2dx92zjifip02sbgmxgnjbnf26l4wn"; # 2025-10-14
-      v1-3-0 = _v "1.3.0" "064pnbv52smfvm0fllvkxza2z6jjzg0ckqp2080v9gn46rbx633l"; # 2025-09-30
-      v1-2-1 = _v "1.2.1" "1sbqb68139dz9iswnvfi147aslmqiw6bgdrl5qk3dp52i3kvzni3"; # 2025-08-07
-      v1-2-0 = _v "1.2.0" "1i3749xa6jhliqr2nnkb9sf9ywqd27w0jifi3bndnz2w53i7qbk1"; # 2025-07-18
-      v1-1-2 = _v "1.1.2" "1gcgsn4wbczhfjqb3sqbxg0az1cgnqkd3b2j1ix8346fyd7vkvil"; # 2025-06-27
-      v1-1-1 = _v "1.1.1" "0pjirqpc4frggs0zicm6grwiv26dv6dqyn600nsakw79jmkzvll8"; # 2025-06-05
-    };
+    version = hex.k8s._.versionMap { inherit chart; versionFile = ./alloy.json; };
   };
   mimir = rec {
     defaults = {
@@ -585,25 +526,7 @@ let
       chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
     };
     # values: https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml
-    version = rec {
-      _v = hex.k8s._.version chart;
-      latest = v5-8-0;
-      v6-0-5 = _v "6.0.5" "17yanyjb631hds1b9yk9i197hp3qi8s6j44k204avghsw7njx1gs"; # 2025-12-01
-      v6-0-4 = _v "6.0.4" "1kgbf360x8inv3j53fdvi8aha9kkh887pmjzlhdspbgzlqiwjczm"; # 2025-11-28
-      v6-0-3 = _v "6.0.3" "0f9hcb03dapnvgwsii0qsygcycl8xlqqmh9jll1rjf9n999qys8z"; # 2025-11-05
-      v6-0-2 = _v "6.0.2" "0a18rmfzq82a7idw9y0m6vij4mzn9311kgj078hgwzjkm17avmw8"; # 2025-11-05
-      v6-0-1 = _v "6.0.1" "0n7k6m9a09aqy27n5kghkkk7mzhhb1k8b37szbqh38gm0d4bzj1y"; # 2025-11-03
-      v6-0-0 = _v "6.0.0" "0v5f1xmdy1qq9sgcd8a0vz5cmjkr4nbzmbwrznw60k1rpfxzwc66"; # 2025-10-31
-      v5-8-0 = _v "5.8.0" "15dn9dxxf2rx6g2wgq4h0fhbhvvggcdzkn2agyrxp4xi6hrj79ls"; # 2025-08-20
-      v5-7-0 = _v "5.7.0" "0da9pjrs5b43ssn0yhig2cq14lzdaagrm2758zj2n26z3r8xj5m9"; # 2025-04-10
-      v5-6-1 = _v "5.6.1" "0jqwqpxbc9l89d29bk8lrrlca6fcypxvg77353fvh9rjpg7yqjbj"; # 2025-04-16
-      v5-6-0 = _v "5.6.0" "1y3vcs18yh08ncfdrj4p3jsbfm2r5li4n4c7izdpgiq7pfcfk7zj"; # 2025-01-16
-      v5-5-1 = _v "5.5.1" "1a66zb2sdgx5c2g8kq6yi6wl04xnhcnx4kcpib9j4ba8bg3hqfr7"; # 2024-10-21
-      v5-4-1 = _v "5.4.1" "0046ylyjjdjafrpbfa4k2i7gk1dk03dqp7vbhb0vqv30nqycdp6x"; # 2024-08-15
-      v5-3-1 = _v "5.3.1" "1h29kf5y0w7pfzc2h4a73ivls7hmcxlqcjmzypz12maa6chz0izy"; # 2024-09-09
-      v5-2-3 = _v "5.2.3" "0d8snrg661fwm2p621h0wf8l8aygyc492xkdc5yxl89i33d29nbx"; # 2024-03-15
-      v5-1-2 = _v "5.1.2" "0frz4fs0za92flb81cgpxhjrkrsmypykz6ynn5j4z1vafqs4ckhq";
-    };
+    version = hex.k8s._.versionMap { inherit chart; versionFile = ./mimir.json; };
   };
   tempo = rec {
     defaults = {
@@ -616,36 +539,7 @@ let
       chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
     };
     # values: https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml
-    version = rec {
-      _v = hex.k8s._.version chart;
-      latest = v1-58-1;
-      v1-58-1 = _v "1.58.1" "0gsr42ad9485mgbipnnjkwvj7jjfd4i26dlh7s1sb440vhxcvin5"; # 2025-12-11
-      v1-57-1 = _v "1.57.1" "0j20xdgb43nks0dlfb09z10b9vyq2bw9cs2pspx22xisxd4sspl5"; # 2025-12-11
-      v1-56-2 = _v "1.56.2" "09j1hppxb0gpcbhp5jgimc6arwb8wxlvbfr99bqjwk3gz4qvfk9k"; # 2025-11-18
-      v1-55-0 = _v "1.55.0" "0grvz71mhm7pqp96q60plz3swgyn98ibqg4ld5j01pv37ylq8cxc"; # 2025-11-10
-      v1-54-1 = _v "1.54.1" "1jcpyvb5z3dslnv40bpbxz56p7lbw3l1rss0m4a3kshaa9gkh84j"; # 2025-11-10
-      v1-53-2 = _v "1.53.2" "1s83mc4yijrbiqrmxgp0b5g5iyc74h8phz5jl9wcrvdlbiw1xmr5"; # 2025-11-05
-      v1-52-10 = _v "1.52.10" "1rxjxn8iny366jlhvdy2f360qdnwmb8hya6q4nknma5fzcycqjnc"; # 2025-11-04
-      v1-51-2 = _v "1.51.2" "1l3r5zn518ayx79li9kcavz161y343cjdaxdb4h2xagh903vzwvw"; # 2025-10-27
-      v1-51-1 = _v "1.51.1" "1ni43wffwm8pdsmd7pxxl9r2y19a3pp6ks0d68c25f6gw2fqz7mi"; # 2025-10-26
-      v1-51-0 = _v "1.51.0" "18bnqbknpx7f7ynia1cdbyvm4az4g5s6kzfhxqnlaysixlzg3jjj"; # 2025-10-26
-      v1-50-0 = _v "1.50.0" "1k60azh6zkwkj1yy00hkbw3jigcwbns93drv9jxif1zs18gscs9b"; # 2025-10-25
-      v1-49-0 = _v "1.49.0" "1kpzynysi05mjrzg7ss3jqmafx3mp7ng9y7jfycf7f2hjmkplb7x"; # 2025-10-25
-      v1-48-1 = _v "1.48.1" "0m15mvfbdsyq1fzsp4g8jhs8jrczxmvfi04q879v3id3l8sf9jya"; # 2025-10-15
-      v1-47-4 = _v "1.47.4" "18kq76fcdlw5xkg7i0h4ncz1ypj44isjg1p28mrmn2pwdnzfikvj"; # 2025-09-17
-      v1-46-5 = _v "1.46.5" "0r0m2wnf3nrhrxdc4q191p7m7p89r7jcglb3w69v1m1h4k8a2wqs"; # 2025-08-26
-      v1-45-0 = _v "1.45.0" "0bw7lvpnkmhk9a2fmlbx1jkrk2dn3yr791v9f5n4003i42gc1mk6"; # 2025-07-11
-      v1-44-1 = _v "1.44.1" "1zcj76vw0vz5jj05pp2vdn54pfp3sidn1d8dx8887scylzl057j6"; # 2025-07-09
-      v1-43-0 = _v "1.43.0" "0cr2i7yh72z5j8awm0xrd2bp4wkj6sj48d935bw4xg3gd34l3kjr"; # 2025-07-04
-      v1-42-3 = _v "1.42.3" "0s8q8m0nvb1crh6zmqdspfa9x5659jpwsghf6wpxpqn0s4gl7gr3"; # 2025-06-24
-      v1-38-2 = _v "1.38.2" "1zccjg9yk3nwpj03ai3l6j1424kcmn0fmvbf6b7lk39bcz8m8l6x"; # 2025-04-21
-      v1-37-0 = _v "1.37.0" "1716d7jjlyl9f9fhp9xf77m8jrg563w46jl0llnqgz2x8rknypa5"; # 2025-04-14
-      v1-36-0 = _v "1.36.0" "052gkcg5fnxdl62ma18a8x2iw14csg744g2pkx1l8372ap4fqb45"; # 2025-04-14
-      v1-35-0 = _v "1.35.0" "0iicga1k2jvy1zir86bxbrj47hx4j6z26r9jlwdg52lhssc2j64n"; # 2025-04-09
-      v1-34-0 = _v "1.34.0" "0a61vi1ayw0hfznkav09i8gy1s27h22pyxccv312yzpyglqgk3bw"; # 2025-04-07
-      v1-33-0 = _v "1.33.0" "0d281s60y6s7rkszg58kpjg5pz9hmv105bsg54jbcrn9qkc75pb9"; # 2025-03-24
-      v1-32-7 = _v "1.32.7" "1qpxwwkjaljbjbbbhxzjr3ml4jg32f178p79837251h4rvh13azq"; # 2025-03-14
-    };
+    version = hex.k8s._.versionMap { inherit chart; versionFile = ./tempo.json; };
   };
   oncall = rec {
     defaults = {

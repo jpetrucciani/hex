@@ -456,7 +456,7 @@ let
 
       deployment =
         let
-          volumeDef = { name, secret ? null, hostPath ? null, configMap ? null, emptyDir ? false, items ? null, pvc ? null, ... }: {
+          volumeDef = { name, secret ? null, hostPath ? null, configMap ? null, items ? null, pvc ? null, emptyDir ? false, sizeLimit ? null, medium ? null, ... }: {
             inherit name;
             ${ifNotNull pvc "persistentVolumeClaim"} = {
               claimName = pvc;
@@ -467,7 +467,10 @@ let
             };
             ${ifNotNull configMap "configMap"}.name = configMap;
             ${ifNotNull hostPath "hostPath"}.path = hostPath;
-            ${attrIf emptyDir "emptyDir"} = { };
+            ${attrIf emptyDir "emptyDir"} = {
+              ${ifNotNull sizeLimit "sizeLimit"} = sizeLimit;
+              ${ifNotNull medium "medium"} = medium;
+            };
           };
           volumeMountDef = { name, mountPath, readOnly ? true, subPath ? null, ... }: {
             inherit name mountPath readOnly;

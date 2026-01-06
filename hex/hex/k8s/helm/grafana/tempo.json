@@ -1,0 +1,102 @@
+[
+  {
+    "version": "1.60.0",
+    "date": "2025-12-23T19:55:41.466355488Z",
+    "sha256": "1y53y9zf4cx5fnscc7faaf02kmqydbg93irsmp0zl5pfg20wb2c1"
+  },
+  {
+    "version": "1.59.0",
+    "date": "2025-12-17T15:05:31.312501926Z",
+    "sha256": "181cich0qyn0gq74flwrfjvzfxxqq9wh9ijjjmfy4y7l1rhfax8a"
+  },
+  {
+    "version": "1.58.1",
+    "date": "2025-12-11T20:56:49.013856138Z",
+    "sha256": "0gsr42ad9485mgbipnnjkwvj7jjfd4i26dlh7s1sb440vhxcvin5"
+  },
+  {
+    "version": "1.58.0",
+    "date": "2025-12-11T18:18:33.739401576Z",
+    "sha256": "11ksp9acrl9lwsdpy79bni03kp5asbh0vh3chm5ghl4gminr2xgs"
+  },
+  {
+    "version": "1.57.1",
+    "date": "2025-12-11T13:15:16.980719115Z",
+    "sha256": "0j20xdgb43nks0dlfb09z10b9vyq2bw9cs2pspx22xisxd4sspl5"
+  },
+  {
+    "version": "1.57.0",
+    "date": "2025-12-01T14:40:13.998169443Z",
+    "sha256": "0gdsbwdvk0pdxbs8nmhlnp9nc172nraja794c2fwgq0ngcc70ab2"
+  },
+  {
+    "version": "1.56.2",
+    "date": "2025-11-18T11:31:35.388579118Z",
+    "sha256": "09j1hppxb0gpcbhp5jgimc6arwb8wxlvbfr99bqjwk3gz4qvfk9k"
+  },
+  {
+    "version": "1.56.1",
+    "date": "2025-11-14T08:19:06.344169723Z",
+    "sha256": "0ydpxn488h5dhv2kp84jnpn2542h4c0lqndg8gx1bvp8k9wc817q"
+  },
+  {
+    "version": "1.56.0",
+    "date": "2025-11-12T18:03:07.98666894Z",
+    "sha256": "1879y5xk3xnqpzy504mv9nfnxv4jx4mlsh4vn7m8gya07pr69z1p"
+  },
+  {
+    "version": "1.55.0",
+    "date": "2025-11-10T17:30:16.533326212Z",
+    "sha256": "0grvz71mhm7pqp96q60plz3swgyn98ibqg4ld5j01pv37ylq8cxc"
+  },
+  {
+    "version": "1.54.1",
+    "date": "2025-11-10T15:43:21.273120878Z",
+    "sha256": "1jcpyvb5z3dslnv40bpbxz56p7lbw3l1rss0m4a3kshaa9gkh84j"
+  },
+  {
+    "version": "1.54.0",
+    "date": "2025-11-09T15:02:13.115683752Z",
+    "sha256": "1azvxifpacb02xpjw5pwgw0rw1j9wd9x93f3xc2p5is9jmx4kaip"
+  },
+  {
+    "version": "1.53.2",
+    "date": "2025-11-05T14:06:28.617282276Z",
+    "sha256": "1s83mc4yijrbiqrmxgp0b5g5iyc74h8phz5jl9wcrvdlbiw1xmr5"
+  },
+  {
+    "version": "1.53.1",
+    "date": "2025-11-04T22:10:39.560743326Z",
+    "sha256": "0pfkx3dsh2ydmwkcax8xmxs68s7d15f13pbg9wvfjvm531xk5b1g"
+  },
+  {
+    "version": "1.53.0",
+    "date": "2025-11-04T20:49:20.680687139Z",
+    "sha256": "0mb7dj6zvwyqq59568czhc33jig4c7hh607dr32ri3mdpcphg3zw"
+  },
+  {
+    "version": "1.52.10",
+    "date": "2025-11-04T15:39:00.414789912Z",
+    "sha256": "1rxjxn8iny366jlhvdy2f360qdnwmb8hya6q4nknma5fzcycqjnc"
+  },
+  {
+    "version": "1.52.9",
+    "date": "2025-11-04T13:36:02.56407278Z",
+    "sha256": "183qc4j0vybna6xdb9cyvjw6jkwxqxydzj91f6l1000990r7gy0w"
+  },
+  {
+    "version": "1.52.8",
+    "date": "2025-11-03T08:12:27.113179125Z",
+    "sha256": "1ac3p32l38g2jl8js5c3514pxbjc2brfgn13rpw5vdjwckbbwks9"
+  },
+  {
+    "version": "1.52.7",
+    "date": "2025-11-02T19:55:58.815738248Z",
+    "sha256": "1370ivvxw7h6nzcnzwb3ilcicb27w1rvg2i73zsp6iis689nb6j7"
+  },
+  {
+    "version": "1.52.6",
+    "date": "2025-11-01T10:44:34.344146106Z",
+    "sha256": "11maq5ja623bxsjp19a7n9dcnd37cp051jkggr44ybjmgjrmjz03"
+  }
+]

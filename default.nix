@@ -18,7 +18,7 @@ let
         { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 5; }
         { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.v0-17-0 {}"; check = num_docs 39; }
         { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.v0-18-0 {}"; check = num_docs 40; }
-        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 66; }
+        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 81; }
         { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 20; }
         { name = "semaphore"; spec = "hex.k8s.semaphore.version.latest {}"; check = num_docs 9; }
         { name = "netbox"; spec = "hex.k8s.netbox.version.latest {}"; check = num_docs 33; }
