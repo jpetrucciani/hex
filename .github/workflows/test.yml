@@ -10,4 +10,4 @@ jobs:
           install_options: --no-daemon
       - run: |
           nix build .#test
-          ./result/bin/test --jobs 1
+          ./result/bin/test
