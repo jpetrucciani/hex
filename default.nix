@@ -57,12 +57,12 @@ let
     in
     pkgs.writers.writeBashBin "test" ''
       ${pkgs.parallel}/bin/parallel \
-        --jobs 0 \
         --will-cite \
         --halt now,fail=1 \
         --keep-order \
         --line-buffer \
         --color \
+        "$@" \
         ::: ${pkgs.lib.concatStringsSep " " test_scripts}
     '';
 in
