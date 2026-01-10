@@ -18,6 +18,10 @@ This module contains helm charts under the [grafana](https://grafana.com/) obser
 
 TODO
 
+### [open-webui/](./open-webui/)
+
+[open-webui](https://github.com/open-webui/open-webui) is a user-friendly AI interface
+
 ### [airbyte.nix](./airbyte.nix)
 
 a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipeline tool
@@ -113,10 +117,6 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 ### [odoo.nix](./odoo.nix)
 
 This module contains an [odoo](https://github.com/odoo/odoo) chart
-
-### [open-webui.nix](./open-webui.nix)
-
-[open-webui](https://github.com/open-webui/open-webui) is a user-friendly AI interface
 
 ### [otf.nix](./otf.nix)
 

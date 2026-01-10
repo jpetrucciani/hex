@@ -33,6 +33,7 @@ let
           check = num_docs 30;
         }
         { name = "coroot-node-agent"; spec = ''hex.k8s.coroot.node-agent.version.latest {}''; check = num_docs 1; }
+        { name = "open-webui"; spec = "hex.k8s.open-webui.version.latest {}"; check = num_docs 14; }
       ];
       test_case = x:
         let
@@ -49,12 +50,20 @@ let
           ${log "exit code: $exit_code"}
           ${log "num docs: $num_docs"}
           ${x.check or ""}
+          rm "$rendered"
+          exit $exit_code
         '';
-      test_script = ''
-        ${pkgs.lib.concatStringsSep "\n" (map test_case tests)}
-        exit 0
-      '';
+      test_scripts = map (x: pkgs.writeShellScript "test-${x.name}" (test_case x)) tests;
     in
-    pkgs.writers.writeBashBin "test" test_script;
+    pkgs.writers.writeBashBin "test" ''
+      ${pkgs.parallel}/bin/parallel \
+        --jobs 0 \
+        --will-cite \
+        --halt now,fail=1 \
+        --keep-order \
+        --line-buffer \
+        --color \
+        ::: ${pkgs.lib.concatStringsSep " " test_scripts}
+    '';
 in
 hex // { inherit deps test; }
