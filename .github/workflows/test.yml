@@ -6,4 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v31
-      - run: nix run .#test -- --jobs 1
+        with:
+          install_options: --no-daemon
+      - run: |
+          nix build .#test
+          ./result/bin/test --jobs 1
