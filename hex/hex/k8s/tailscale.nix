@@ -115,6 +115,8 @@ let
         , tailscale_image_base ? defaults.tailscale_image_base
         , tailscale_image_tag ? defaults.tailscale_image_tag
         , tailscale_stateful_filtering ? false
+        , tailscale_firewall_mode ? null
+        , tailscale_extra_env_attr ? { }
         , tailscale_extra_args ? [ ]
         , busybox_image ? "${busybox_image_base}:${busybox_image_tag}"
         , busybox_image_base ? defaults.busybox_image_base
@@ -135,7 +137,7 @@ let
           ${toYAMLDoc (role {inherit name namespace;})}
           ${toYAMLDoc (role-binding {inherit name namespace;})}
           ${toYAMLDoc (network-policy {inherit name namespace cidr;})}
-          ${toYAMLDoc (deployment {inherit name namespace destination_ip tailscale_image busybox_image tailscale_stateful_filtering tailscale_extra_args all_tags cpu memory userspace exit_node subnet_router_cidr bind_local hostAliases;})}
+          ${toYAMLDoc (deployment {inherit name namespace destination_ip tailscale_image busybox_image tailscale_stateful_filtering tailscale_extra_args all_tags cpu memory userspace exit_node subnet_router_cidr bind_local hostAliases tailscale_firewall_mode tailscale_extra_env_attr;})}
         '';
       deployment =
         { name
@@ -144,8 +146,8 @@ let
         , tailscale_image
         , tailscale_stateful_filtering
         , tailscale_firewall_mode
-        , tailscale_extra_args
         , tailscale_extra_env_attr
+        , tailscale_extra_args
         , busybox_image
         , all_tags
         , cpu
