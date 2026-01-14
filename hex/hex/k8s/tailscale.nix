@@ -143,7 +143,9 @@ let
         , destination_ip
         , tailscale_image
         , tailscale_stateful_filtering
+        , tailscale_firewall_mode
         , tailscale_extra_args
+        , tailscale_extra_env_attr
         , busybox_image
         , all_tags
         , cpu
@@ -205,13 +207,14 @@ let
                     env = with hex.defaults.env; [
                       pod_ip
                       pod_name
-                    ] ++ (hex.envAttrToNVP {
+                    ] ++ (hex.envAttrToNVP ({
                       TS_KUBE_SECRET = name;
                       TS_USERSPACE = boolToString userspace;
                       TS_EXTRA_ARGS = ts_extra_args;
                       ${ifNotNull destination_ip "TS_DEST_IP"} = destination_ip;
                       ${ifNotNull subnet_router_cidr "TS_ROUTES"} = subnet_router_cidr;
-                    });
+                      ${ifNotNull tailscale_firewall_mode "TS_DEBUG_FIREWALL_MODE"} = tailscale_firewall_mode;
+                    } // tailscale_extra_env_attr));
                     resources = {
                       requests = {
                         inherit cpu memory;
