@@ -2,7 +2,7 @@
 let
   litellm =
     { name ? "litellm"
-    , version ? "v1.80.15"
+    , version ? "v1.81.0"
     , namespace ? "default"
     , image_registry ? "ghcr.io/berriai"
     , image_base ? "litellm-database"
