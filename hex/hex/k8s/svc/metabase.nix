@@ -6,7 +6,7 @@ let
     , namespace ? "default"
     , image ? "${image_base}:${image_tag}"
     , image_base ? "metabase/metabase"
-    , image_tag ? "v0.58.3"
+    , image_tag ? "v0.58.4"
     , replicas ? 1
     , cpuRequest ? "0.5"
     , cpuLimit ? "1.0"
