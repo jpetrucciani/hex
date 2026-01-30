@@ -31,7 +31,6 @@ let
     inherit aws;
     inherit services svc;
     addons = import ./k8s/addons.nix params;
-    cert-manager = import ./k8s/cert-manager.nix params;
     cron = import ./k8s/cron.nix params;
     helm = import ./k8s/helm.nix params;
     nginx-ingress = import ./k8s/nginx-ingress.nix params;

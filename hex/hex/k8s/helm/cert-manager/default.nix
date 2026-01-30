@@ -1,32 +1,19 @@
-# [cert-manager](https://github.com/cert-manager/cert-manager/) adds certificates and certificate issuers as resource types in Kubernetes clusters, and simplifies the process of obtaining, renewing and using those certificates.
+# [cert-manager](https://github.com/cert-manager/cert-manager) is a way to automatically provision and manage TLS certificates in Kubernetes
 { hex, ... }:
 let
   inherit (hex) toYAMLDoc;
+  name = "cert-manager";
+  defaults = {
+    inherit name;
+    namespace = name;
+  };
+  chart_url = version: "https://charts.jetstack.io/charts/cert-manager-${version}.tgz";
+  values_url = "https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/values.yaml";
+  chart = hex.k8s._.chart { inherit defaults chart_url; };
+  cert-manager = {
+    inherit defaults chart chart_url values_url;
+    version = hex.k8s._.versionMap { inherit chart; versionFile = ./cert-manager.json; };
 
-  cert-manager = rec {
-    defaults = {
-      name = "cert-manager";
-      namespace = "cert-manager";
-      version = "1.9.1";
-      sha256 = "0jr4ifqv25fagjgjp8m5gk5cb00h7ppqza3nzr8gwd4dmx62kss7";
-    };
-    version = rec {
-      _v = v: s: chart.build { version = v; sha256 = s; };
-      v1-7-1 = _v "1.7.1" "00pp4cplf018a89awj2wmy8q86926qq5y1zpmgkc1djvdpmxrj5d";
-      v1-9-1 = _v defaults.version defaults.sha256;
-      latest = v1-9-1;
-    };
-    chart_url = version: "https://github.com/cert-manager/cert-manager/releases/download/v${version}/cert-manager.yaml";
-    chart = rec {
-      build = { version ? defaults.version, sha256 ? defaults.sha256 }: ''
-        ---
-        ${setup {inherit version sha256;}}
-      '';
-      setup = { version, sha256 }: builtins.readFile (builtins.fetchurl {
-        inherit sha256;
-        url = chart_url version;
-      });
-    };
     certificate = rec {
       build = args: toYAMLDoc (cert args);
       cert = { name, namespace ? "default", issuer ? "letsencrypt-prod", dns_names ? [ ] }: {

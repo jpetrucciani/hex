@@ -34,6 +34,8 @@ let
         }
         { name = "coroot-node-agent"; spec = ''hex.k8s.coroot.node-agent.version.latest {}''; check = num_docs 1; }
         { name = "open-webui"; spec = "hex.k8s.open-webui.version.latest {}"; check = num_docs 14; }
+        { name = "cert-manager"; spec = "hex.k8s.cert-manager.version.latest {}"; check = num_docs 46; }
+        { name = "redpanda"; spec = "hex.k8s.redpanda.version.latest {}"; check = num_docs 9; }
       ];
       test_case = x:
         let
@@ -58,7 +60,6 @@ let
     pkgs.writers.writeBashBin "test" ''
       ${pkgs.parallel}/bin/parallel \
         --will-cite \
-        --halt now,fail=1 \
         --keep-order \
         --line-buffer \
         --color \

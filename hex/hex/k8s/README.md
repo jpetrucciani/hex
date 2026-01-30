@@ -22,10 +22,6 @@ various cluster addons [out of date]
 
 This module contains k8s helpers for AWS related functionality
 
-### [cert-manager.nix](./cert-manager.nix)
-
-[cert-manager](https://github.com/cert-manager/cert-manager/) adds certificates and certificate issuers as resource types in Kubernetes clusters, and simplifies the process of obtaining, renewing and using those certificates.
-
 ### [cron.nix](./cron.nix)
 
 This hex spell allows concise cron job declaration in Kubernetes.

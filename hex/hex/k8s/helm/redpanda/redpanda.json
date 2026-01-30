@@ -1,0 +1,72 @@
+[
+  {
+    "version": "25.3.1",
+    "date": "2025-12-12T17:20:04.579886197Z",
+    "sha256": "1gpkg8ny1jzn0jxbfnbc1rd3nb8pa1xlf5d9ir7r6rahasbnjwh2"
+  },
+  {
+    "version": "25.2.1",
+    "date": "2025-12-03T16:08:34.681669865Z",
+    "sha256": "1kwdfs9l1qgq78xl4qb89a1vqm9x805df6d4j93sq5yg3lsz8wk4"
+  },
+  {
+    "version": "2.3.15-24.3.18",
+    "date": "2025-11-25T11:24:39.101234518Z",
+    "sha256": "0dzf234fv6k80kcrzhkldr1gz86vixxclz9ddl631cv47niq7rzr"
+  },
+  {
+    "version": "2.4.6",
+    "date": "2025-11-17T21:00:15.860911427Z",
+    "sha256": "0mcnn4iz0rv404jdb01zy8b7vpxddbqsw2fyvszcbcp6q8lf8pic"
+  },
+  {
+    "version": "25.1.4",
+    "date": "2025-11-06T11:24:03.664509453Z",
+    "sha256": "16dp4cl1srnacxbiaznc5s6yjmdlr90mqvb7ifmz07x0bjbgpd7w"
+  },
+  {
+    "version": "25.1.3",
+    "date": "2025-08-07T22:43:35.240035769Z",
+    "sha256": "1b2y3q4di6hjksj1hy3dkgdzsg7kkhqk2rmlcs6hs3rhacvaf36x"
+  },
+  {
+    "version": "25.1.2",
+    "date": "2025-07-31T09:15:08.312850387Z",
+    "sha256": "0r6m7kzw6z069kdffgnn9218mc7l5j515nljkbr9j2s0gxhdmh51"
+  },
+  {
+    "version": "25.1.1",
+    "date": "2025-07-29T16:30:14.945607821Z",
+    "sha256": "01p0jn8x4slmqjpgjy8jdxl2l0kp7vn8h08g950dw8af93vn0wh9"
+  },
+  {
+    "version": "2.4.5",
+    "date": "2025-07-18T19:48:57.547736504Z",
+    "sha256": "1q8sragfpcg6i9bqc14rri7ah29b8mr9fxwzz44lzp0im9z7yakn"
+  },
+  {
+    "version": "2.3.14-24.3.17",
+    "date": "2025-07-16T10:43:20.387596022Z",
+    "sha256": "04zdzhx8jv898ck7rsga0vyydhkcsl5xrpw5s991x6nfqii0yv64"
+  },
+  {
+    "version": "2.4.4",
+    "date": "2025-07-15T19:47:48.307687718Z",
+    "sha256": "15631v6vfnqxhdxf9v4904zmdkcbhmdkbgl75n7cskc6zicib9r6"
+  },
+  {
+    "version": "2.3.13-24.3.17",
+    "date": "2025-07-15T14:55:08.297637517Z",
+    "sha256": "178vhzvnns7r9jar3qcjmqvwc7dipsmi4yj0f6ws7yppqlgdw9ck"
+  },
+  {
+    "version": "2.3.12-24.3.17",
+    "date": "2025-07-10T18:09:49.894344893Z",
+    "sha256": "0fr2gyzzikm6bsam70zlc04x5p8lfsfvhxw3dfqllxkzvfqndmvw"
+  },
+  {
+    "version": "2.4.3",
+    "date": "2025-07-10T10:43:13.334951047Z",
+    "sha256": "0x1ljkmy35j7d5r8c8s2c6rbkss1lh6c1i6vl5g58k0i59w3hdm4"
+  }
+]
