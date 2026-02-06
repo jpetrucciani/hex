@@ -2,6 +2,7 @@ name: check for chart updates
 on: { workflow_dispatch, schedule: [cron: '0 0 * * *'] }
 jobs:
   update:
+    name: chart version update [${{ matrix.attrs.attr }}]
     strategy:
       fail-fast: false
       matrix:
@@ -18,6 +19,12 @@ jobs:
           - attr: tempo
             cmd: chart_scan_tempo
             vfile: ./hex/hex/k8s/helm/grafana/tempo.json
+          - attr: cert-manager
+            cmd: chart_scan_cert-manager
+            vfile: ./hex/hex/k8s/helm/cert-manager/cert-manager.json
+          - attr: netbox
+            cmd: chart_scan_netbox
+            vfile: ./hex/hex/k8s/helm/netbox/netbox.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -36,9 +43,41 @@ jobs:
         with:
           delete-branch: true
           author: jacobi petrucciani <j@cobi.dev>
-          title: '[auto] chart update - (${{ matrix.attrs.attr }})'
-          commit-message: '[auto] chart update - (${{ matrix.attrs.attr }})'
+          title: '[auto] chart update (${{ matrix.attrs.attr }})'
+          commit-message: '[auto] chart update (${{ matrix.attrs.attr }})'
           branch: auto-chart-update-${{ matrix.attrs.attr }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      - if: ${{ steps.pr.outputs.pull-request-number }}
-        run: gh pr merge --auto --squash ${{ steps.pr.outputs.pull-request-url }}
+      - name: automerge
+        if: ${{ steps.pr.outputs.pull-request-number }}
+        env:
+          PR_URL: ${{ steps.pr.outputs.pull-request-url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          max_attempts=3
+          attempt=1
+          while (( attempt <= max_attempts )); do
+            echo "Attempt $attempt/$max_attempts: gh pr merge --auto --squash $PR_URL"
+            out="$(mktemp)"
+            err="$(mktemp)"
+            if gh pr merge --auto --squash "$PR_URL" >"$out" 2>"$err"; then
+              echo "merge succeeded"
+              cat "$out"
+              exit 0
+            fi
+            echo "merge failed"
+            cat "$err" >&2
+            if grep -q "Base branch was modified" "$err"; then
+              echo "detected base-branch race. updating PR branch with rebase, then retrying"
+              gh pr update-branch --rebase "$PR_URL"
+              sleep_time=$(( 2 + RANDOM % 4 ))
+              echo "sleeping ${sleep_time}s before retry"
+              sleep "$sleep_time"
+              attempt=$(( attempt + 1 ))
+              continue
+            fi
+            echo "non-retryable merge failure; exiting"
+            exit 1
+          done
+          echo "exceeded retries ($max_attempts)"
+          exit 1
