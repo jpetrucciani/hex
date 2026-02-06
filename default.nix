@@ -36,6 +36,8 @@ let
         { name = "open-webui"; spec = "hex.k8s.open-webui.version.latest {}"; check = num_docs 14; }
         { name = "cert-manager"; spec = "hex.k8s.cert-manager.version.latest {}"; check = num_docs 46; }
         { name = "redpanda"; spec = "hex.k8s.redpanda.version.latest {}"; check = num_docs 9; }
+        { name = "prefect-server"; spec = "hex.k8s.prefect.server.version.latest {}"; check = num_docs 8; }
+        { name = "prefect-worker"; spec = ''hex.k8s.prefect.worker.version.latest { valuesAttrs.worker = { apiConfig = "selfHostedServer"; config.workPool = "test"; selfHostedServerApiConfig.apiUrl="127.0.0.1"; }; }''; check = num_docs 4; }
       ];
       test_case = x:
         let
