@@ -57,7 +57,7 @@ jobs:
           max_attempts=3
           attempt=1
           while (( attempt <= max_attempts )); do
-            echo "Attempt $attempt/$max_attempts: gh pr merge --auto --squash $PR_URL"
+            echo "attempt $attempt/$max_attempts: gh pr merge --auto --squash $PR_URL"
             out="$(mktemp)"
             err="$(mktemp)"
             if gh pr merge --auto --squash "$PR_URL" >"$out" 2>"$err"; then
@@ -81,7 +81,7 @@ jobs:
               exit 1
             fi
             sleep_time=$(( 3 + RANDOM % 6 ))  # 3-8s
-            echo "Sleeping ${sleep_time}s before retry..."
+            echo "sleeping ${sleep_time}s before retry"
             sleep "$sleep_time"
             attempt=$(( attempt + 1 ))
           done
