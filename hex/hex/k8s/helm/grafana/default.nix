@@ -13,6 +13,7 @@ let
       inherit defaults;
       chart_url = version: _chart_url { inherit version; inherit (defaults) name; prefix = "helm-"; };
     };
+    values_url = "https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml";
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./loki.json; };
     # this agent is deprecated! use alloy instead!
     agent =
@@ -512,7 +513,7 @@ let
       inherit defaults;
       chart_url = version: _chart_url { inherit version; inherit (defaults) name; };
     };
-    # values: https://github.com/grafana/alloy/blob/main/operations/helm/charts/alloy/values.yaml
+    values = "https://github.com/grafana/alloy/blob/main/operations/helm/charts/alloy/values.yaml";
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./alloy.json; };
   };
   mimir = rec {
@@ -525,7 +526,7 @@ let
       inherit defaults;
       chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
     };
-    # values: https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml
+    values_url = "https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml";
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./mimir.json; };
   };
   tempo = rec {
@@ -538,7 +539,7 @@ let
       inherit defaults;
       chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
     };
-    # values: https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml
+    values = "https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml";
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./tempo.json; };
   };
   oncall = rec {

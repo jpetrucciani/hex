@@ -6,6 +6,7 @@
 let
   params = { inherit system pkgs; };
   hex = import ./hex params;
+  docsIndex = import ./hex/hex/k8s/docs-index.nix { inherit pkgs; };
   deps = import ./hex/hex/deps.nix { inherit pkgs; };
   test =
     let
@@ -72,4 +73,4 @@ let
         ::: ${pkgs.lib.concatStringsSep " " test_scripts}
     '';
 in
-hex // { inherit deps test; }
+hex // { inherit deps docsIndex test; }
