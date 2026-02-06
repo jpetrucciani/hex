@@ -1,0 +1,77 @@
+[
+  {
+    "version": "4.3.1",
+    "date": "2025-10-17T00:00:00Z",
+    "sha256": "19lb52x6crclba37cpw5ivj9laxxvk91kxjfs9xdcanrbnjgl30k"
+  },
+  {
+    "version": "4.3.0",
+    "date": "2025-10-07T00:00:00Z",
+    "sha256": "161flxwydqibzmgxp2nmp70089fgn0fblmvzc9r4w4ba0v85sn9n"
+  },
+  {
+    "version": "4.2.0",
+    "date": "2025-04-16T00:00:00Z",
+    "sha256": "1zzhp14fkn6yz0z0ard7b502iskj6nnmplylzk1wi90zc0j971jv"
+  },
+  {
+    "version": "4.1.0",
+    "date": "2025-01-15T00:00:00Z",
+    "sha256": "18pd1czabssqa4frwrp3pdnvz4ni7z8mq1jly8x9372h5l5zsizy"
+  },
+  {
+    "version": "4.0.0",
+    "date": "2024-11-07T00:00:00Z",
+    "sha256": "1ydb74i6zmqd06fsi4zffv03fnwk10zg8mrycidyyvqpwhy2y776"
+  },
+  {
+    "version": "3.3.8",
+    "date": "2024-07-31T00:00:00Z",
+    "sha256": "08ljg7py0fchgvigp4lf5z4br1z7y2aa1x49mh28drx0jpip3748"
+  },
+  {
+    "version": "3.3.7",
+    "date": "2024-04-09T00:00:00Z",
+    "sha256": "1aaf3pigxyvi0sxljpvia20hmrzg948bpjljh9yb8kjm7hmj60xa"
+  },
+  {
+    "version": "3.3.4",
+    "date": "2024-03-25T00:00:00Z",
+    "sha256": "0jr6dxsyh450am7jr96w6gg4hhzd6m5cihyj5pg1gf06vxp2ylil"
+  },
+  {
+    "version": "3.2.1",
+    "date": "2023-11-27T00:00:00Z",
+    "sha256": "144bbsb0j0zpfkj8bki0kikjjj1wvy98b250cdzq2rh8mkpcfyfd"
+  },
+  {
+    "version": "3.2.0",
+    "date": "2023-11-27T00:00:00Z",
+    "sha256": "1qzc8q8wjwjbm2ymdgxjsqyfkmqvjbnq4450dsfngp9adss1gslx"
+  },
+  {
+    "version": "3.1.0",
+    "date": "2023-09-29T00:00:00Z",
+    "sha256": "1aj4s6ykchfl59y5nid86kj389d6njl3ndp68gy5lm9wphvwiqw3"
+  },
+  {
+    "version": "3.0.3",
+    "date": "2023-08-29T00:00:00Z",
+    "sha256": "04k5cj6a0wqw45bhspcd6q662zbx6539d1wb0r81pdlssmjkf6pl"
+  },
+  {
+    "version": "3.0.2",
+    "date": "2023-08-17T00:00:00Z",
+    "sha256": "1l9r3sv74mnpyqv2lrizf714ai2znbvlqs9hxag0hymx3l8hayg1"
+  },
+  {
+    "version": "3.0.1",
+    "date": "2023-08-15T00:00:00Z",
+    "sha256": "1q7zscj5c92gy30bzklnx58v5y0zwx5hcxz5vxrmw7i9h6zqbqgw"
+  },
+  {
+    "version": "3.0.0",
+    "date": "2023-08-11T00:00:00Z",
+    "sha256": "0w3m7k0xgha59n50999nhgwyap8dgw3fz764q5l5sgh18kq0z8px"
+  }
+]

@@ -3,66 +3,17 @@
 let
   inherit (hex) attrIf ifNotEmptyAttr toYAMLDoc;
 
+  # NOTE: v0-17-0 and ONWARDS REQUIRES v1 instead of v1beta!
   _apiVersion = beta: if beta then "external-secrets.io/v1beta1" else "external-secrets.io/v1";
-
   external-secrets = rec {
     defaults = {
       name = "external-secrets";
       namespace = "external-secrets";
       store_name = "gsm";
     };
-    version = rec {
-      _v = hex.k8s._.version chart;
-      latest = v1-3-2;
-      v1-3-2 = _v "1.3.2" "1qmzwnpgm383g1p6dg267z7wkfnpg5jxfwgrwmxm0m6m4s818fdf"; # 2026-02-03
-      v1-3-1 = _v "1.3.1" "0031vckpgkirf2mnc1875r6m8asyx2z5783m837qlv7z09p9b3q3"; # 2026-01-23
-      v1-2-1 = _v "1.2.1" "05dmp8lh0dpm84xs3s0m3jc0jd7gkgmbf4qr0qhib8wcdbzi1lzc"; # 2026-01-02
-      v1-2-0 = _v "1.2.0" "1cyn25kdwzlnkn4ppl43gs7yssl5sjg5vmmm61yp9g4n873ijmpj"; # 2025-12-19
-      v1-1-1 = _v "1.1.1" "0x73d6jk47lq3nz8gnkah9vqv7sx0ply75vvavai3iv558mgg7y9"; # 2025-12-05
-      v1-1-0 = _v "1.1.0" "17m8mcyaqxd3ybggvafc2v5r727yw3npjm62xwgqw55ll6d43r78"; # 2025-11-21
-      v1-0-0 = _v "1.0.0" "1x7dikk79gmi2sbnvrij84ayp48b07iwgnvdj4fgzqnkm4am3vji"; # 2025-11-07
-      v0-20-4 = _v "0.20.4" "0zvh868h8q0b1rxf7400z0lqcj38xa6h95cpbmw86hk2v7riw8l8"; # 2025-10-24
-      v0-20-3 = _v "0.20.3" "1q41ngnkp9zg7maqb7ajbfkymxkhl9z8z5wrvkzf6dwccd0999mr"; # 2025-10-14
-      v0-20-2 = _v "0.20.2" "02gkbdmvchjdcx99xvii0a2j41y4nvd9lcfi8jy2lbl97dq4hwhz"; # 2025-10-03
-      v0-20-1 = _v "0.20.1" "14k2356aywm44bvv29mva9x1nxyvfpprg4ykxv9x0bg1j6krrqkw"; # 2025-09-22
-      v0-19-2 = _v "0.19.2" "03ic32i66kynza028q93bkrw335d2f0rzjhm0i26v7yfaxi4pn89"; # 2025-08-13
-      v0-19-1 = _v "0.19.1" "1rdswghhngr8k7rc8w2xk5kpys3pqr3lj8yyx9v7rpp9lirwpksw"; # 2025-08-08
-      v0-19-0 = _v "0.19.0" "0m182w9452ca0v9kzirfrb91i1js68v0056f9bm72r6v6hgbifg0"; # 2025-08-02
-      v0-18-2 = _v "0.18.2" "1r783i6i2bphnn2mycsw3qmcm02j0sb3a9gnq331zdl65bzj7c0z"; # 2025-07-03
-      v0-18-1 = _v "0.18.1" "08dcppzgsnwyca72s9sp4zkkvs0wsa6zm97m8ydxdfpy3llmjzk1"; # 2025-06-26
-      v0-18-0 = _v "0.18.0" "08gl4iyxnds9xfdapgr5101n5irjvg4ynkxs1prnn621yxnb9hdl"; # 2025-06-17
-      v0-17-0 = _v "0.17.0" "0bcn9iwd6i7jfsmcjwly5i3h3wlbcdbnk4b8phm1dvsg545kph1q"; # 2025-05-15  # THIS RELEASE ONWARDS REQUIRES v1 instead of v1beta!
-      v0-16-2 = _v "0.16.2" "0h4gbwg9yk9r7xrrn5zsh3478yc241idqa12m939hnmkc1pni95a"; # 2025-05-07
-      v0-16-1 = _v "0.16.1" "0dpv9529caksc0mpjmd0gqpfhvzgka9a9d04nw647qhpvxqn6ajc"; # 2025-04-16
-      v0-16-0 = _v "0.16.0" "1wbr0v0wi0sfiyxsbzcwwjn9c5j0vs4z1w12glwf22101q1ci8z5"; # 2025-04-14
-      v0-15-1 = _v "0.15.1" "0h2w9byijx4k91f2aznzilcd846q94sknx4ss3l4cv7vnn4xrg4q"; # 2025-03-28
-      v0-15-0 = _v "0.15.0" "16pymmyh8gpi704wzyd600kp7722wbxh3r4fss034ya4lxkgv6lb"; # 2025-03-19
-      v0-14-4 = _v "0.14.4" "1v3mk38n92sza0k1smm8fbn35f786xf27h731jfzgpgkmycwamjy"; # 2025-03-10
-      v0-14-3 = _v "0.14.3" "0i23y7fgbw06d0q5pcizlgfwbs7dhxdf1afc2m0ihjfn2j563avy"; # 2025-02-26
-      v0-14-2 = _v "0.14.2" "0dyib0qrb7cxq42qkwi6mp72vi329xrp3ip9bh4vaalj0ks3fm5g"; # 2025-02-13
-      v0-14-1 = _v "0.14.1" "1vfbwlvpv6ckycsf8iyvdhkz1m4bazbpb47fp3qkxsaa1vi88lg7"; # 2025-02-08
-      v0-14-0 = _v "0.14.0" "1xq6w4h0g2ibq4aaywqv843bzr0p5yr7ml4a3n264cmydqij77kp"; # 2025-02-04
-      v0-13-0 = _v "0.13.0" "1ly3iqvs2yxipjb3zq47id78nwyggzkpszq6w8h64lm1mash6ih9"; # 2025-01-21
-      v0-12-1 = _v "0.12.1" "0vlng3x6ynyhkxa6k9jxfg3fy56iwb6mbca6v2lqjka2d55p7a0g"; # 2024-12-23
-      v0-11-0 = _v "0.11.0" "09j65l2h0g7cdlp1iif18y8c51vndkm1pkjw1kxrx26g82373lbn"; # 2024-12-02
-      v0-10-7 = _v "0.10.7" "0wv50rsdgp2sghkgkwr2ryzbvfbcnmx0ccgm3vvflkm2yy062v8y"; # 2024-11-23
-      v0-10-6 = _v "0.10.6" "1qk8y5kml3dp394j59ffai5b3npbby1410sgf20smdslq3fx4a8i"; # 2024-11-20
-      v0-10-5 = _v "0.10.5" "1873pfq6l6xjp2kb7x10fzcj0iljfdvgnbv0dml2s7vcmsa9y5i9"; # 2024-10-25
-      v0-10-4 = _v "0.10.4" "09r20z96b8rzh6hnl172775na3wgrcn17x2kblagmgrwbzdidwvd"; # 2024-09-25
-      v0-9-20 = _v "0.9.20" "1i08zphbasfk4nkfr0fc0hixbqqpd3x4a1chxcl88xbgs7gjl3xy"; # 2024-07-06
-      v0-9-19 = _v "0.9.19" "11j5n878b0b2ncn3fd1nilpl6s0ir6lxz9v14hn0dnplybkbr1qg"; # 2024-06-04
-      v0-9-18 = _v "0.9.18" "0jiva7qgnsb4d1711xffh9ccbs78qjdhw98iq33sg3lmyqk3hjsh"; # 2024-05-14
-      v0-9-17 = _v "0.9.17" "0scsqcc5sfqd5yhyhi1c78clcs7szs1gfas7al05qjnjbb3hvbis"; # 2024-05-01
-      v0-9-16 = _v "0.9.16" "1lib2rf12iw4spk6qkp8wsxm35hvfxnb4i0awkf12ds3ddxs84cr"; # 2024-04-18
-      v0-9-14 = _v "0.9.14" "0r0g9bv30qywlw1qlk4i581pvsmrmc5bxp7nxbm1lmqq6a6ihv16"; # 2024-03-30
-      v0-9-13 = _v "0.9.13" "00mmhqy70n9q512zgf15kpcn22ri9vzx9bx782j3pz59ppa849i4"; # 2024-02-17
-      v0-9-12 = _v "0.9.12" "1pvg8qxsih5yvn3g5k1ampr80vcc131vspmx4diw9m19bwnrcvhw"; # 2024-02-09
-      v0-9-11 = _v "0.9.11" "1aij5xw944gc18whmfqh9qz483c5xlyvv3bl0r7j1i234vkl7zkj"; # 2023-12-25
-      v0-8-7 = _v "0.8.7" "0q8pzcxix151b3jsiszz1la6fl98nkwxi7bimhm2zyy0ws532lc0";
-      v0-7-2 = _v "0.7.2" "17isdcbb94kqwxg0v0mfj1ypjiqn3airghnd1bswlg609w73a8h4";
-      v0-6-1 = _v "0.6.1" "02kacs4wdp5q9dlpndkzj4fxi30kpl6gxfqalgq5q9y3vr3l5gwv";
-      v0-5-9 = _v "0.5.9" "0mxm237a7q8gvxvpcqk6zs0rbv725260xdvhd27kibirfjwm4zxl";
-    };
+    values_url = "https://github.com/external-secrets/external-secrets/blob/main/deploy/charts/external-secrets/values.yaml";
+    chart = hex.k8s._.chart { inherit defaults chart_url; };
+    version = hex.k8s._.versionMap { inherit chart; versionFile = ./external-secrets.json; };
     chart_url = version: hex.k8s.helm.charts.url.github {
       inherit version;
       org = "external-secrets";
@@ -70,7 +21,6 @@ let
       repoName = "helm-chart";
       chartName = "external-secrets";
     };
-    chart = hex.k8s._.chart { inherit defaults chart_url; };
     cluster_store = rec {
       build =
         { aws ? false

@@ -28,6 +28,15 @@ jobs:
           - attr: redpanda
             cmd: chart_scan_redpanda
             vfile: ./hex/hex/k8s/helm/redpanda/redpanda.json
+          - attr: external-secrets
+            cmd: chart_scan_external-secrets
+            vfile: ./hex/hex/k8s/helm/external-secrets/external-secrets.json
+          - attr: questdb
+            cmd: chart_scan_questdb
+            vfile: ./hex/hex/k8s/helm/questdb/questdb.json
+          - attr: jupyterhub
+            cmd: chart_scan_jupyterhub
+            vfile: ./hex/hex/k8s/helm/jupyterhub/jupyterhub.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

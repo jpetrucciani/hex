@@ -37,6 +37,19 @@
                 hexpkgs.hex
                 hexpkgs.hexcast
                 hexpkgs.nixrender
+
+                (pkgs.writers.writeBashBin "cursed_convert" ''
+                  ${pkgs.gawk}/bin/awk '
+                    match($0, /_v[[:space:]]+"([^"]+)"[[:space:]]+"([^"]+)"/, m) {
+                      ver=m[1]; sha=m[2];
+                      date="null"
+                      if (match($0, /#[[:space:]]*([0-9]{4}-[0-9]{2}-[0-9]{2})/, d)) {
+                        date="\"" d[1] "T00:00:00Z\""
+                      }
+                      printf "{\"version\":\"%s\",\"date\":%s,\"sha256\":\"%s\"}\n", ver, date, sha
+                    }
+                  ' "$1" | ${pkgs.jq}/bin/jq -s .
+                '')
               ] ++ [
                 (pog {
                   name = "docs";

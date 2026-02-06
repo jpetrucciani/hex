@@ -6,9 +6,21 @@ helm based hex modules
 
 ## In this directory
 
+### [cert-manager/](./cert-manager/)
+
+[cert-manager](https://github.com/cert-manager/cert-manager) is a way to automatically provision and manage TLS certificates in Kubernetes
+
+### [external-secrets/](./external-secrets/)
+
+[external-secrets](https://github.com/external-secrets/external-secrets) reads information from a third-party service like AWS Secrets Manager and automatically injects the values as Kubernetes Secrets.
+
 ### [grafana/](./grafana/)
 
 This module contains helm charts under the [grafana](https://grafana.com/) observability umbrella. This includes things like [loki](https://github.com/grafana/loki), [mimir](https://github.com/grafana/mimir), and [oncall](https://github.com/grafana/oncall).
+
+### [jupyterhub/](./jupyterhub/)
+
+[jupyterhub](https://github.com/jupyterhub/jupyterhub) is a platform for hosting Jupyter notebooks for many users
 
 ### [netbox/](./netbox/)
 
@@ -21,6 +33,18 @@ TODO
 ### [open-webui/](./open-webui/)
 
 [open-webui](https://github.com/open-webui/open-webui) is a user-friendly AI interface
+
+### [prefect/](./prefect/)
+
+This module contains [prefect](https://github.com/PrefectHQ/Prefect) charts
+
+### [questdb/](./questdb/)
+
+This module contains a [questdb](https://github.com/questdb/questdb) chart
+
+### [redpanda/](./redpanda/)
+
+This module contains a [redpanda](https://github.com/redpanda-data/redpanda) chart
 
 ### [airbyte.nix](./airbyte.nix)
 
@@ -62,10 +86,6 @@ This module contains a [csi-driver-smb](https://github.com/kubernetes-csi/csi-dr
 
 This module contains an [elastic operator](https://github.com/elastic/cloud-on-k8s/)
 
-### [external-secrets.nix](./external-secrets.nix)
-
-[external-secrets](https://github.com/external-secrets/external-secrets) reads information from a third-party service like AWS Secrets Manager and automatically injects the values as Kubernetes Secrets.
-
 ### [fission.nix](./fission.nix)
 
 [fission](https://github.com/fission/fission) is a serverless function platform for k8s
@@ -89,10 +109,6 @@ This module contains the helm chart for the [GitLab Kubernetes Executor](https:/
 ### [infisical.nix](./infisical.nix)
 
 This module contains an [infisical](https://github.com/Infisical/infisical) helm chart
-
-### [jupyterhub.nix](./jupyterhub.nix)
-
-[jupyterhub](https://github.com/jupyterhub/jupyterhub) is a platform for hosting Jupyter notebooks for many users
 
 ### [kong.nix](./kong.nix)
 
@@ -138,17 +154,9 @@ Helpers for [prometheus](https://github.com/prometheus/prometheus) related thing
 
 [pulp](https://github.com/pulp/pulp-operator) is a platform for managing RPMs and other software artifacts
 
-### [questdb.nix](./questdb.nix)
-
-This module contains a [questdb](https://github.com/questdb/questdb) chart
-
 ### [redis.nix](./redis.nix)
 
 [redis-operator](https://github.com/spotahome/redis-operator) creates/configures/manages high availability redis with sentinel automatic failover atop Kubernetes
-
-### [redpanda.nix](./redpanda.nix)
-
-This module contains a [redpanda](https://github.com/redpanda-data/redpanda) chart
 
 ### [robusta.nix](./robusta.nix)
 
