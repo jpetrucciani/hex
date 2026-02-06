@@ -1,0 +1,44 @@
+name: check for chart updates
+on: { workflow_dispatch, schedule: [cron: '0 0 * * *'] }
+jobs:
+  update:
+    strategy:
+      fail-fast: false
+      matrix:
+        attrs:
+          - attr: open-webui
+            cmd: chart_scan_open-webui
+            vfile: ./hex/hex/k8s/helm/open-webui/open-webui.json
+          - attr: loki
+            cmd: chart_scan_loki
+            vfile: ./hex/hex/k8s/helm/grafana/loki.json
+          - attr: mimir
+            cmd: chart_scan_mimir
+            vfile: ./hex/hex/k8s/helm/grafana/mimir.json
+          - attr: tempo
+            cmd: chart_scan_tempo
+            vfile: ./hex/hex/k8s/helm/grafana/tempo.json
+    runs-on: ubuntu-24.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.g7c.us
+            extra-trusted-public-keys = cache.g7c.us:dSWpE2B5zK/Fahd7npIQWM4izRnVL+a4LiCAnrjdoFY=
+      - run: nix run github:jpetrucciani/nix#${{ matrix.attrs.cmd }} -- -u ${{ matrix.attrs.vfile }}
+      - uses: peter-evans/create-pull-request@v8.1.0
+        id: pr
+        with:
+          delete-branch: true
+          author: jacobi petrucciani <j@cobi.dev>
+          title: '[auto] chart update - (${{ matrix.attrs.attr }})'
+          commit-message: '[auto] chart update - (${{ matrix.attrs.attr }})'
+          branch: auto-chart-update-${{ matrix.attrs.attr }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - if: ${{ steps.pr.outputs.pull-request-number }}
+        run: gh pr merge --auto --squash ${{ steps.pr.outputs.pull-request-url }}
