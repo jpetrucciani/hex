@@ -1,4 +1,4 @@
-{pkgs}:
+{ pkgs }:
 let
   inherit (builtins) attrNames concatLists filter fromJSON head length listToAttrs readDir readFile;
   inherit (pkgs.lib) hasSuffix removeSuffix sort unique;

@@ -21,7 +21,7 @@
         packages = hexpkgs;
         defaultPackage = hex.hex;
         lib = {
-          docsIndex = hex.docsIndex;
+          inherit (hex) docsIndex;
         };
 
         devShells = {
