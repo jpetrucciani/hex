@@ -7,36 +7,57 @@ jobs:
       fail-fast: false
       matrix:
         attrs:
-          - attr: open-webui
-            cmd: chart_scan_open-webui
-            vfile: ./hex/hex/k8s/helm/open-webui/open-webui.json
+          - attr: airflow
+            cmd: chart_scan_airflow
+            vfile: ./hex/hex/k8s/helm/airflow/airflow.json
+          - attr: cert-manager
+            cmd: chart_scan_cert-manager
+            vfile: ./hex/hex/k8s/helm/cert-manager/cert-manager.json
+          - attr: external-secrets
+            cmd: chart_scan_external-secrets
+            vfile: ./hex/hex/k8s/helm/external-secrets/external-secrets.json
+          - attr: gitlab-runner
+            cmd: chart_scan_gitlab-runner
+            vfile: ./hex/hex/k8s/helm/gitlab-runner/gitlab-runner.json
+          - attr: jupyterhub
+            cmd: chart_scan_jupyterhub
+            vfile: ./hex/hex/k8s/helm/jupyterhub/jupyterhub.json
           - attr: loki
             cmd: chart_scan_loki
             vfile: ./hex/hex/k8s/helm/grafana/loki.json
           - attr: mimir
             cmd: chart_scan_mimir
             vfile: ./hex/hex/k8s/helm/grafana/mimir.json
-          - attr: tempo
-            cmd: chart_scan_tempo
-            vfile: ./hex/hex/k8s/helm/grafana/tempo.json
-          - attr: cert-manager
-            cmd: chart_scan_cert-manager
-            vfile: ./hex/hex/k8s/helm/cert-manager/cert-manager.json
           - attr: netbox
             cmd: chart_scan_netbox
             vfile: ./hex/hex/k8s/helm/netbox/netbox.json
-          - attr: redpanda
-            cmd: chart_scan_redpanda
-            vfile: ./hex/hex/k8s/helm/redpanda/redpanda.json
-          - attr: external-secrets
-            cmd: chart_scan_external-secrets
-            vfile: ./hex/hex/k8s/helm/external-secrets/external-secrets.json
+          - attr: open-webui
+            cmd: chart_scan_open-webui
+            vfile: ./hex/hex/k8s/helm/open-webui/open-webui.json
+          - attr: otf
+            cmd: chart_scan_otf
+            vfile: ./hex/hex/k8s/helm/otf/otf.json
+          - attr: otf
+            cmd: chart_scan_otf
+            vfile: ./hex/hex/k8s/helm/otf/otf.json
+          - attr: prefect-server
+            cmd: chart_scan_prefect-server
+            vfile: ./hex/hex/k8s/helm/prefect/server.json
+          - attr: prefect-worker
+            cmd: chart_scan_prefect-worker
+            vfile: ./hex/hex/k8s/helm/prefect/worker.json
           - attr: questdb
             cmd: chart_scan_questdb
             vfile: ./hex/hex/k8s/helm/questdb/questdb.json
-          - attr: jupyterhub
-            cmd: chart_scan_jupyterhub
-            vfile: ./hex/hex/k8s/helm/jupyterhub/jupyterhub.json
+          - attr: redpanda
+            cmd: chart_scan_redpanda
+            vfile: ./hex/hex/k8s/helm/redpanda/redpanda.json
+          - attr: tempo
+            cmd: chart_scan_tempo
+            vfile: ./hex/hex/k8s/helm/grafana/tempo.json
+          - attr: traefik
+            cmd: chart_scan_traefik
+            vfile: ./hex/hex/k8s/helm/grafana/traefik.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

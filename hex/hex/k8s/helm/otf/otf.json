@@ -1,0 +1,37 @@
+[
+  {
+    "version": "0.3.20",
+    "date": "2025-07-24T00:00:00Z",
+    "sha256": "1bygm6swvw6vzqh97ak2jzv0yc0i3ywjhijajcbaipbp457in9pb"
+  },
+  {
+    "version": "0.3.19",
+    "date": "2025-05-26T00:00:00Z",
+    "sha256": "08apvp9ddc7hvm5f9i6y166zch3xly7xqvcv0hyccqbcp9wjhfd7"
+  },
+  {
+    "version": "0.3.18",
+    "date": "2025-05-18T00:00:00Z",
+    "sha256": "19n3s9j41xi5bcxr99ahkqvfh2zsipar2cydalcjm8pp711lrkj7"
+  },
+  {
+    "version": "0.3.17",
+    "date": "2025-04-25T00:00:00Z",
+    "sha256": "0r4zjb7y91v14p6qqfxirchy6h1p6mfjrzb10ja8n9npjjh4bvvd"
+  },
+  {
+    "version": "0.3.15",
+    "date": "2025-04-16T00:00:00Z",
+    "sha256": "1qgsw6jlp8w7zaxa5k0v3rhg9v6djdmx7g0pbz6g0b6c7r8f26ah"
+  },
+  {
+    "version": "0.3.14",
+    "date": "2025-01-03T00:00:00Z",
+    "sha256": "15f7imbsdmw31vbkm7lisyf4dzzbiql6glb9zsp3n07ihvi13v5n"
+  },
+  {
+    "version": "0.3.13",
+    "date": "",
+    "sha256": "0769y1554cgajpa19987xwwpg4pikgk8c0l69s6b5kpyyw3k2cjc"
+  }
+]

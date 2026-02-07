@@ -83,6 +83,9 @@ let
 in
 {
   __functor = _: metabase;
+  docs_meta = {
+    source = "https://github.com/metabase/metabase";
+  };
   updater =
     let
       inherit (hex.updater.utils) dockerhub_latest_tag;

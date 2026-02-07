@@ -5,3 +5,11 @@ result*
 node_modules/
 docs/.vitepress/dist
 docs/.vitepress/cache
+docs/reference/index.md
+docs/reference/chart-index.md
+docs/reference/svc-index.md
+docs/reference/generated-services-build.md
+docs/reference/generated-k8s-index.json
+docs/reference/charts/
+docs/reference/svc/
+docs/reference/helpers/

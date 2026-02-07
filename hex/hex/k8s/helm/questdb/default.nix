@@ -3,6 +3,9 @@
 { hex, ... }:
 let
   questdb = rec {
+    docs_meta = {
+      source = "https://github.com/questdb/questdb";
+    };
     defaults = {
       name = "questdb";
     };

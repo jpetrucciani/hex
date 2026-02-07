@@ -4,6 +4,9 @@ let
   # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/tags
   # https://hub.jupyter.org/helm-chart/
   jupyterhub = rec {
+    docs_meta = {
+      source = "https://github.com/jupyterhub/jupyterhub";
+    };
     defaults = {
       name = "jupyterhub";
       namespace = "jupyterhub";

@@ -6,6 +6,10 @@ helm based hex modules
 
 ## In this directory
 
+### [airflow/](./airflow/)
+
+[airflow](https://github.com/apache/airflow/) is a platform to programmatically author, schedule, and monitor workflows
+
 ### [cert-manager/](./cert-manager/)
 
 [cert-manager](https://github.com/cert-manager/cert-manager) is a way to automatically provision and manage TLS certificates in Kubernetes
@@ -13,6 +17,10 @@ helm based hex modules
 ### [external-secrets/](./external-secrets/)
 
 [external-secrets](https://github.com/external-secrets/external-secrets) reads information from a third-party service like AWS Secrets Manager and automatically injects the values as Kubernetes Secrets.
+
+### [gitlab-runner/](./gitlab-runner/)
+
+This module contains the helm chart for the [GitLab Kubernetes Executor](https://docs.gitlab.com/runner/executors/kubernetes.html).
 
 ### [grafana/](./grafana/)
 
@@ -30,6 +38,10 @@ This module contains helm charts under the [grafana](https://grafana.com/) obser
 
 TODO
 
+### [otf/](./otf/)
+
+[otf](https://github.com/jpetrucciani/otf) is an open source terraform cloud alternative
+
 ### [open-webui/](./open-webui/)
 
 [open-webui](https://github.com/open-webui/open-webui) is a user-friendly AI interface
@@ -46,13 +58,13 @@ This module contains a [questdb](https://github.com/questdb/questdb) chart
 
 This module contains a [redpanda](https://github.com/redpanda-data/redpanda) chart
 
+### [traefik/](./traefik/)
+
+[Traefik](https://github.com/traefik/traefik-helm-chart) is a modern HTTP reverse proxy and load balancer made to deploy microservices with ease.
+
 ### [airbyte.nix](./airbyte.nix)
 
 a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipeline tool
-
-### [airflow.nix](./airflow.nix)
-
-[airflow](https://github.com/apache/airflow/) is a platform to programmatically author, schedule, and monitor workflows
 
 ### [argocd.nix](./argocd.nix)
 
@@ -102,10 +114,6 @@ This module contains an [elastic operator](https://github.com/elastic/cloud-on-k
 
 [k8s gateway api](https://github.com/kubernetes-sigs/gateway-api) CRDs
 
-### [gitlab-runner.nix](./gitlab-runner.nix)
-
-This module contains the helm chart for the [GitLab Kubernetes Executor](https://docs.gitlab.com/runner/executors/kubernetes.html).
-
 ### [infisical.nix](./infisical.nix)
 
 This module contains an [infisical](https://github.com/Infisical/infisical) helm chart
@@ -133,10 +141,6 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 ### [odoo.nix](./odoo.nix)
 
 This module contains an [odoo](https://github.com/odoo/odoo) chart
-
-### [otf.nix](./otf.nix)
-
-[otf](https://github.com/jpetrucciani/otf) is an open source terraform cloud alternative
 
 ### [plane.nix](./plane.nix)
 
@@ -193,7 +197,3 @@ K8s Helm module for running a [StackStorm](https://stackstorm.com) cluster in HA
 ### [toolhive.nix](./toolhive.nix)
 
 [toolhive](https://github.com/stacklok/toolhive) makes deploying MCP servers easy, secure and fun
-
-### [traefik.nix](./traefik.nix)
-
-[Traefik](https://github.com/traefik/traefik-helm-chart) is a modern HTTP reverse proxy and load balancer made to deploy microservices with ease.

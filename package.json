@@ -5,7 +5,8 @@
     "vitepress": "^1.4.2"
   },
   "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs"
+    "docs:gen": "bun scripts/generate-docs.mjs",
+    "docs:dev": "bun run docs:gen && vitepress dev docs",
+    "docs:build": "bun run docs:gen && vitepress build docs"
   }
 }

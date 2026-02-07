@@ -20,6 +20,9 @@
       {
         packages = hexpkgs;
         defaultPackage = hex.hex;
+        lib = {
+          inherit (hex) docsIndex;
+        };
 
         devShells = {
           default = pkgs.mkShell {
