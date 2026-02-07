@@ -6,9 +6,17 @@ helm based hex modules
 
 ## In this directory
 
+### [airbyte/](./airbyte/)
+
+a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipeline tool
+
 ### [airflow/](./airflow/)
 
 [airflow](https://github.com/apache/airflow/) is a platform to programmatically author, schedule, and monitor workflows
+
+### [authentik/](./authentik/)
+
+[Authentik](https://github.com/goauthentik/authentik) is an open source IDP written in go
 
 ### [cert-manager/](./cert-manager/)
 
@@ -58,13 +66,13 @@ This module contains a [questdb](https://github.com/questdb/questdb) chart
 
 This module contains a [redpanda](https://github.com/redpanda-data/redpanda) chart
 
+### [semaphore/](./semaphore/)
+
+This module contains a [semaphore](https://github.com/semaphoreui/semaphore) chart
+
 ### [traefik/](./traefik/)
 
 [Traefik](https://github.com/traefik/traefik-helm-chart) is a modern HTTP reverse proxy and load balancer made to deploy microservices with ease.
-
-### [airbyte.nix](./airbyte.nix)
-
-a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipeline tool
 
 ### [argocd.nix](./argocd.nix)
 
@@ -73,10 +81,6 @@ a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipelin
 ### [argo-workflows.nix](./argo-workflows.nix)
 
 [argo-workflows](https://github.com/argoproj/argo-workflows) is a workflow engine for kubernetes
-
-### [authentik.nix](./authentik.nix)
-
-[Authentik](https://github.com/goauthentik/authentik) is an open source IDP written in go
 
 ### [coroot.nix](./coroot.nix)
 
@@ -169,10 +173,6 @@ Helpers for [prometheus](https://github.com/prometheus/prometheus) related thing
 ### [searxng.nix](./searxng.nix)
 
 [searxng](https://github.com/searxng/searxng/) is a free internet metasearch engine which aggregates results from various search services and databases
-
-### [semaphore.nix](./semaphore.nix)
-
-This module contains a [semaphore](https://github.com/semaphoreui/semaphore) chart
 
 ### [sentry.nix](./sentry.nix)
 

@@ -7,9 +7,15 @@ jobs:
       fail-fast: false
       matrix:
         attrs:
+          - attr: airbyte
+            cmd: chart_scan_airbyte
+            vfile: ./hex/hex/k8s/helm/airbyte/airbyte.json
           - attr: airflow
             cmd: chart_scan_airflow
             vfile: ./hex/hex/k8s/helm/airflow/airflow.json
+          - attr: authentik
+            cmd: chart_scan_authentik
+            vfile: ./hex/hex/k8s/helm/authentik/authentik.json
           - attr: cert-manager
             cmd: chart_scan_cert-manager
             vfile: ./hex/hex/k8s/helm/cert-manager/cert-manager.json
@@ -52,12 +58,15 @@ jobs:
           - attr: redpanda
             cmd: chart_scan_redpanda
             vfile: ./hex/hex/k8s/helm/redpanda/redpanda.json
+          - attr: semaphore
+            cmd: chart_scan_semaphore
+            vfile: ./hex/hex/k8s/helm/semaphore/semaphore.json
           - attr: tempo
             cmd: chart_scan_tempo
             vfile: ./hex/hex/k8s/helm/grafana/tempo.json
           - attr: traefik
             cmd: chart_scan_traefik
-            vfile: ./hex/hex/k8s/helm/grafana/traefik.json
+            vfile: ./hex/hex/k8s/helm/traefik/traefik.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
