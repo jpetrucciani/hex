@@ -1,67 +1,102 @@
 [
   {
+    "version": "4.3.2",
+    "date": "2025-12-13T02:48:05.70615957Z",
+    "sha256": "1i4c7kpryg7wqd8cgcgkb4rc81kcv3m20m22bibrr6k8q6za35ls"
+  },
+  {
     "version": "4.3.1",
-    "date": "2025-10-17T00:00:00Z",
+    "date": "2025-10-17T18:15:01.11745784Z",
     "sha256": "19lb52x6crclba37cpw5ivj9laxxvk91kxjfs9xdcanrbnjgl30k"
   },
   {
     "version": "4.3.0",
-    "date": "2025-10-07T00:00:00Z",
+    "date": "2025-10-07T19:27:40.211540048Z",
     "sha256": "161flxwydqibzmgxp2nmp70089fgn0fblmvzc9r4w4ba0v85sn9n"
   },
   {
     "version": "4.2.0",
-    "date": "2025-04-16T00:00:00Z",
+    "date": "2025-04-16T22:21:14.338649316Z",
     "sha256": "1zzhp14fkn6yz0z0ard7b502iskj6nnmplylzk1wi90zc0j971jv"
   },
   {
     "version": "4.1.0",
-    "date": "2025-01-15T00:00:00Z",
+    "date": "2025-01-15T19:25:24.888163331Z",
     "sha256": "18pd1czabssqa4frwrp3pdnvz4ni7z8mq1jly8x9372h5l5zsizy"
   },
   {
     "version": "4.0.0",
-    "date": "2024-11-07T00:00:00Z",
+    "date": "2024-11-07T10:55:55.368548634Z",
     "sha256": "1ydb74i6zmqd06fsi4zffv03fnwk10zg8mrycidyyvqpwhy2y776"
   },
   {
     "version": "3.3.8",
-    "date": "2024-07-31T00:00:00Z",
+    "date": "2024-07-31T10:42:59.970789308Z",
     "sha256": "08ljg7py0fchgvigp4lf5z4br1z7y2aa1x49mh28drx0jpip3748"
   },
   {
     "version": "3.3.7",
-    "date": "2024-04-09T00:00:00Z",
+    "date": "2024-04-09T05:31:57.063552789Z",
     "sha256": "1aaf3pigxyvi0sxljpvia20hmrzg948bpjljh9yb8kjm7hmj60xa"
   },
   {
+    "version": "3.3.6",
+    "date": "2024-03-30T10:00:14.527308789Z",
+    "sha256": "089kkm8aqnkh0ns1xff4lhwkdv0i1nvp5fhlvp761nsmkw2ii30m"
+  },
+  {
+    "version": "3.3.5",
+    "date": "2024-03-26T10:17:17.364041864Z",
+    "sha256": "13q1g5l8dfhscfli8jwbliwkpg5sx81c4prr9p81cpl7i76zs8zq"
+  },
+  {
     "version": "3.3.4",
-    "date": "2024-03-25T00:00:00Z",
+    "date": "2024-03-25T20:21:26.428486425Z",
     "sha256": "0jr6dxsyh450am7jr96w6gg4hhzd6m5cihyj5pg1gf06vxp2ylil"
   },
   {
+    "version": "3.3.3",
+    "date": "2024-03-23T17:23:35.432062099Z",
+    "sha256": "161ij7adx4lrgifq7hljp6h5jwhg958zan8k9rx54x5d0xps22kz"
+  },
+  {
+    "version": "3.3.2",
+    "date": "2024-03-20T22:36:37.040620789Z",
+    "sha256": "19gz4lyv537495x1pdfdaxc3s1x8k08f997ymdyczp7hfg1xmqg2"
+  },
+  {
+    "version": "3.3.1",
+    "date": "2024-03-20T17:43:42.189172454Z",
+    "sha256": "14j79l6braf13pbdnpggvpd5rspaf7jkgj3gmn0ffjxjrxl7imrn"
+  },
+  {
+    "version": "3.3.0",
+    "date": "2024-03-20T15:44:56.804866924Z",
+    "sha256": "0kc8v7kw08piy7am8vifnb7ac2q1blcmydy0wv2564r9z4wzmddg"
+  },
+  {
     "version": "3.2.1",
-    "date": "2023-11-27T00:00:00Z",
+    "date": "2023-11-27T18:03:00.134515038Z",
     "sha256": "144bbsb0j0zpfkj8bki0kikjjj1wvy98b250cdzq2rh8mkpcfyfd"
   },
   {
     "version": "3.2.0",
-    "date": "2023-11-27T00:00:00Z",
+    "date": "2023-11-27T14:15:51.411813018Z",
     "sha256": "1qzc8q8wjwjbm2ymdgxjsqyfkmqvjbnq4450dsfngp9adss1gslx"
   },
   {
     "version": "3.1.0",
-    "date": "2023-09-29T00:00:00Z",
+    "date": "2023-09-29T20:07:42.21704147Z",
     "sha256": "1aj4s6ykchfl59y5nid86kj389d6njl3ndp68gy5lm9wphvwiqw3"
   },
   {
     "version": "3.0.3",
-    "date": "2023-08-29T00:00:00Z",
+    "date": "2023-08-29T07:20:03.143257227Z",
     "sha256": "04k5cj6a0wqw45bhspcd6q662zbx6539d1wb0r81pdlssmjkf6pl"
   },
   {
     "version": "3.0.2",
-    "date": "2023-08-17T00:00:00Z",
+    "date": "2023-08-17T11:03:37.889957095Z",
     "sha256": "1l9r3sv74mnpyqv2lrizf714ai2znbvlqs9hxag0hymx3l8hayg1"
   },
   {
