@@ -43,9 +43,6 @@ jobs:
           - attr: otf
             cmd: chart_scan_otf
             vfile: ./hex/hex/k8s/helm/otf/otf.json
-          - attr: otf
-            cmd: chart_scan_otf
-            vfile: ./hex/hex/k8s/helm/otf/otf.json
           - attr: prefect-server
             cmd: chart_scan_prefect-server
             vfile: ./hex/hex/k8s/helm/prefect/server.json
