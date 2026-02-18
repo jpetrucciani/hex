@@ -106,9 +106,11 @@ let
         , extra_data ? [ ]
         , labels ? { }
         , string_data ? { }
+        , engineVersion ? "v2"
+        , mergePolicy ? if string_data == { } then "Replace" else "Merge"
         , _beta ? false
         , apiVersion ? _apiVersion _beta
-        }: toYAMLDoc (secret { inherit name filename env store store_kind refresh_interval secret_ref namespace extract decoding_strategy metadata_policy conversion_strategy extra_data labels string_data _beta apiVersion; });
+        }: toYAMLDoc (secret { inherit name filename env store store_kind refresh_interval secret_ref namespace extract decoding_strategy metadata_policy conversion_strategy extra_data labels string_data engineVersion mergePolicy _beta apiVersion; });
 
       secret =
         { name
@@ -126,6 +128,8 @@ let
         , extra_data
         , labels
         , string_data
+        , engineVersion
+        , mergePolicy
         , _beta
         , apiVersion ? _apiVersion _beta
         }:
@@ -150,6 +154,7 @@ let
               creationPolicy = "Owner";
               deletionPolicy = "Retain";
               template = {
+                inherit engineVersion mergePolicy;
                 ${ifNotEmptyAttr string_data "data"} = string_data;
                 metadata = {
                   labels = all_labels;
