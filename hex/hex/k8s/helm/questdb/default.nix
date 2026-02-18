@@ -11,6 +11,7 @@ let
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./questdb.json; };
     chart_url = version: "https://questdb.github.io/questdb-kubernetes/questdb-${version}.tgz";
+    values_url = "https://github.com/questdb/questdb-kubernetes/blob/master/charts/questdb/values.yaml";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
 in
