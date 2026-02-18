@@ -10,6 +10,7 @@ let
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./nats.json; };
     chart_url = version: "https://github.com/nats-io/k8s/releases/download/nats-${version}/nats-${version}.tgz";
+    values_url = "https://github.com/nats-io/k8s/blob/main/helm/charts/nats/values.yaml";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
 in

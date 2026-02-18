@@ -9,6 +9,7 @@ let
       namespace = "default";
     };
     chart_url = version: "https://github.com/open-webui/helm-charts/releases/download/${name}-${version}/${name}-${version}.tgz";
+    values_url = "https://github.com/open-webui/helm-charts/blob/main/charts/open-webui/values.yaml";
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./open-webui.json; };
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };

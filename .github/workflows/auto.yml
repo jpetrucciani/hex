@@ -73,6 +73,9 @@ jobs:
           - attr: prometheus-mysql-exporter
             cmd: chart_scan_prometheus-mysql-exporter
             vfile: ./hex/hex/k8s/helm/prometheus/mysql-exporter.json
+          - attr: prometheus-nats-exporter
+            cmd: chart_scan_prometheus-nats-exporter
+            vfile: ./hex/hex/k8s/helm/prometheus/nats-exporter.json
           - attr: prometheus-postgres-exporter
             cmd: chart_scan_prometheus-postgres-exporter
             vfile: ./hex/hex/k8s/helm/prometheus/postgres-exporter.json

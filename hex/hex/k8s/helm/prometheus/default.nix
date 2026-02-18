@@ -45,6 +45,7 @@ in
       namespace = "default";
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./kube-prometheus-stack.json; };
+    values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml";
     chart_url = prom_chart "kube-prometheus-stack";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
@@ -54,6 +55,7 @@ in
       namespace = "default";
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./adapter.json; };
+    values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-adapter/values.yaml";
     chart_url = prom_chart "prometheus-adapter";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
@@ -63,6 +65,7 @@ in
       namespace = "default";
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./pushgateway.json; };
+    values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-pushgateway/values.yaml";
     chart_url = prom_chart "prometheus-pushgateway";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
@@ -73,6 +76,7 @@ in
         namespace = "default";
       };
       version = hex.k8s._.versionMap { inherit chart; versionFile = ./cloudwatch-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-cloudwatch-exporter/values.yaml";
       chart_url = prom_chart "prometheus-cloudwatch-exporter";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
@@ -82,6 +86,7 @@ in
         namespace = "default";
       };
       version = hex.k8s._.versionMap { inherit chart; versionFile = ./elasticsearch-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-elasticsearch-exporter/values.yaml";
       chart_url = prom_chart "prometheus-elasticsearch-exporter";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
@@ -91,6 +96,7 @@ in
         namespace = "default";
       };
       version = hex.k8s._.versionMap { inherit chart; versionFile = ./mongodb-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-mongodb-exporter/values.yaml";
       chart_url = prom_chart "prometheus-mongodb-exporter";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
@@ -100,7 +106,18 @@ in
         namespace = "default";
       };
       version = hex.k8s._.versionMap { inherit chart; versionFile = ./mysql-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-mysql-exporter/values.yaml";
       chart_url = prom_chart "prometheus-mysql-exporter";
+      chart = hex.k8s._.chart { inherit defaults chart_url; };
+    };
+    nats = rec {
+      defaults = {
+        name = "prometheus-nats-exporter";
+        namespace = "default";
+      };
+      version = hex.k8s._.versionMap { inherit chart; versionFile = ./nats-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-nats-exporter/values.yaml";
+      chart_url = prom_chart "prometheus-nats-exporter";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
     postgres = rec {
@@ -109,6 +126,7 @@ in
         namespace = "default";
       };
       version = hex.k8s._.versionMap { inherit chart; versionFile = ./postgres-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-postgres-exporter/values.yaml";
       chart_url = prom_chart "prometheus-postgres-exporter";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
@@ -118,6 +136,7 @@ in
         namespace = "default";
       };
       version = hex.k8s._.versionMap { inherit chart; versionFile = ./redis-exporter.json; };
+      values_url = "https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-redis-exporter/values.yaml";
       chart_url = prom_chart "prometheus-redis-exporter";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     };
