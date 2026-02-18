@@ -71,6 +71,7 @@ rec {
   concatMapStrings = f: list: concatStrings (map f list);
   boolToString = b: if b then "true" else "false";
   hasPrefix = pref: str: substring 0 (stringLength pref) str == pref;
+  escapeBackslashes = s: builtins.replaceStrings [ "\\" ] [ "\\\\" ] s;
   removePrefix = prefix: str:
     let
       preLen = stringLength prefix;
