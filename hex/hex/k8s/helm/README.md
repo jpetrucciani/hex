@@ -22,6 +22,10 @@ a hex module for [airbyte](https://github.com/airbytehq/airbyte), an ETL pipelin
 
 [cert-manager](https://github.com/cert-manager/cert-manager) is a way to automatically provision and manage TLS certificates in Kubernetes
 
+### [dask/](./dask/)
+
+[dask](https://docs.dask.org/en/stable/) is a python library/framework for parallel and distributed computing
+
 ### [external-secrets/](./external-secrets/)
 
 [external-secrets](https://github.com/external-secrets/external-secrets) reads information from a third-party service like AWS Secrets Manager and automatically injects the values as Kubernetes Secrets.
@@ -58,6 +62,10 @@ TODO
 
 This module contains [prefect](https://github.com/PrefectHQ/Prefect) charts
 
+### [prometheus/](./prometheus/)
+
+Helpers for [prometheus](https://github.com/prometheus/prometheus) related things in k8s land!
+
 ### [questdb/](./questdb/)
 
 This module contains a [questdb](https://github.com/questdb/questdb) chart
@@ -93,10 +101,6 @@ This module contains a [csi-driver-smb](https://github.com/kubernetes-csi/csi-dr
 ### [custom-pod-autoscaler.nix](./custom-pod-autoscaler.nix)
 
 [custom-pod-autoscaler](https://github.com/jthomperoo/custom-pod-autoscaler-operator) is an operator for managing custom autoscaling rules
-
-### [dask.nix](./dask.nix)
-
-[dask](https://docs.dask.org/en/stable/) is a python library/framework for parallel and distributed computing
 
 ### [elastic.nix](./elastic.nix)
 
@@ -153,10 +157,6 @@ This module contains an [odoo](https://github.com/odoo/odoo) chart
 ### [postgres.nix](./postgres.nix)
 
 [postgres-operator](https://github.com/zalando/postgres-operator) creates and manages PostgreSQL clusters running in Kubernetes
-
-### [prometheus.nix](./prometheus.nix)
-
-Helpers for [prometheus](https://github.com/prometheus/prometheus) related things in k8s land!
 
 ### [pulp.nix](./pulp.nix)
 

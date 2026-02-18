@@ -13,6 +13,7 @@ let
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./jupyterhub.json; };
     chart_url = version: "https://hub.jupyter.org/helm-chart/jupyterhub-${version}.tgz";
+    values_url = "https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/main/jupyterhub/values.yaml";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
 in

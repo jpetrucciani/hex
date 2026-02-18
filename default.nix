@@ -42,6 +42,18 @@ let
         { name = "jupyterhub"; spec = "hex.k8s.jupyterhub.version.v4-3-1 {}"; check = num_docs 30; }
         { name = "prefect-server"; spec = "hex.k8s.prefect.server.version.latest {}"; check = num_docs 8; }
         { name = "prefect-worker"; spec = ''hex.k8s.prefect.worker.version.latest { valuesAttrs.worker = { apiConfig = "selfHostedServer"; config.workPool = "test"; selfHostedServerApiConfig.apiUrl="127.0.0.1"; }; }''; check = num_docs 4; }
+        { name = "trino"; spec = ''hex.k8s.trino.trino.version.latest {}''; check = num_docs 10; }
+        { name = "trino-gateway"; spec = ''hex.k8s.trino.gateway.version.latest {}''; check = num_docs 6; }
+        { name = "nats"; spec = ''hex.k8s.nats.version.latest {}''; check = num_docs 8; }
+        { name = "dask"; spec = ''hex.k8s.dask.kubernetes-operator.version.latest {}''; check = num_docs 8; }
+        { name = "prometheus-adapter"; spec = ''hex.k8s.prometheus.adapter.version.latest {}''; check = num_docs 11; }
+        { name = "prometheus-pushgateway"; spec = ''hex.k8s.prometheus.pushgateway.version.latest {}''; check = num_docs 3; }
+        { name = "prometheus-exporters-cloudwatch"; spec = ''hex.k8s.prometheus.exporters.cloudwatch.version.latest {}''; check = num_docs 7; }
+        { name = "prometheus-exporters-elasticsearch"; spec = ''hex.k8s.prometheus.exporters.elasticsearch.version.latest {}''; check = num_docs 2; }
+        { name = "prometheus-exporters-mongodb"; spec = ''hex.k8s.prometheus.exporters.mongodb.version.latest {}''; check = num_docs 5; }
+        { name = "prometheus-exporters-mysql"; spec = ''hex.k8s.prometheus.exporters.mysql.version.latest {}''; check = num_docs 3; }
+        { name = "prometheus-exporters-postgres"; spec = ''hex.k8s.prometheus.exporters.postgres.version.latest {}''; check = num_docs 6; }
+        { name = "prometheus-exporters-redis"; spec = ''hex.k8s.prometheus.exporters.redis.version.latest {}''; check = num_docs 5; }
       ];
       test_case = x:
         let
@@ -51,6 +63,8 @@ let
           name=${x.name}
           ${log "test"}
           rendered="$(${mktemp})"
+          # shellcheck disable=SC2064
+          trap "rm -f $rendered" EXIT
           ${heval} '${x.spec}' >$rendered
           exit_code=$?
           ${log "rendered to $rendered"}

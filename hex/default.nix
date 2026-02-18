@@ -38,6 +38,8 @@ let
         ${var.notEmpty "1"} && spell="$1"
         ${var.empty "spell"} && spell="$(${_.mktemp})" && cp /dev/stdin "$spell"
         spell_render="$(${_.mktemp})"
+        # shellcheck disable=SC2064
+        trap "rm -f $spell_render" EXIT
         fullpath="$(${_.realpath} "$spell")"
         debug "casting $fullpath - hex files at ${./hex}"
         ${_.nix} eval --raw --impure --expr "import ${./hex}/spell.nix ${pkgs.path} \"$fullpath\"" >"$spell_render"
@@ -73,7 +75,7 @@ in
 
   hex =
     let
-      version = "0.0.9";
+      version = "0.0.10";
     in
     pog {
       inherit version;
@@ -166,6 +168,8 @@ in
           export USE_GKE_GCLOUD_AUTH_PLUGIN=True
           if ${var.notEmpty "evaluate"}; then
             target=$(${_.mktemp})
+            # shellcheck disable=SC2064
+            trap "rm -f $target" EXIT
             cat <<EOF >"$target"
             {hex, pkgs}:
             $evaluate
@@ -179,6 +183,10 @@ in
           ${flag "clientside"} && side="false"
           rendered=$(${_.mktemp})
           diffed=$(${_.mktemp})
+          # shellcheck disable=SC2064
+          trap "rm -f $rendered" EXIT
+          # shellcheck disable=SC2064
+          trap "rm -f $diffed" EXIT
           debug "''${GREEN}render to '$rendered'"
           ${timer.start steps.render}
           if ${flag "all"}; then
