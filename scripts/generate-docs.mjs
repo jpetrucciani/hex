@@ -51,6 +51,17 @@ const helperSpecs = [
   },
 ];
 
+const chartHelperTopLevelIgnore = new Set([
+  'chart',
+  'chart_url',
+  'defaults',
+  'docs_meta',
+  'index_url',
+  'name',
+  'values_url',
+  'version',
+]);
+
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -180,12 +191,13 @@ function findBraceEnd(source, startIndex) {
   return -1;
 }
 
-function splitTopLevelArgs(block) {
+function splitTopLevelByDelimiter(block, delimiter) {
   const parts = [];
   let current = '';
   let curly = 0;
   let square = 0;
   let paren = 0;
+  let letDepth = 0;
   let inDouble = false;
   let inMultiSingle = false;
   let inLineComment = false;
@@ -272,7 +284,24 @@ function splitTopLevelArgs(block) {
       continue;
     }
 
-    if (ch === ',' && curly === 0 && square === 0 && paren === 0) {
+    if (delimiter === ';' && curly === 0 && square === 0 && paren === 0) {
+      const isIdent = (value) => /[A-Za-z0-9_.+-]/.test(value || '');
+      if (ch === 'l' && block.slice(i, i + 3) === 'let') {
+        const before = block[i - 1] || '';
+        const after = block[i + 3] || '';
+        if (!isIdent(before) && !isIdent(after)) {
+          letDepth += 1;
+        }
+      } else if (ch === 'i' && next === 'n') {
+        const before = block[i - 1] || '';
+        const after = block[i + 2] || '';
+        if (!isIdent(before) && !isIdent(after)) {
+          letDepth = Math.max(0, letDepth - 1);
+        }
+      }
+    }
+
+    if (ch === delimiter && curly === 0 && square === 0 && paren === 0 && letDepth === 0) {
       parts.push(current);
       current = '';
       continue;
@@ -288,6 +317,183 @@ function splitTopLevelArgs(block) {
   return parts;
 }
 
+function splitTopLevelArgs(block) {
+  return splitTopLevelByDelimiter(block, ',');
+}
+
+function splitTopLevelStatements(block) {
+  return splitTopLevelByDelimiter(block, ';');
+}
+
+function isWrappedByMatchingParens(value) {
+  let depth = 0;
+  let inDouble = false;
+  let inMultiSingle = false;
+  let inLineComment = false;
+
+  for (let i = 0; i < value.length; i += 1) {
+    const ch = value[i];
+    const next = value[i + 1] || '';
+    const prev = value[i - 1] || '';
+
+    if (inLineComment) {
+      if (ch === '\n') {
+        inLineComment = false;
+      }
+      continue;
+    }
+
+    if (inDouble) {
+      if (ch === '"' && prev !== '\\') {
+        inDouble = false;
+      }
+      continue;
+    }
+
+    if (inMultiSingle) {
+      if (ch === "'" && next === "'") {
+        inMultiSingle = false;
+        i += 1;
+      }
+      continue;
+    }
+
+    if (ch === '#') {
+      inLineComment = true;
+      continue;
+    }
+
+    if (ch === '"') {
+      inDouble = true;
+      continue;
+    }
+
+    if (ch === "'" && next === "'") {
+      inMultiSingle = true;
+      i += 1;
+      continue;
+    }
+
+    if (ch === '(') {
+      depth += 1;
+      continue;
+    }
+
+    if (ch === ')') {
+      depth -= 1;
+      if (depth === 0 && i < value.length - 1) {
+        return false;
+      }
+    }
+  }
+
+  return depth === 0;
+}
+
+function stripOuterParens(value) {
+  let out = value.trim();
+  while (out.startsWith('(') && out.endsWith(')') && isWrappedByMatchingParens(out)) {
+    out = out.slice(1, -1).trim();
+  }
+  return out;
+}
+
+function inferArgType(defaultValue) {
+  if (defaultValue === null) {
+    return 'unknown';
+  }
+
+  const normalized = stripOuterParens(String(defaultValue).trim());
+  if (!normalized) {
+    return 'unknown';
+  }
+
+  if (normalized === 'true' || normalized === 'false') {
+    return 'bool';
+  }
+  if (normalized === 'null') {
+    return 'null';
+  }
+  if (/^-?\d+(?:\.\d+)?$/.test(normalized)) {
+    return 'number';
+  }
+  if (
+    (normalized.startsWith('"') && normalized.endsWith('"')) ||
+    (normalized.startsWith("''") && normalized.endsWith("''"))
+  ) {
+    return 'string';
+  }
+  if (normalized.startsWith('[') && normalized.endsWith(']')) {
+    return 'list';
+  }
+  if (normalized.startsWith('{') && normalized.endsWith('}')) {
+    return 'attrset';
+  }
+
+  const ifMatch = normalized.match(/^if\s+[\s\S]+?\s+then\s+([\s\S]+?)\s+else\s+([\s\S]+)$/);
+  if (ifMatch) {
+    const thenType = inferArgType(ifMatch[1].trim());
+    const elseType = inferArgType(ifMatch[2].trim());
+    if (thenType === elseType) {
+      return thenType;
+    }
+    if (thenType === 'unknown') {
+      return elseType;
+    }
+    if (elseType === 'unknown') {
+      return thenType;
+    }
+    return `${thenType} | ${elseType}`;
+  }
+
+  return 'unknown';
+}
+
+function parseDocsNotesFromCommentLines(lines) {
+  const notes = [];
+  for (const line of lines || []) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith('#')) {
+      continue;
+    }
+
+    const body = trimmed.replace(/^#\s*/, '').trim();
+    const match = body.match(/^(?:docs?|description)\s*:\s*(.+)$/i);
+    if (!match) {
+      continue;
+    }
+
+    const note = match[1].trim();
+    if (note) {
+      notes.push(note);
+    }
+  }
+  return notes;
+}
+
+function parseArgTypeHint(note) {
+  if (!note) {
+    return { typeHint: null, cleanNote: '' };
+  }
+
+  const match = note.match(/\btype\s*:\s*([^;]+)(?:;|$)/i);
+  if (!match) {
+    return { typeHint: null, cleanNote: note };
+  }
+
+  const typeHint = match[1].replace(/\s+/g, ' ').trim() || null;
+  const withoutType = `${note.slice(0, match.index)}${note.slice(match.index + match[0].length)}`
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^[-:,;]\s*/, '')
+    .replace(/\s*[-:,;]$/, '');
+
+  return {
+    typeHint,
+    cleanNote: withoutType,
+  };
+}
+
 function parseArgsFromBlock(block) {
   const segments = splitTopLevelArgs(block);
   const args = [];
@@ -298,13 +504,32 @@ function parseArgsFromBlock(block) {
       continue;
     }
 
-    const noteMatch = raw.match(/#\s*(.+)$/m);
-    const note = noteMatch ? noteMatch[1].trim() : '';
-    const withoutComments = raw
-      .split(/\r?\n/)
-      .map((line) => line.replace(/\s+#.*$/, ''))
-      .join('\n')
-      .trim();
+    const noteParts = [];
+    const codeLines = [];
+    for (const line of raw.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        continue;
+      }
+
+      if (trimmed.startsWith('#')) {
+        noteParts.push(trimmed.replace(/^#\s*/, '').trim());
+        continue;
+      }
+
+      const inlineCommentMatch = line.match(/^(.*?)(?:\s+#\s*(.+))?$/);
+      const code = inlineCommentMatch?.[1] ?? line;
+      const inlineNote = inlineCommentMatch?.[2]?.trim() ?? '';
+      if (inlineNote) {
+        noteParts.push(inlineNote);
+      }
+      if (code.trim()) {
+        codeLines.push(code);
+      }
+    }
+
+    const note = noteParts.join(' ').replace(/\s+/g, ' ').trim();
+    const withoutComments = codeLines.join('\n').trim();
     if (!withoutComments) {
       continue;
     }
@@ -316,11 +541,14 @@ function parseArgsFromBlock(block) {
 
     const name = match[1];
     const defaultValue = match[2] ? match[2].replace(/\s+/g, ' ').trim() : null;
+    const inferredType = inferArgType(defaultValue);
+    const typeAndNote = parseArgTypeHint(note);
     args.push({
       name,
       required: defaultValue === null,
       defaultValue,
-      note,
+      note: typeAndNote.cleanNote,
+      type: typeAndNote.typeHint || inferredType,
     });
   }
 
@@ -402,6 +630,446 @@ function extractFunctionArgsByMarker(source, marker, range) {
   }
 
   return parseArgsFromBlock(source.slice(braceStart + 1, braceEnd));
+}
+
+function parseTopLevelBindingsFromAttrset(block) {
+  const bindings = [];
+  for (const statement of splitTopLevelStatements(block)) {
+    const rawLines = statement.split(/\r?\n/);
+    let offset = 0;
+    while (offset < rawLines.length && rawLines[offset].trim() === '') {
+      offset += 1;
+    }
+
+    const leadingCommentLines = [];
+    while (offset < rawLines.length && rawLines[offset].trim().startsWith('#')) {
+      leadingCommentLines.push(rawLines[offset]);
+      offset += 1;
+    }
+
+    const lines = rawLines.slice(offset).filter((line) => line.trim() !== '');
+    if (lines.length === 0) {
+      continue;
+    }
+
+    const trimmed = lines.join('\n').trim();
+    if (!trimmed) {
+      continue;
+    }
+    const match = trimmed.match(/^([A-Za-z0-9_.+-]+)\s*=\s*([\s\S]+)$/);
+    if (!match) {
+      continue;
+    }
+    bindings.push({
+      key: match[1],
+      value: match[2].trim(),
+      notes: parseDocsNotesFromCommentLines(leadingCommentLines),
+    });
+  }
+  return bindings;
+}
+
+function parseDocsNotesBeforeIndex(source, index) {
+  if (!Number.isInteger(index) || index < 0) {
+    return [];
+  }
+
+  const lines = source.slice(0, index).split(/\r?\n/);
+  let cursor = lines.length - 1;
+  while (cursor >= 0 && lines[cursor].trim() === '') {
+    cursor -= 1;
+  }
+
+  const commentLines = [];
+  while (cursor >= 0) {
+    const line = lines[cursor];
+    if (!line.trim().startsWith('#')) {
+      break;
+    }
+    commentLines.push(line);
+    cursor -= 1;
+  }
+
+  return parseDocsNotesFromCommentLines(commentLines.reverse());
+}
+
+function isIdentChar(ch) {
+  return /[A-Za-z0-9_.+-]/.test(ch || '');
+}
+
+function escapeRegExp(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function unwrapLeadingLetIn(value) {
+  const trimmed = stripOuterParens(value.trim());
+  if (!trimmed.startsWith('let')) {
+    return trimmed;
+  }
+
+  let curly = 0;
+  let square = 0;
+  let paren = 0;
+  let inDouble = false;
+  let inMultiSingle = false;
+  let inLineComment = false;
+
+  for (let i = 3; i < trimmed.length; i += 1) {
+    const ch = trimmed[i];
+    const next = trimmed[i + 1] || '';
+    const prev = trimmed[i - 1] || '';
+
+    if (inLineComment) {
+      if (ch === '\n') {
+        inLineComment = false;
+      }
+      continue;
+    }
+
+    if (inDouble) {
+      if (ch === '"' && prev !== '\\') {
+        inDouble = false;
+      }
+      continue;
+    }
+
+    if (inMultiSingle) {
+      if (ch === "'" && next === "'") {
+        inMultiSingle = false;
+        i += 1;
+      }
+      continue;
+    }
+
+    if (ch === '#') {
+      inLineComment = true;
+      continue;
+    }
+
+    if (ch === '"') {
+      inDouble = true;
+      continue;
+    }
+
+    if (ch === "'" && next === "'") {
+      inMultiSingle = true;
+      i += 1;
+      continue;
+    }
+
+    if (ch === '{') {
+      curly += 1;
+      continue;
+    }
+    if (ch === '}') {
+      curly = Math.max(0, curly - 1);
+      continue;
+    }
+    if (ch === '[') {
+      square += 1;
+      continue;
+    }
+    if (ch === ']') {
+      square = Math.max(0, square - 1);
+      continue;
+    }
+    if (ch === '(') {
+      paren += 1;
+      continue;
+    }
+    if (ch === ')') {
+      paren = Math.max(0, paren - 1);
+      continue;
+    }
+
+    if (curly === 0 && square === 0 && paren === 0 && ch === 'i' && next === 'n') {
+      const before = trimmed[i - 1] || '';
+      const after = trimmed[i + 2] || '';
+      if (!isIdentChar(before) && !isIdentChar(after)) {
+        return trimmed.slice(i + 2).trim();
+      }
+    }
+  }
+
+  return trimmed;
+}
+
+function findForwardedCallInLambdaBody(body, paramName) {
+  const escapedParam = escapeRegExp(paramName);
+  const callRegex = new RegExp(`\\b([A-Za-z0-9_.+-]+)\\s+\\(?\\s*${escapedParam}\\b`, 'g');
+  const candidates = [];
+  for (const match of body.matchAll(callRegex)) {
+    const candidate = match[1];
+    if (!candidate || candidate === paramName) {
+      continue;
+    }
+    candidates.push(candidate);
+  }
+  return candidates[0] || null;
+}
+
+function isYamlWrapperLambda(body, forwardedCall) {
+  if (!forwardedCall || !body) {
+    return false;
+  }
+
+  if (!/\btoYAMLDoc\b/.test(body)) {
+    return false;
+  }
+
+  const forwardedRegex = new RegExp(`\\b${escapeRegExp(forwardedCall)}\\b`);
+  return forwardedRegex.test(body);
+}
+
+function parseLeadingAttrsetValue(value) {
+  const trimmed = unwrapLeadingLetIn(value);
+  const recPrefixMatch = trimmed.match(/^rec\s+/);
+  const offset = recPrefixMatch ? recPrefixMatch[0].length : 0;
+  if (trimmed[offset] !== '{') {
+    return null;
+  }
+
+  const braceStart = offset;
+  const braceEnd = findBraceEnd(trimmed, braceStart);
+  if (braceEnd < 0) {
+    return null;
+  }
+
+  let suffixIdx = braceEnd + 1;
+  while (suffixIdx < trimmed.length && /\s/.test(trimmed[suffixIdx])) {
+    suffixIdx += 1;
+  }
+
+  return {
+    block: trimmed.slice(braceStart + 1, braceEnd),
+    isLambda: trimmed[suffixIdx] === ':',
+  };
+}
+
+function parseFunctionArgsFromValue(value) {
+  const normalized = unwrapLeadingLetIn(value);
+  const attrsetValue = parseLeadingAttrsetValue(normalized);
+  if (attrsetValue?.isLambda) {
+    return {
+      args: parseArgsFromBlock(attrsetValue.block),
+      forwardedCall: null,
+    };
+  }
+
+  const simpleLambdaMatch = normalized.match(/^([A-Za-z0-9_.+-]+)\s*:\s*([\s\S]+)$/);
+  if (!simpleLambdaMatch) {
+    return null;
+  }
+
+  const paramName = simpleLambdaMatch[1];
+  const body = simpleLambdaMatch[2].trim();
+  const forwardedCall = findForwardedCallInLambdaBody(body, paramName);
+  return {
+    args: [
+      {
+        name: paramName,
+        required: true,
+        defaultValue: null,
+        note: '',
+        type: 'unknown',
+      },
+    ],
+    forwardedCall,
+    yamlWrapper: isYamlWrapperLambda(body, forwardedCall),
+  };
+}
+
+function extractFunctionsFromAttrsetBlock(block, pathSegments = []) {
+  const out = [];
+  for (const binding of parseTopLevelBindingsFromAttrset(block)) {
+    const nextPath = [...pathSegments, binding.key];
+    const parsedFn = parseFunctionArgsFromValue(binding.value);
+    if (parsedFn) {
+      out.push({
+        name: nextPath.join('.'),
+        pathSegments: nextPath,
+        args: parsedFn.args,
+        forwardedCall: parsedFn.forwardedCall,
+        forwardedTarget: null,
+        yamlWrapper: parsedFn.yamlWrapper === true,
+        notes: binding.notes || [],
+      });
+      continue;
+    }
+
+    const nestedAttrset = parseLeadingAttrsetValue(binding.value);
+    if (nestedAttrset && !nestedAttrset.isLambda) {
+      out.push(...extractFunctionsFromAttrsetBlock(nestedAttrset.block, nextPath));
+    }
+  }
+  return out;
+}
+
+function resolveForwardedFunctionName(currentName, forwardedCall, knownNames) {
+  if (!forwardedCall || !knownNames.has(currentName)) {
+    return null;
+  }
+
+  const currentSegments = currentName.split('.');
+  const forwardedSegments = String(forwardedCall).split('.');
+  for (let depth = currentSegments.length - 1; depth >= 0; depth -= 1) {
+    const candidate = [...currentSegments.slice(0, depth), ...forwardedSegments].join('.');
+    if (knownNames.has(candidate)) {
+      return candidate;
+    }
+  }
+
+  return knownNames.has(forwardedCall) ? forwardedCall : null;
+}
+
+function resolveForwardedHelperArgs(functions) {
+  const byName = new Map(functions.map((fn) => [fn.name, fn]));
+  const knownNames = new Set(byName.keys());
+  const cache = new Map();
+  const resolving = new Set();
+
+  const resolveArgs = (name) => {
+    const fn = byName.get(name);
+    if (!fn) {
+      return [];
+    }
+    if (cache.has(name)) {
+      return cache.get(name);
+    }
+    if (resolving.has(name)) {
+      return fn.args.map((arg) => ({ ...arg }));
+    }
+
+    resolving.add(name);
+    let resolved = fn.args;
+    if (fn.forwardedCall) {
+      const targetName = resolveForwardedFunctionName(name, fn.forwardedCall, knownNames);
+      if (targetName && targetName !== name) {
+        const targetArgs = resolveArgs(targetName);
+        if (targetArgs.length > 0) {
+          resolved = targetArgs;
+        }
+      }
+    }
+    resolving.delete(name);
+
+    const cloned = resolved.map((arg) => ({ ...arg }));
+    cache.set(name, cloned);
+    return cloned;
+  };
+
+  for (const fn of functions) {
+    fn.forwardedTarget = fn.forwardedCall ? resolveForwardedFunctionName(fn.name, fn.forwardedCall, knownNames) : null;
+    fn.args = resolveArgs(fn.name).map((arg) => ({ ...arg }));
+  }
+}
+
+function attachForwardedWrapperNotes(functions) {
+  for (const fn of functions) {
+    if (!fn.yamlWrapper || !fn.forwardedTarget) {
+      continue;
+    }
+
+    const note = `returns YAML as a string; \`${fn.forwardedTarget}\` returns an attrset.`;
+    const existing = Array.isArray(fn.notes) ? fn.notes : [];
+    if (!existing.includes(note)) {
+      fn.notes = [...existing, note];
+    }
+  }
+}
+
+function isAssignedAttrsetRange(source, range) {
+  let prefixEnd = range.start - 1;
+  while (prefixEnd >= 0 && /\s/.test(source[prefixEnd])) {
+    prefixEnd -= 1;
+  }
+
+  const prefix = source.slice(Math.max(0, prefixEnd - 200), prefixEnd + 1);
+  if (!/=\s*(?:rec\s*)?$/.test(prefix)) {
+    return false;
+  }
+
+  let suffixStart = range.end + 1;
+  while (suffixStart < source.length && /\s/.test(source[suffixStart])) {
+    suffixStart += 1;
+  }
+  return source[suffixStart] !== ':';
+}
+
+function findEnclosingAssignedAttrsetRange(source, markerIndex) {
+  const candidates = [];
+  for (let i = 0; i < source.length; i += 1) {
+    if (source[i] !== '{') {
+      continue;
+    }
+    const end = findBraceEnd(source, i);
+    if (end < 0) {
+      continue;
+    }
+    if (i <= markerIndex && markerIndex <= end && isAssignedAttrsetRange(source, { start: i, end })) {
+      candidates.push({ start: i, end });
+    }
+  }
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  candidates.sort((a, b) => (a.end - a.start) - (b.end - b.start));
+  return candidates[0];
+}
+
+function chartAttrsetBlockByVersionFile(source, versionFileName) {
+  const marker = `versionFile = ./${versionFileName}`;
+  const markerIndex = source.indexOf(marker);
+  if (markerIndex < 0) {
+    return null;
+  }
+
+  const scopeRange = findEnclosingAssignedAttrsetRange(source, markerIndex);
+  if (!scopeRange) {
+    return null;
+  }
+
+  return source.slice(scopeRange.start + 1, scopeRange.end);
+}
+
+function shouldIncludeChartHelperFunction(pathSegments) {
+  if (!Array.isArray(pathSegments) || pathSegments.length === 0) {
+    return false;
+  }
+  return !chartHelperTopLevelIgnore.has(pathSegments[0]);
+}
+
+function extractChartHelperFunctions(source, attrPath, versionFileName) {
+  const chartBlock = chartAttrsetBlockByVersionFile(source, versionFileName);
+  if (!chartBlock) {
+    return [];
+  }
+
+  const allFunctions = extractFunctionsFromAttrsetBlock(chartBlock).filter((fn) =>
+    shouldIncludeChartHelperFunction(fn.pathSegments),
+  );
+  resolveForwardedHelperArgs(allFunctions);
+  attachForwardedWrapperNotes(allFunctions);
+
+  const unique = [];
+  const seen = new Set();
+  for (const fn of allFunctions) {
+    if (seen.has(fn.name)) {
+      continue;
+    }
+    seen.add(fn.name);
+    unique.push({
+      name: fn.name,
+      attrPath: `${attrPath}.${fn.name}`,
+      args: fn.args,
+      notes: fn.notes || [],
+    });
+  }
+
+  unique.sort((a, b) => a.attrPath.localeCompare(b.attrPath));
+  return unique;
 }
 
 function findChartModuleSource(jsonFilePath) {
@@ -536,7 +1204,14 @@ function shortDate(dateLike) {
   return new Date(ms).toISOString().slice(0, 10);
 }
 
-function placeholderForRequiredArg(argName, moduleName) {
+function placeholderForRequiredArg(arg, moduleName) {
+  const argName = arg.name;
+  const typeTokens = String(arg.type || '')
+    .toLowerCase()
+    .split('|')
+    .map((token) => token.trim())
+    .filter(Boolean);
+
   if (argName === 'name') {
     return `"${moduleName}"`;
   }
@@ -558,6 +1233,29 @@ function placeholderForRequiredArg(argName, moduleName) {
   if (argName === 'path') {
     return '"/srv/data"';
   }
+
+  const nonNullType = typeTokens.find((token) => token !== 'null' && token !== 'unknown');
+  const effectiveType = nonNullType || (typeTokens.length === 1 ? typeTokens[0] : null);
+
+  if (effectiveType === 'string') {
+    return '"TODO"';
+  }
+  if (effectiveType === 'number') {
+    return argName === 'port' ? '8080' : '0';
+  }
+  if (effectiveType === 'bool') {
+    return 'false';
+  }
+  if (effectiveType === 'list') {
+    return '[ ]';
+  }
+  if (effectiveType === 'attrset') {
+    return '{ }';
+  }
+  if (effectiveType === 'null') {
+    return 'null';
+  }
+
   return '"TODO"';
 }
 
@@ -588,11 +1286,66 @@ function renderCallSpec(attrPath, args) {
   }
 
   for (const arg of requiredArgs) {
-    lines.push(`  ${arg.name} = ${placeholderForRequiredArg(arg.name, attrPath.split('.').at(-1) || 'item')};`);
+    lines.push(`  ${arg.name} = ${placeholderForRequiredArg(arg, attrPath.split('.').at(-1) || 'item')};`);
   }
 
   lines.push('})');
   return lines.join('\n');
+}
+
+function renderArgType(typeValue) {
+  const type = typeof typeValue === 'string' && typeValue.trim() ? typeValue.trim() : 'unknown';
+  return `\`${type}\``;
+}
+
+function renderArgDefault(defaultValue) {
+  if (!defaultValue) {
+    return '-';
+  }
+  return `\`${defaultValue.replaceAll('`', '\\`')}\``;
+}
+
+function renderFunctionDocs(lines, fn, headingLevel) {
+  const requiredArgs = fn.args.filter((arg) => arg.required);
+  const optionalArgs = fn.args.filter((arg) => !arg.required);
+  const subHeading = `${headingLevel}#`;
+
+  lines.push(`${headingLevel} ${fn.attrPath}`);
+  lines.push('');
+  if (Array.isArray(fn.notes) && fn.notes.length > 0) {
+    lines.push('::: tip Usage');
+    for (let idx = 0; idx < fn.notes.length; idx += 1) {
+      lines.push(fn.notes[idx]);
+      if (idx < fn.notes.length - 1) {
+        lines.push('');
+      }
+    }
+    lines.push(':::');
+    lines.push('');
+  }
+
+  lines.push(`${subHeading} Copy Call Skeleton`);
+  lines.push('');
+  lines.push('```nix');
+  lines.push(renderCallSpec(fn.attrPath, fn.args));
+  lines.push('```');
+  lines.push('');
+  lines.push(`${subHeading} Required Args`);
+  lines.push('');
+  lines.push('| Arg | Type | Notes |');
+  lines.push('| --- | --- | --- |');
+  for (const arg of requiredArgs) {
+    lines.push(`| \`${arg.name}\` | ${renderArgType(arg.type)} | ${arg.note || '-'} |`);
+  }
+  lines.push('');
+  lines.push(`${subHeading} Optional Args`);
+  lines.push('');
+  lines.push('| Arg | Type | Default | Notes |');
+  lines.push('| --- | --- | --- | --- |');
+  for (const arg of optionalArgs) {
+    lines.push(`| \`${arg.name}\` | ${renderArgType(arg.type)} | ${renderArgDefault(arg.defaultValue)} | ${arg.note || '-'} |`);
+  }
+  lines.push('');
 }
 
 function renderNotes(notes) {
@@ -726,6 +1479,7 @@ function buildChartData(meta) {
   const chartMeta = meta.charts || {};
   const jsonFiles = walkFiles(helmRoot, (abs) => abs.endsWith('.json'));
   const byDir = new Map();
+  const moduleSourceCache = new Map();
 
   for (const file of jsonFiles) {
     const dir = path.dirname(file);
@@ -757,10 +1511,18 @@ function buildChartData(meta) {
     const attrPath = siblings.length === 1 ? `hex.k8s.${moduleDir}` : `hex.k8s.${moduleDir}.${jsonBase}`;
     const moduleSource = findChartModuleSource(file);
     const moduleSourceFile = moduleSource ? relRepo(moduleSource) : null;
+    let moduleSourceText = null;
+    if (moduleSource) {
+      if (!moduleSourceCache.has(moduleSource)) {
+        moduleSourceCache.set(moduleSource, fs.readFileSync(moduleSource, 'utf8'));
+      }
+      moduleSourceText = moduleSourceCache.get(moduleSource);
+    }
     const inlineMeta = inlineDocsMetaFromFile(moduleSource);
     const rowMeta = chartMeta[attrPath] || {};
     const resolvedMeta = resolveChartMeta(rowMeta, inlineMeta);
     const slug = slugFromAttr(attrPath);
+    const helperFunctions = moduleSourceText ? extractChartHelperFunctions(moduleSourceText, attrPath, path.basename(file)) : [];
 
     rows.push({
       attrPath,
@@ -779,6 +1541,8 @@ function buildChartData(meta) {
       appSource: resolvedMeta.source,
       requiredValuesAttrs: resolvedMeta.requiredValuesAttrs,
       notes: resolvedMeta.notes,
+      helperFunctions,
+      helperCount: helperFunctions.length,
     });
   }
 
@@ -859,12 +1623,15 @@ function buildHelperData(meta) {
       if (!args) {
         continue;
       }
+      const markerIndex = sourceText.indexOf(fn.marker, scopeRange.start);
       const fnAttrPath = `${spec.moduleAttrPath}.${fn.name}`;
+      const docsNotes = parseDocsNotesBeforeIndex(sourceText, markerIndex);
+      const metaNotes = Array.isArray(helperMeta[fnAttrPath]?.notes) ? helperMeta[fnAttrPath].notes : [];
       functions.push({
         name: fn.name,
         attrPath: fnAttrPath,
         args,
-        notes: Array.isArray(helperMeta[fnAttrPath]?.notes) ? helperMeta[fnAttrPath].notes : [],
+        notes: [...docsNotes, ...metaNotes],
       });
     }
 
@@ -904,6 +1671,9 @@ function renderChartPage(row) {
   if (row.requiredValuesAttrs.length > 0) {
     lines.push(`- required valuesAttrs keys: ${row.requiredValuesAttrs.map((k) => `\`${k}\``).join(', ')}`);
   }
+  if (row.helperCount > 0) {
+    lines.push(`- extra helper functions: ${row.helperCount}`);
+  }
 
   lines.push('');
   lines.push(...renderNotes(row.notes));
@@ -913,6 +1683,16 @@ function renderChartPage(row) {
   lines.push(renderPinnedChartSpec(row.attrPath, row.latest, row.requiredValuesAttrs));
   lines.push('```');
   lines.push('');
+  lines.push('## Helper Functions');
+  lines.push('');
+  if (row.helperFunctions.length === 0) {
+    lines.push('No helper functions discovered in this chart module.');
+    lines.push('');
+  } else {
+    for (const fn of row.helperFunctions) {
+      renderFunctionDocs(lines, fn, '###');
+    }
+  }
   lines.push('## Versions');
   lines.push('');
   lines.push('| Version | Date | Attr |');
@@ -989,39 +1769,7 @@ function renderHelperModulePage(module) {
   lines.push(...renderNotes(module.notes));
 
   for (const fn of module.functions) {
-    const requiredArgs = fn.args.filter((arg) => arg.required);
-    const optionalArgs = fn.args.filter((arg) => !arg.required);
-    lines.push(`## ${fn.attrPath}`);
-    lines.push('');
-    if (fn.notes.length > 0) {
-      for (const note of fn.notes) {
-        lines.push(`- ${note}`);
-      }
-      lines.push('');
-    }
-    lines.push('### Copy Call Skeleton');
-    lines.push('');
-    lines.push('```nix');
-    lines.push(renderCallSpec(fn.attrPath, fn.args));
-    lines.push('```');
-    lines.push('');
-    lines.push('### Required Args');
-    lines.push('');
-    lines.push('| Arg | Notes |');
-    lines.push('| --- | --- |');
-    for (const arg of requiredArgs) {
-      lines.push(`| \`${arg.name}\` | ${arg.note || '-'} |`);
-    }
-    lines.push('');
-    lines.push('### Optional Args');
-    lines.push('');
-    lines.push('| Arg | Default | Notes |');
-    lines.push('| --- | --- | --- |');
-    for (const arg of optionalArgs) {
-      const defaultValue = arg.defaultValue ? `\`${arg.defaultValue.replaceAll('`', '\\`')}\`` : '-';
-      lines.push(`| \`${arg.name}\` | ${defaultValue} | ${arg.note || '-'} |`);
-    }
-    lines.push('');
+    renderFunctionDocs(lines, fn, '##');
   }
 
   lines.push('[Back to Helper Index](/reference/helpers/index)');
@@ -1038,8 +1786,8 @@ function renderChartIndex(chartRows) {
     '',
     `Total tracked versions: **${totalVersions}**`,
     '',
-    '| Chart | Latest | Latest Date | Versions | App | values.yaml | Source |',
-    '| --- | --- | --- | --- | --- | --- | --- |',
+    '| Chart | Latest | Latest Date | Versions | Helpers | App | values.yaml | Source |',
+    '| --- | --- | --- | --- | --- | --- | --- | --- |',
   ];
 
   for (const row of chartRows) {
@@ -1049,7 +1797,7 @@ function renderChartIndex(chartRows) {
     const sourceLinks = `[json](${githubBlobBase}/${row.sourceFile})${row.moduleSourceFile ? ` [module](${githubBlobBase}/${row.moduleSourceFile})` : ''}`;
     const latestDateCell = shortDate(row.latestDate) ? `\`${shortDate(row.latestDate)}\`` : '-';
     lines.push(
-      `| ${chartLink} | \`${row.latest ?? 'n/a'}\` | ${latestDateCell} | ${row.versionCount} | ${appCell} | ${valuesCell} | ${sourceLinks} |`,
+      `| ${chartLink} | \`${row.latest ?? 'n/a'}\` | ${latestDateCell} | ${row.versionCount} | ${row.helperCount ?? 0} | ${appCell} | ${valuesCell} | ${sourceLinks} |`,
     );
   }
 

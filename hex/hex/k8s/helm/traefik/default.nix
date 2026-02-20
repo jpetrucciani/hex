@@ -134,14 +134,16 @@ let
 
     # middlewares https://doc.traefik.io/traefik/middlewares/http/overview/
     middleware = rec {
+      # docs: render a Middleware resource to YAML using the args accepted by middleware.setup.
       build = args: toYAMLDoc (setup args);
+      # docs: build a generic Middleware resource attrset for custom middleware specs.
       setup =
-        { name
-        , spec
-        , kind ? "Middleware"
-        , pre23 ? false
-        , apiVersion ? if pre23 then "traefik.containo.us/v1alpha1" else "traefik.io/v1alpha1"
-        , extraSpec ? { }
+        { name  # type: string; Middleware resource name
+        , spec  # type: attrset; middleware spec body (addPrefix/stripPrefix/etc)
+        , kind ? "Middleware"  # type: string; Kubernetes resource kind to render
+        , pre23 ? false  # type: bool; use legacy traefik.containo.us API group
+        , apiVersion ? if pre23 then "traefik.containo.us/v1alpha1" else "traefik.io/v1alpha1"  # type: string; override Traefik CRD apiVersion
+        , extraSpec ? { }  # type: attrset; extra fields merged at resource root
         }: {
           inherit kind apiVersion spec;
           metadata = {
@@ -149,76 +151,106 @@ let
           };
         } // extraSpec;
       _ = {
-        add_prefix = { prefix, name ? "add-prefix", extraSpec ? { } }: build {
-          inherit name extraSpec;
-          spec = {
-            addPrefix = {
-              inherit prefix;
+        # docs: create an addPrefix middleware that prepends a path prefix.
+        add_prefix =
+          { prefix  # type: string; prefix to prepend to request paths
+          , name ? "add-prefix"  # type: string; Middleware resource name
+          , extraSpec ? { }  # type: attrset; extra fields merged at resource root
+          }: build {
+            inherit name extraSpec;
+            spec = {
+              addPrefix = {
+                inherit prefix;
+              };
             };
           };
-        };
-        compress = { name ? "compress", extraSpec ? { } }: build {
-          inherit name extraSpec;
-          spec = {
-            compress = { };
-          };
-        };
-        default_index = { name ? "default-index", extraSpec ? { } }: build {
-          inherit name extraSpec;
-          spec = {
-            replacePathRegex = {
-              regex = "^/$";
-              replacement = "/index.html";
+        # docs: create a compress middleware for HTTP response compression.
+        compress =
+          { name ? "compress"  # type: string; Middleware resource name
+          , extraSpec ? { }  # type: attrset; extra fields merged at resource root
+          }: build {
+            inherit name extraSpec;
+            spec = {
+              compress = { };
             };
           };
-        };
-        ip_allowlist = { ips, name ? "ip-allowlist", extraSpec ? { } }: build {
-          inherit name extraSpec;
-          spec = {
-            ipAllowList.sourceRange = ips;
-          };
-        };
-        ip_whitelist = { ips, name ? "ip-whitelist", extraSpec ? { } }: build {
-          inherit name extraSpec;
-          spec = {
-            ipWhiteList.sourceRange = ips;
-          };
-        };
-        strip_prefix = { prefixes, name ? "strip-prefix", extraSpec ? { } }: build {
-          inherit name extraSpec;
-          spec = {
-            stripPrefix = {
-              inherit prefixes;
+        # docs: create a middleware that rewrites / to /index.html.
+        default_index =
+          { name ? "default-index"  # type: string; Middleware resource name
+          , extraSpec ? { }  # type: attrset; extra fields merged at resource root
+          }: build {
+            inherit name extraSpec;
+            spec = {
+              replacePathRegex = {
+                regex = "^/$";
+                replacement = "/index.html";
+              };
             };
           };
-        };
+        # docs: create an ipAllowList middleware with allowed source ranges.
+        ip_allowlist =
+          { ips  # type: list; CIDR ranges allowed to access matching routes
+          , name ? "ip-allowlist"  # type: string; Middleware resource name
+          , extraSpec ? { }  # type: attrset; extra fields merged at resource root
+          }: build {
+            inherit name extraSpec;
+            spec = {
+              ipAllowList.sourceRange = ips;
+            };
+          };
+        # docs: create a legacy ipWhiteList middleware with allowed source ranges.
+        ip_whitelist =
+          { ips  # type: list; CIDR ranges allowed to access matching routes
+          , name ? "ip-whitelist"  # type: string; Middleware resource name
+          , extraSpec ? { }  # type: attrset; extra fields merged at resource root
+          }: build {
+            inherit name extraSpec;
+            spec = {
+              ipWhiteList.sourceRange = ips;
+            };
+          };
+        # docs: create a stripPrefix middleware that removes path prefixes.
+        strip_prefix =
+          { prefixes  # type: list; prefixes to strip from request paths
+          , name ? "strip-prefix"  # type: string; Middleware resource name
+          , extraSpec ? { }  # type: attrset; extra fields merged at resource root
+          }: build {
+            inherit name extraSpec;
+            spec = {
+              stripPrefix = {
+                inherit prefixes;
+              };
+            };
+          };
       };
     };
 
     # ingressroute https://doc.traefik.io/traefik/v2.2/routing/providers/kubernetes-crd/#kind-ingressroute
     ingress_route = rec {
       constants = { };
+      # docs: render an IngressRoute resource to YAML using the args accepted by ingress_route.setup.
       build = args: toYAMLDoc (setup args);
+      # docs: build an IngressRoute resource attrset for host routing and middleware wiring.
       setup =
-        { name
-        , domain
-        , regex ? false
-        , port ? 80
-        , namespace ? "default"
-        , service ? name
-        , serviceScheme ? if port == 443 then "https" else "http"
-        , extraService ? { }
-        , extraServices ? [ ]
-        , internal ? true
-        , secretName ? ""
-        , labels ? [ ]
-        , middlewares ? [ ]
-        , extraRule ? { }
-        , extraRoutes ? [ ]
-        , extraSpec ? { }
-        , ingressRouteNamespace ? "default"
-        , pre23 ? false
-        , apiVersion ? if pre23 then "traefik.containo.us/v1alpha1" else "traefik.io/v1alpha1"
+        { name  # type: string; IngressRoute resource name
+        , domain  # type: string; host or host regexp matched by the route
+        , regex ? false  # type: bool; use HostRegexp instead of Host
+        , port ? 80  # type: number; backend service port
+        , namespace ? "default"  # type: string; backend service namespace
+        , service ? name  # type: string; backend service name
+        , serviceScheme ? if port == 443 then "https" else "http"  # type: string; backend service scheme
+        , extraService ? { }  # type: attrset; extra fields merged into primary service entry
+        , extraServices ? [ ]  # type: list; additional service entries appended to services
+        , internal ? true  # type: bool; switch ingress class between internal and external traefik
+        , secretName ? ""  # type: string; TLS secret name, empty string disables TLS
+        , labels ? [ ]  # type: list; metadata labels list inserted when non-empty
+        , middlewares ? [ ]  # type: list; middleware refs attached to the route
+        , extraRule ? { }  # type: attrset; extra fields merged into route rule
+        , extraRoutes ? [ ]  # type: list; additional route entries appended to spec.routes
+        , extraSpec ? { }  # type: attrset; extra fields merged into spec
+        , ingressRouteNamespace ? "default"  # type: string; namespace for the IngressRoute resource
+        , pre23 ? false  # type: bool; use legacy traefik.containo.us API group
+        , apiVersion ? if pre23 then "traefik.containo.us/v1alpha1" else "traefik.io/v1alpha1"  # type: string; override Traefik CRD apiVersion
         }:
         let
           secure = (builtins.stringLength secretName) > 0;
