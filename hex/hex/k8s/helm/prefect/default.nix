@@ -9,7 +9,7 @@ let
         namespace = "prefect";
       };
       chart_url = version: "https://prefecthq.github.io/prefect-helm/charts/${name}-${version}.tgz";
-      values_url = "https://github.com/prefect-community/prefect-chart/blob/main/charts/prefect/values.yaml";
+      values_url = "https://github.com/PrefectHQ/prefect-helm/blob/main/charts/prefect-server/values.yaml";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     in
     {
@@ -24,7 +24,7 @@ let
         namespace = "prefect";
       };
       chart_url = version: "https://prefecthq.github.io/prefect-helm/charts/${name}-${version}.tgz";
-      values_url = "https://github.com/prefect-community/prefect-chart/blob/main/charts/prefect/values.yaml";
+      values_url = "https://github.com/PrefectHQ/prefect-helm/blob/main/charts/prefect-worker/values.yaml";
       chart = hex.k8s._.chart { inherit defaults chart_url; };
     in
     {
