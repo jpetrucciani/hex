@@ -1,5 +1,20 @@
 [
   {
+    "version": "8.0.1",
+    "date": "2026-02-24T19:08:26.306173579Z",
+    "sha256": "1cp59gqz3aik8rh6mp4pippb6igkivvajir88cxfkmg6llfmqkga"
+  },
+  {
+    "version": "8.0.0",
+    "date": "2026-02-24T13:27:09.382200881Z",
+    "sha256": "1vbxf7x97pfvim7g7c1dd8jkw7iyh4abd8ly6f8xhwm1bqh4jj5j"
+  },
+  {
+    "version": "7.4.16",
+    "date": "2026-02-24T12:36:03.309635182Z",
+    "sha256": "08kxb9y8b4j5sz2cvk7ywm76q5hg3hzq6jnvgnpmqgmvpicpzj4q"
+  },
+  {
     "version": "7.4.15",
     "date": "2026-02-23T14:00:54.792937128Z",
     "sha256": "0ssh2y4mp8xj40nsghx4fm8n9n3ii6rnhwcnh9qykig6rg22d1jk"
