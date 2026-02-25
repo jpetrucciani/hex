@@ -106,6 +106,18 @@ jobs:
           - attr: trino-gateway
             cmd: chart_scan_trino-gateway
             vfile: ./hex/hex/k8s/helm/trino/gateway.json
+          - attr: flipt
+            cmd: chart_scan_flipt
+            vfile: ./hex/hex/k8s/helm/flipt/flipt.json
+          - attr: livekit
+            cmd: chart_scan_livekit
+            vfile: ./hex/hex/k8s/helm/livekit/livekit.json
+          - attr: retool
+            cmd: chart_scan_retool
+            vfile: ./hex/hex/k8s/helm/retool/retool.json
+          - attr: sentry
+            cmd: chart_scan_sentry
+            vfile: ./hex/hex/k8s/helm/sentry/sentry.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

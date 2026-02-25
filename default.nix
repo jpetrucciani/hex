@@ -36,6 +36,12 @@ let
         { name = "coroot-node-agent"; spec = ''hex.k8s.coroot.node-agent.version.latest {}''; check = num_docs 1; }
         { name = "open-webui"; spec = "hex.k8s.open-webui.version.latest {}"; check = num_docs 14; }
         { name = "cert-manager"; spec = "hex.k8s.cert-manager.version.latest {}"; check = num_docs 46; }
+        { name = "argocd"; spec = "hex.k8s.argocd.version.latest {}"; check = num_docs 53; }
+        { name = "argo-workflows"; spec = "hex.k8s.argo-workflows.version.latest {}"; check = num_docs 27; }
+        { name = "flipt"; spec = "hex.k8s.flipt.version.latest {}"; check = num_docs 5; }
+        { name = "livekit"; spec = "hex.k8s.livekit.version.latest {}"; check = num_docs 3; }
+        { name = "retool"; spec = ''hex.k8s.retool.version.latest {valuesAttrs = {config.encryptionKey = "meme"; image.tag = "3.284.7-stable";};}''; check = num_docs 17; }
+        { name = "sentry"; spec = "hex.k8s.sentry.version.latest {}"; check = num_docs 105; }
         { name = "redpanda"; spec = "hex.k8s.redpanda.version.latest {}"; check = num_docs 9; }
         { name = "questdb"; spec = "hex.k8s.questdb.version.latest {}"; check = num_docs 5; }
         { name = "questdb"; spec = "hex.k8s.questdb.version.v1-0-17 {}"; check = num_docs 5; }

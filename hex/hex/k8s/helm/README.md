@@ -114,7 +114,7 @@ This module contains an [elastic operator](https://github.com/elastic/cloud-on-k
 
 [fleet](https://github.com/fleetdm/fleet) is an open-source platform for IT, security, and infrastructure teams
 
-### [flipt.nix](./flipt.nix)
+### [flipt/](./flipt/)
 
 [flipt](https://github.com/flipt-io/flipt) is a feature flag service built with Go
 
@@ -134,7 +134,7 @@ This module contains a [kong ingress controller](https://github.com/Kong/kuberne
 
 [langflow](https://github.com/langflow-ai/langflow) is a visual framework for building multi-agent and RAG applications
 
-### [livekit.nix](./livekit.nix)
+### [livekit/](./livekit/)
 
 [livekit](https://github.com/livekit/livekit) is an End-to-end realtime stack for connecting humans and AI
 
@@ -166,6 +166,10 @@ This module contains an [odoo](https://github.com/odoo/odoo) chart
 
 [redis-operator](https://github.com/spotahome/redis-operator) creates/configures/manages high availability redis with sentinel automatic failover atop Kubernetes
 
+### [retool/](./retool/)
+
+[retool](https://github.com/tryretool/retool-helm) is a low-code platform for building internal tools
+
 ### [robusta.nix](./robusta.nix)
 
 [robusta](https://github.com/robusta-dev/robusta) is a Kubernetes observability and automation, with an awesome Prometheus integration
@@ -174,7 +178,7 @@ This module contains an [odoo](https://github.com/odoo/odoo) chart
 
 [searxng](https://github.com/searxng/searxng/) is a free internet metasearch engine which aggregates results from various search services and databases
 
-### [sentry.nix](./sentry.nix)
+### [sentry/](./sentry/)
 
 [sentry](https://github.com/getsentry/sentry) is a Developer-first error tracking and performance monitoring platform.
 
