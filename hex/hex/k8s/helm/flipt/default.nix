@@ -9,7 +9,7 @@ let
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./flipt.json; };
     chart_url = version: "https://github.com/flipt-io/helm-charts/releases/download/${name}-${version}/${name}-${version}.tgz";
-    values_url = "";
+    values_url = "https://github.com/flipt-io/helm-charts/blob/main/charts/flipt/values.yaml";
     chart = hex.k8s._.chart { inherit defaults chart_url; };
   };
 in
