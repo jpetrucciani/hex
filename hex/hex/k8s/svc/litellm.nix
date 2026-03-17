@@ -2,7 +2,7 @@
 let
   litellm =
     { name ? "litellm"
-    , version ? "v1.82.0"
+    , version ? "v1.82.3"
     , namespace ? "default"
     , image_registry ? "ghcr.io/berriai"
     , image_base ? "litellm-database"
@@ -24,19 +24,20 @@ let
     , periodSeconds ? 10
     , successThreshold ? 1
     , timeoutSeconds ? 4
+    , initialDelaySeconds ? 10
     , livenessProbe ? {
         httpGet = {
           inherit port;
           path = "/health/liveliness";
         };
-        inherit failureThreshold periodSeconds successThreshold timeoutSeconds;
+        inherit initialDelaySeconds failureThreshold periodSeconds successThreshold timeoutSeconds;
       }
     , readinessProbe ? {
         httpGet = {
           inherit port;
           path = "/health/readiness";
         };
-        inherit failureThreshold periodSeconds successThreshold timeoutSeconds;
+        inherit initialDelaySeconds failureThreshold periodSeconds successThreshold timeoutSeconds;
       }
     , maxUnavailable ? 0
     , maxSurge ? "50%"
