@@ -7,7 +7,7 @@ let
   isFunctor = hasAttrKey "__functor";
   core = "${pkgs.coreutils}/bin";
   oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${../.oxfmtrc.json}";
-  nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
+  nix = "${pkgs.nixVersions.nix_2_32}/bin/nix";
   hexcast =
     let
       _ = {
@@ -43,8 +43,12 @@ let
         fullpath="$(${_.realpath} "$spell")"
         debug "casting $fullpath - hex files at ${./hex}"
         ${nix} eval --raw --impure --expr "import ${./hex}/spell.nix ${pkgs.path} \"$fullpath\"" >"$spell_render"
+        render_exit_code=$?
+        [ "$render_exit_code" -ne 0 ] && exit "$render_exit_code"
         debug "formatting $spell_render"
         ${oxfmt} "$spell_render" &>/dev/null
+        format_exit_code=$?
+        [ "$format_exit_code" -ne 0 ] && exit "$format_exit_code"
         debug "removing blank docs in $spell_render"
         # remove empty docs
         ${_.sed} -E -z -i 's#---(\n+---)*#---#g' "$spell_render"
@@ -209,7 +213,9 @@ in
           if [ "$render_exit_code" -ne 0 ]; then
             die "hexcast failed!" 2
           fi
-          ${flag "prettify"} && ${oxfmt} "$rendered" >/dev/null
+          if ${flag "prettify"}; then
+            ${oxfmt} "$rendered" >/dev/null || die "oxfmt failed!" 2
+          fi
           if ${flag "render"}; then
             cat "$rendered"
             exit 0
