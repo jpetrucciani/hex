@@ -7,6 +7,7 @@ let
   isFunctor = hasAttrKey "__functor";
   core = "${pkgs.coreutils}/bin";
   oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${../.oxfmtrc.json}";
+  nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
   hexcast =
     let
       _ = {
@@ -14,7 +15,6 @@ let
         realpath = "${core}/realpath";
         yq = "${pkgs.yq-go}/bin/yq";
         mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
-        nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
       };
     in
     pog {
@@ -42,7 +42,7 @@ let
         trap "rm -f $spell_render" EXIT
         fullpath="$(${_.realpath} "$spell")"
         debug "casting $fullpath - hex files at ${./hex}"
-        ${_.nix} eval --raw --impure --expr "import ${./hex}/spell.nix ${pkgs.path} \"$fullpath\"" >"$spell_render"
+        ${nix} eval --raw --impure --expr "import ${./hex}/spell.nix ${pkgs.path} \"$fullpath\"" >"$spell_render"
         debug "formatting $spell_render"
         ${oxfmt} "$spell_render" &>/dev/null
         debug "removing blank docs in $spell_render"
@@ -56,9 +56,6 @@ in
 {
   inherit hexcast;
   nixrender =
-    let
-      nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
-    in
     pog {
       name = "nixrender";
       description = "a quick and easy way to use nix to render various other config files!";
@@ -68,7 +65,7 @@ in
       ];
       script = ''
         template="$1"
-        rendered="$(${nix}/bin/nix eval --raw -f "$template")"
+        rendered="$(${nix} eval --raw -f "$template")"
         echo "$rendered"
       '';
     };
@@ -175,8 +172,8 @@ in
           EOF
           fi
           side="true"
-          if ${flag "repl"};then
-            nix repl --impure --expr "import ${./hex}/spell.nix ${pkgs.path} { isRepl = true; } \"\""
+          if ${flag "repl"}; then
+            ${nix} repl --impure --expr "import ${./hex}/spell.nix ${pkgs.path} { isRepl = true; } \"\""
             exit
           fi
           ${flag "clientside"} && side="false"
