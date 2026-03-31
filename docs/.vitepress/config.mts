@@ -18,13 +18,11 @@ type SidebarGroup = {
   items: SidebarLeaf[];
 };
 
-function loadGeneratedIndex():
-  | {
-      charts?: Array<{ attrPath?: string; pageLink?: string }>;
-      svc?: Array<{ attrPath?: string; pageLink?: string }>;
-      helpers?: Array<{ moduleAttrPath?: string; pageLink?: string }>;
-    }
-  | null {
+function loadGeneratedIndex(): {
+  charts?: Array<{ attrPath?: string; pageLink?: string }>;
+  svc?: Array<{ attrPath?: string; pageLink?: string }>;
+  helpers?: Array<{ moduleAttrPath?: string; pageLink?: string }>;
+} | null {
   try {
     const raw = fs.readFileSync(generatedIndexPath, 'utf8');
     return JSON.parse(raw);

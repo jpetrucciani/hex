@@ -6,6 +6,8 @@ let
     defaults = {
       inherit name;
       namespace = name;
+      # The chart schema fetches a remote Flipt config schema, which fails in Nix builds.
+      extraFlags = [ "--skip-schema-validation" ];
     };
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./flipt.json; };
     chart_url = version: "https://github.com/flipt-io/helm-charts/releases/download/${name}-${version}/${name}-${version}.tgz";

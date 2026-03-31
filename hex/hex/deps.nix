@@ -70,7 +70,7 @@ let
               , version ? defaults.version or ""
               , sha256 ? defaults.sha256 or ""
               , forceNamespace ? true
-              , extraFlags ? [ ]
+              , extraFlags ? defaults.extraFlags or [ ]
               , sortYaml ? false
               , preRender ? defaults.preRender or ""
               , postRender ? defaults.postRender or ""

@@ -1015,7 +1015,7 @@ function findEnclosingAssignedAttrsetRange(source, markerIndex) {
     return null;
   }
 
-  candidates.sort((a, b) => (a.end - a.start) - (b.end - b.start));
+  candidates.sort((a, b) => a.end - a.start - (b.end - b.start));
   return candidates[0];
 }
 
@@ -1343,7 +1343,9 @@ function renderFunctionDocs(lines, fn, headingLevel) {
   lines.push('| Arg | Type | Default | Notes |');
   lines.push('| --- | --- | --- | --- |');
   for (const arg of optionalArgs) {
-    lines.push(`| \`${arg.name}\` | ${renderArgType(arg.type)} | ${renderArgDefault(arg.defaultValue)} | ${arg.note || '-'} |`);
+    lines.push(
+      `| \`${arg.name}\` | ${renderArgType(arg.type)} | ${renderArgDefault(arg.defaultValue)} | ${arg.note || '-'} |`,
+    );
   }
   lines.push('');
 }
@@ -1522,7 +1524,9 @@ function buildChartData(meta) {
     const rowMeta = chartMeta[attrPath] || {};
     const resolvedMeta = resolveChartMeta(rowMeta, inlineMeta);
     const slug = slugFromAttr(attrPath);
-    const helperFunctions = moduleSourceText ? extractChartHelperFunctions(moduleSourceText, attrPath, path.basename(file)) : [];
+    const helperFunctions = moduleSourceText
+      ? extractChartHelperFunctions(moduleSourceText, attrPath, path.basename(file))
+      : [];
 
     rows.push({
       attrPath,
