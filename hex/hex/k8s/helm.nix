@@ -3,7 +3,7 @@
 let
   inherit (builtins) isFunction readFile;
   inherit (hex) concatMapStrings _if fetchGitChart fetchOCIChart;
-  inherit (hex._) prettier sed yaml_sort yq;
+  inherit (hex._) oxfmt sed yaml_sort yq;
   helm = rec {
     constants = {
       flags = {
@@ -95,7 +95,7 @@ let
           ${postRenderText}
           ${_if sortYaml ''${yaml_sort} <$out >$out.tmp''}
           ${_if sortYaml ''mv $out.tmp $out''}
-          ${_if prettify ''${prettier} --parser yaml $out''}
+          ${_if prettify ''${oxfmt} $out''}
         '';
       };
   };

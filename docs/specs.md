@@ -55,7 +55,7 @@ Flags:
 -r, --render          only render and patch, do not diff or apply [bool]
 -c, --crds            filter down to just the CRDs (useful for initial deployments) [bool]
 --clientside          run the diff on the clientside instead of serverside [bool]
--p, --prettify        whether to run prettier on the hex output yaml [bool]
+-p, --prettify        whether to run oxfmt on the hex output yaml [bool]
 -f, --force           force apply the resulting hex without a diff (WARNING - BE CAREFUL) [bool]
 -e, --evaluate        evaluate an in-line hex script
 --version             print version and exit [bool]

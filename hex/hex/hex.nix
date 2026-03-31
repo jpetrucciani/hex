@@ -194,7 +194,7 @@ rec {
     , version ? "0.0.1"
     }: builtins.readFile (pkgs.runCommand "${name}-${version}" { src = builtins.fetchurl { inherit url sha256; }; } ''
       ${if isFunction patch then patch _ else patch}
-      ${_.prettier} --parser yaml $out
+      ${_.oxfmt} $out
     '');
 
   _ = rec {
@@ -207,7 +207,7 @@ rec {
     tail = "${_cu}/tail";
     tr = "${_cu}/tr";
     yq = "${pkgs.yq-go}/bin/yq";
-    prettier = "${pkgs.nodePackages.prettier}/bin/prettier --write --config ${_files.prettier_config}";
+    oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${_._files.oxfmt_config}";
     yamlfmt = "${pkgs.yamlfmt}/bin/yamlfmt";
 
     _yaml_py = pkgs.python311.withPackages (p: with p; [ pyaml ]);
@@ -254,27 +254,24 @@ rec {
               print(f"---\n{rendered}")
         '';
       };
-      prettier_config = pkgs.writeTextFile {
-        name = "prettier.config.js";
-        text = ''
-          const config = {
-            printWidth: 100,
-            arrowParens: 'always',
-            singleQuote: true,
-            tabWidth: 2,
-            useTabs: false,
-            semi: true,
-            bracketSpacing: false,
-            bracketSameLine: false,
-            requirePragma: false,
-            proseWrap: 'preserve',
-            trailingComma: 'all',
-          };
-          module.exports = config;
-        '';
-      };
+      oxfmt_config =
+        let
+          configFormat = pkgs.formats.json { };
+        in
+        configFormat.generate ".oxfmtrc.json" {
+          printWidth = 120;
+          arrowParens = "always";
+          singleQuote = true;
+          tabWidth = 2;
+          useTabs = false;
+          semi = true;
+          bracketSpacing = true;
+          bracketSameLine = false;
+          proseWrap = "preserve";
+          trailingComma = "all";
+          ignorePatterns = [ "flake.lock" ];
+        };
     };
-
   };
 
   constants = {

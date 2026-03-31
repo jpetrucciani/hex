@@ -6,27 +6,27 @@ let
   hasAttrKey = key: value: (isAttrSet value) && (builtins.hasAttr key value);
   isFunctor = hasAttrKey "__functor";
   core = "${pkgs.coreutils}/bin";
+  oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${../.oxfmtrc.json}";
   hexcast =
     let
       _ = {
         sed = "${pkgs.gnused}/bin/sed";
         realpath = "${core}/realpath";
         yq = "${pkgs.yq-go}/bin/yq";
-        prettier = "${pkgs.nodePackages.prettier}/bin/prettier --write --config ${../prettier.config.js}";
         mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
-        nix = "${pkgs.nixVersions.nix_2_32}/bin/nix";
+        nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
       };
     in
     pog {
       name = "hexcast";
-      version = "0.0.6";
+      version = "0.0.7";
       description = "a quick and easy way to use nix to render (cast) various other types of config files!";
       flags = [
-        {
-          name = "format";
-          description = "the output format to use. use either yaml or json!";
-          default = "yaml";
-        }
+        # {
+        #   name = "format";
+        #   description = "the output format to use. use either yaml or json!";
+        #   default = "yaml";
+        # }
         {
           name = "crds";
           description = "filter to only the crds (k8s specific)";
@@ -44,7 +44,7 @@ let
         debug "casting $fullpath - hex files at ${./hex}"
         ${_.nix} eval --raw --impure --expr "import ${./hex}/spell.nix ${pkgs.path} \"$fullpath\"" >"$spell_render"
         debug "formatting $spell_render"
-        ${_.prettier} --parser "$format" "$spell_render" &>/dev/null
+        ${oxfmt} "$spell_render" &>/dev/null
         debug "removing blank docs in $spell_render"
         # remove empty docs
         ${_.sed} -E -z -i 's#---(\n+---)*#---#g' "$spell_render"
@@ -57,7 +57,7 @@ in
   inherit hexcast;
   nixrender =
     let
-      nix = "${pkgs.nixVersions.nix_2_32}/bin/nix";
+      nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
     in
     pog {
       name = "nixrender";
@@ -75,7 +75,7 @@ in
 
   hex =
     let
-      version = "0.0.10";
+      version = "0.0.11";
     in
     pog {
       inherit version;
@@ -120,7 +120,7 @@ in
         }
         {
           name = "prettify";
-          description = "whether to run prettier on the hex output yaml";
+          description = "whether to run oxfmt on the hex output yaml";
           bool = true;
         }
         {
@@ -160,7 +160,6 @@ in
             mktemp = "${pkgs.coreutils}/bin/mktemp";
             rg = "${pkgs.ripgrep}/bin/rg";
             sort = "${pkgs.coreutils}/bin/sort";
-            prettier = "${pkgs.nodePackages.prettier}/bin/prettier --write --config ${../prettier.config.js}";
           };
         in
         helpers: with helpers; ''
@@ -213,7 +212,7 @@ in
           if [ "$render_exit_code" -ne 0 ]; then
             die "hexcast failed!" 2
           fi
-          ${flag "prettify"} && ${_.prettier} --parser yaml "$rendered" >/dev/null
+          ${flag "prettify"} && ${oxfmt} "$rendered" >/dev/null
           if ${flag "render"}; then
             cat "$rendered"
             exit 0
