@@ -3,13 +3,12 @@ on: { workflow_dispatch, push: { branches: [main] }, pull_request }
 jobs:
   test:
     runs-on: ubuntu-24.04
-    env:
-      NIX_CACHE_HOME: ${{ runner.temp }}/nix-cache
     steps:
       - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v31
         with:
           install_options: --no-daemon
       - run: |
+          export NIX_CACHE_HOME="${RUNNER_TEMP}/nix-cache"
           nix build .#test
           ./result/bin/test
