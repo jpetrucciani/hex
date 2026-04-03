@@ -7,7 +7,7 @@ let
   isFunctor = hasAttrKey "__functor";
   core = "${pkgs.coreutils}/bin";
   oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${../.oxfmtrc.json}";
-  nix = "${pkgs.nixVersions.nix_2_32}/bin/nix";
+  nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
   hexcast =
     let
       _ = {
