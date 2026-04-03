@@ -9,5 +9,6 @@ jobs:
         with:
           install_options: --no-daemon
       - run: |
+          export NIX_CACHE_HOME="${RUNNER_TEMP}/nix-cache"
           nix build .#test
           ./result/bin/test
