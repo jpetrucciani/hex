@@ -1,103 +1,108 @@
 [
   {
+    "version": "30.2.0",
+    "date": "2026-04-28T11:56:54.152108516Z",
+    "sha256": "0dhk0jvc0xpvn7p424pm795xg5cijvhz7hs4dwzj84fb0k982z14"
+  },
+  {
     "version": "30.1.0",
-    "date": "2026-04-22T06:37:53.127660719Z",
+    "date": "2026-04-28T11:56:54.125110452Z",
     "sha256": "1g3q82yrv896q2cwfd0wx5rvmd01gg1nddz3gf8vyrmn54dih30x"
   },
   {
     "version": "30.0.1",
-    "date": "2026-04-22T06:37:53.100685275Z",
+    "date": "2026-04-28T11:56:54.099685316Z",
     "sha256": "01ksr4shxpby5ihjx80zng2ljp8p1w6rdw7br3cm6z6wqdc27ffx"
   },
   {
     "version": "30.0.0",
-    "date": "2026-04-22T06:37:53.072827819Z",
+    "date": "2026-04-28T11:56:54.071552051Z",
     "sha256": "0kixsjnf8jav10y3vgpsmyglami11dww4f0m94gqv49zlca2zbaw"
   },
   {
     "version": "29.5.1",
-    "date": "2026-04-22T06:37:53.015657947Z",
+    "date": "2026-04-28T11:56:54.013682602Z",
     "sha256": "0pgay81fwix4ywisg0ij3y8qk1w2amqyn3mvlc6ai0ydgwlz2799"
   },
   {
     "version": "29.5.0",
-    "date": "2026-04-22T06:37:52.98815221Z",
+    "date": "2026-04-28T11:56:53.986395322Z",
     "sha256": "1xcjnhkl3dylnzmj2m3hgfw1xhi006sqa89hgcyrg0kzvfc5wwkn"
   },
   {
     "version": "29.4.1",
-    "date": "2026-04-22T06:37:52.960862352Z",
+    "date": "2026-04-28T11:56:53.959722223Z",
     "sha256": "05rvv4i3lrazrp0ry9l9yay4z8v3b01i11zqh2a931zdfpbx04f0"
   },
   {
     "version": "29.4.0",
-    "date": "2026-04-22T06:37:52.932589504Z",
+    "date": "2026-04-28T11:56:53.932694628Z",
     "sha256": "1khrq8990n1gbi0zspnjdpcp6k3w411b2n7qqypr4ajf78gncb0m"
   },
   {
     "version": "29.3.0",
-    "date": "2026-04-22T06:37:52.906487134Z",
+    "date": "2026-04-28T11:56:53.906710554Z",
     "sha256": "1bk02m6i3wlwz16f4x2d4a2wx0ifclcsl7nddamlgvh3f2jidnx9"
   },
   {
     "version": "29.2.0",
-    "date": "2026-04-22T06:37:52.880056268Z",
+    "date": "2026-04-28T11:56:53.87952673Z",
     "sha256": "19hx6rih03y14ixbqx1mn8dy0nf164hd8g206bxalxwkg840hhvd"
   },
   {
     "version": "29.1.0",
-    "date": "2026-04-22T06:37:52.852050933Z",
+    "date": "2026-04-28T11:56:53.852962903Z",
     "sha256": "0piqych41bk07ra6l5wz613620gpxs702wy3wx6czfjvd1wwivn8"
   },
   {
     "version": "29.0.0",
-    "date": "2026-04-22T06:37:52.824815237Z",
+    "date": "2026-04-28T11:56:53.826671056Z",
     "sha256": "1x58aykcbygv83ympgshmp5yyppl9nf63iqswjnsrb3c80zxpbpv"
   },
   {
     "version": "28.1.0",
-    "date": "2026-04-22T06:37:52.79917056Z",
+    "date": "2026-04-28T11:56:53.801354107Z",
     "sha256": "1mz7n5pbghb6sc5y7bd44ski0r2nyqbkjmxw06r2yknq15vj2i1a"
   },
   {
     "version": "28.0.3",
-    "date": "2026-04-22T06:37:52.766706439Z",
+    "date": "2026-04-28T11:56:53.769084162Z",
     "sha256": "02sqcp8fj6rfivdhgifcpf0qr9820pynki6xyh4561nn202hr463"
   },
   {
     "version": "28.0.2",
-    "date": "2026-04-22T06:37:52.734153298Z",
+    "date": "2026-04-28T11:56:53.73765282Z",
     "sha256": "08p0iq774pc9kx97wfcpb85qrrbqsz31z6cmdh45k4nhlm4h5k0m"
   },
   {
     "version": "28.0.1",
-    "date": "2026-04-22T06:37:52.702282835Z",
+    "date": "2026-04-28T11:56:53.703877814Z",
     "sha256": "15k1y4awhdn6yw2j5h90dbbn1in10rdg772jqzgb40qybcp43jhz"
   },
   {
     "version": "28.0.0",
-    "date": "2026-04-22T06:37:52.670861367Z",
+    "date": "2026-04-28T11:56:53.670789668Z",
     "sha256": "0ka2k3g0rzqjrmrb5d8a2rxsxi0mr6h4c9jhhiv57z86bhfxqxxb"
   },
   {
     "version": "27.9.0",
-    "date": "2026-04-22T06:37:52.63892607Z",
+    "date": "2026-04-28T11:56:53.639069639Z",
     "sha256": "0vszzliba28crv725nzppv757h03nj1rddrd2r98077if1fqahjp"
+  },
+  {
+    "version": "27.11.0",
+    "date": "2026-04-28T11:56:52.941959106Z",
+    "sha256": "1w51n4as759kxijbllbx4g0z37ic16325z4cph1ahawrmqqsqnrz"
+  },
+  {
+    "version": "27.10.0",
+    "date": "2026-04-28T11:56:52.906134253Z",
+    "sha256": "1bjwlpbb4liffwlh4g3lkp20a23z047nrbqzd9kffjkg4d73q3qn"
   },
   {
     "version": "27.8.1",
     "date": "2026-04-22T06:37:52.603485431Z",
     "sha256": "0n6bf827wrr9z1c9rslgc0b01vq4kq64w2j242c88szn2i2bybqm"
-  },
-  {
-    "version": "27.11.0",
-    "date": "2026-04-22T06:37:51.851718547Z",
-    "sha256": "1w51n4as759kxijbllbx4g0z37ic16325z4cph1ahawrmqqsqnrz"
-  },
-  {
-    "version": "27.10.0",
-    "date": "2026-04-22T06:37:51.807035003Z",
-    "sha256": "1bjwlpbb4liffwlh4g3lkp20a23z047nrbqzd9kffjkg4d73q3qn"
   },
   {
     "version": "27.8.0",
