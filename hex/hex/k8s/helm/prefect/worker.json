@@ -1,5 +1,15 @@
 [
   {
+    "version": "2026.5.1223020",
+    "date": "2026-05-01T22:30:46.032305434Z",
+    "sha256": "0w680ipw82dda8zbwc7lmphyggqnrah3f2xniljc2prmsk1npn0k"
+  },
+  {
+    "version": "2026.5.1213142",
+    "date": "2026-05-01T21:32:09.518715032Z",
+    "sha256": "0pbin5wwc3hb7y35k3wncp1q60l3kbkvyza7lghxsg9qj9anam9l"
+  },
+  {
     "version": "2026.4.24170839",
     "date": "2026-04-24T17:09:05.507996719Z",
     "sha256": "1yaf2drgjx03f0hpwk2v2i079lrx31lx90sj1lz61pqlimrg52x5"
