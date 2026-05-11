@@ -60,7 +60,7 @@ let
         { name = "prometheus-exporters-mongodb"; spec = ''hex.k8s.prometheus.exporters.mongodb.version.latest {}''; check = num_docs 5; }
         { name = "prometheus-exporters-mysql"; spec = ''hex.k8s.prometheus.exporters.mysql.version.latest {}''; check = num_docs 3; }
         { name = "prometheus-exporters-nats"; spec = ''hex.k8s.prometheus.exporters.nats.version.latest {}''; check = num_docs 2; }
-        { name = "prometheus-exporters-postgres"; spec = ''hex.k8s.prometheus.exporters.postgres.version.latest {}''; check = num_docs 6; }
+        { name = "prometheus-exporters-postgres"; spec = ''hex.k8s.prometheus.exporters.postgres.version.latest { valuesAttrs.config.datasource.passwordSecret = { name = "pg-pass-secret"; key = "PGPASS"; }; }''; check = num_docs 5; }
         { name = "prometheus-exporters-redis"; spec = ''hex.k8s.prometheus.exporters.redis.version.latest {}''; check = num_docs 5; }
       ];
       test_case = x:
