@@ -62,6 +62,7 @@ let
         { name = "prometheus-exporters-nats"; spec = ''hex.k8s.prometheus.exporters.nats.version.latest {}''; check = num_docs 2; }
         { name = "prometheus-exporters-postgres"; spec = ''hex.k8s.prometheus.exporters.postgres.version.latest { valuesAttrs.config.datasource.passwordSecret = { name = "pg-pass-secret"; key = "PGPASS"; }; }''; check = num_docs 5; }
         { name = "prometheus-exporters-redis"; spec = ''hex.k8s.prometheus.exporters.redis.version.latest {}''; check = num_docs 5; }
+        { name = "dremio"; spec = ''hex.k8s.dremio.version.latest {valuesAttrs.distStorage={type="aws"; aws={bucketName= "test"; region="us-east-2";};};}''; check = num_docs 106; }
       ];
       test_case = x:
         let
