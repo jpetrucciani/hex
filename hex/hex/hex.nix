@@ -162,11 +162,13 @@ rec {
         tmp_dir=$(mktemp -d)
         # shellcheck disable=SC2064
         trap "rm -rf $tmp_dir" EXIT
+        image_dir="$tmp_dir/image"
+        mkdir "$image_dir"
         printf '{}' >"$tmp_dir/auth.json"
-        skopeo --insecure-policy copy --authfile "$tmp_dir/auth.json" --format oci docker://${pkgs.lib.removePrefix "oci://" url} dir:$tmp_dir
-        largest_blob=$(jq '.layers[] | select (.mediaType == "application/vnd.cncf.helm.chart.content.v1.tar+gzip") | .digest' -r $tmp_dir/manifest.json | cut -d: -f2)
+        skopeo --insecure-policy copy --authfile "$tmp_dir/auth.json" --format oci docker://${pkgs.lib.removePrefix "oci://" url} dir:$image_dir
+        largest_blob=$(jq '.layers[] | select (.mediaType == "application/vnd.cncf.helm.chart.content.v1.tar+gzip") | .digest' -r "$image_dir/manifest.json" | cut -d: -f2)
         mkdir -p $out
-        tar -xzvf $tmp_dir/$largest_blob --strip-components=1 -C $out
+        tar -xzvf "$image_dir/$largest_blob" --strip-components=1 -C $out
       '';
       outputHashAlgo = "sha256";
       outputHashMode = "recursive";
