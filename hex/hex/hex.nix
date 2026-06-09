@@ -162,7 +162,8 @@ rec {
         tmp_dir=$(mktemp -d)
         # shellcheck disable=SC2064
         trap "rm -rf $tmp_dir" EXIT
-        skopeo --insecure-policy copy --format oci docker://${pkgs.lib.removePrefix "oci://" url} dir:$tmp_dir
+        printf '{}' >"$tmp_dir/auth.json"
+        skopeo --insecure-policy copy --authfile "$tmp_dir/auth.json" --format oci docker://${pkgs.lib.removePrefix "oci://" url} dir:$tmp_dir
         largest_blob=$(jq '.layers[] | select (.mediaType == "application/vnd.cncf.helm.chart.content.v1.tar+gzip") | .digest' -r $tmp_dir/manifest.json | cut -d: -f2)
         mkdir -p $out
         tar -xzvf $tmp_dir/$largest_blob --strip-components=1 -C $out
