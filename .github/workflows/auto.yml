@@ -118,6 +118,9 @@ jobs:
           - attr: sentry
             cmd: chart_scan_sentry
             vfile: ./hex/hex/k8s/helm/sentry/sentry.json
+          - attr: dremio
+            cmd: chart_scan_dremio
+            vfile: ./hex/hex/k8s/helm/dremio/dremio.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
