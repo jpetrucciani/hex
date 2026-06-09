@@ -1106,6 +1106,70 @@ function valuesUrlFromDir(dirPath) {
   return [...urls][0] || null;
 }
 
+function literalValuesUrlFromBlock(block) {
+  const binding = parseTopLevelBindingsFromAttrset(block).find((item) => item.key === 'values_url');
+  const match = binding?.value.match(/^"([^"]+)"$/);
+  return match?.[1] ?? null;
+}
+
+function topLevelInheritsValuesUrl(block) {
+  return splitTopLevelStatements(block).some((statement) => /\binherit\b[^;]*\bvalues_url\b/.test(statement));
+}
+
+function inheritedValuesUrlBefore(source, index) {
+  const prefix = source.slice(0, index);
+  const regex = /\bvalues_url\s*=\s*"([^"]+)"/g;
+  let latest = null;
+  for (const match of prefix.matchAll(regex)) {
+    latest = match[1];
+  }
+  return latest;
+}
+
+function findEnclosingAttrsetRanges(source, markerIndex) {
+  const candidates = [];
+  for (let i = 0; i < source.length; i += 1) {
+    if (source[i] !== '{') {
+      continue;
+    }
+    const end = findBraceEnd(source, i);
+    if (end < 0) {
+      continue;
+    }
+    if (i <= markerIndex && markerIndex <= end) {
+      candidates.push({ start: i, end });
+    }
+  }
+
+  candidates.sort((a, b) => a.end - a.start - (b.end - b.start));
+  return candidates;
+}
+
+function chartValuesUrlFromSource(source, versionFileName) {
+  const marker = `versionFile = ./${versionFileName}`;
+  const markerIndex = source.indexOf(marker);
+  if (markerIndex < 0) {
+    return null;
+  }
+
+  for (const scopeRange of findEnclosingAttrsetRanges(source, markerIndex)) {
+    const block = source.slice(scopeRange.start + 1, scopeRange.end);
+    const literal = literalValuesUrlFromBlock(block);
+    if (literal) {
+      return literal;
+    }
+
+    if (topLevelInheritsValuesUrl(block)) {
+      const inherited = inheritedValuesUrlBefore(source, scopeRange.start);
+      if (inherited) {
+        return inherited;
+      }
+    }
+  }
+
+  return null;
+}
+
 function toVersionAttr(version) {
   const raw = String(version || '').trim();
   if (!raw) {
@@ -1541,7 +1605,9 @@ function buildChartData(meta) {
       versionCount: versionEntries.length,
       versions: versionEntries.map((v) => v.version),
       versionEntries,
-      valuesUrl: valuesUrlFromDir(dir),
+      valuesUrl: moduleSourceText
+        ? (chartValuesUrlFromSource(moduleSourceText, path.basename(file)) ?? valuesUrlFromDir(dir))
+        : valuesUrlFromDir(dir),
       appSource: resolvedMeta.source,
       requiredValuesAttrs: resolvedMeta.requiredValuesAttrs,
       notes: resolvedMeta.notes,
