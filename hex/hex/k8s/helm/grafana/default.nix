@@ -537,9 +537,13 @@ let
     };
     chart = hex.k8s._.chart {
       inherit defaults;
-      chart_url = version: _chart_url { inherit version; name = defaults.chart_name; };
+      chart_url = version:
+        if (builtins.compareVersions version "2.0.0") != -1 then
+          "oci://ghcr.io/grafana-community/helm-charts/tempo-distributed:${version}"
+        else
+          _chart_url { inherit version; name = defaults.chart_name; };
     };
-    values_url = "https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml";
+    values_url = "https://github.com/grafana-community/helm-charts/blob/main/charts/tempo-distributed/values.yaml";
     version = hex.k8s._.versionMap { inherit chart; versionFile = ./tempo.json; };
   };
   oncall = rec {
