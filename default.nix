@@ -63,6 +63,7 @@ let
         { name = "prometheus-exporters-postgres"; spec = ''hex.k8s.prometheus.exporters.postgres.version.latest { valuesAttrs.config.datasource.passwordSecret = { name = "pg-pass-secret"; key = "PGPASS"; }; }''; check = num_docs 5; }
         { name = "prometheus-exporters-redis"; spec = ''hex.k8s.prometheus.exporters.redis.version.latest {}''; check = num_docs 5; }
         { name = "dremio"; spec = ''hex.k8s.dremio.version.latest {valuesAttrs.distStorage={type="aws"; aws={bucketName= "test"; region="us-east-2";};};}''; check = num_docs 106; }
+        { name = "keda"; spec = ''hex.k8s.keda.version.latest {}''; check = num_docs 29; }
       ];
       test_case = x:
         let
@@ -84,16 +85,64 @@ let
           rm "$rendered"
           exit $exit_code
         '';
-      test_scripts = map (x: pkgs.writeShellScript "test-${x.name}" (test_case x)) tests;
+      test_scripts = map
+        (x: {
+          inherit (x) name;
+          script = pkgs.writeShellScript "test-${x.name}" (test_case x);
+        })
+        tests;
+      test_names = pkgs.lib.unique (map (x: x.name) tests);
+      all_test_script_args = pkgs.lib.concatMapStringsSep " " (x: ''"${x.script}"'') test_scripts;
+      selected_test_cases = pkgs.lib.concatMapStringsSep "\n"
+        (name:
+          let
+            matching_tests = builtins.filter (x: x.name == name) test_scripts;
+            selected_scripts = pkgs.lib.concatMapStringsSep "\n" (x: ''selected_scripts+=("${x.script}")'') matching_tests;
+          in
+          ''
+            ${name})
+              ${selected_scripts}
+              ;;
+          '')
+        test_names;
+      available_tests = pkgs.lib.concatStringsSep "," test_names;
     in
     pkgs.writers.writeBashBin "test" ''
+      selected_scripts=(${all_test_script_args})
+
+      if [ "$#" -gt 0 ] && [[ "$1" != -* ]]; then
+        requested_tests="$1"
+        shift
+        selected_scripts=()
+
+        IFS=',' read -r -a test_names <<< "$requested_tests"
+        for test_name in "''${test_names[@]}"; do
+          test_name="$(${pkgs.coreutils}/bin/printf '%s' "$test_name" | ${pkgs.gnused}/bin/sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+          [ -z "$test_name" ] && continue
+
+          case "$test_name" in
+            ${selected_test_cases}
+            *)
+              echo "unknown test: $test_name" >&2
+              echo "available tests: ${available_tests}" >&2
+              exit 2
+              ;;
+          esac
+        done
+
+        if [ "''${#selected_scripts[@]}" -eq 0 ]; then
+          echo "no tests selected" >&2
+          exit 2
+        fi
+      fi
+
       ${pkgs.parallel}/bin/parallel \
         --will-cite \
         --keep-order \
         --line-buffer \
         --color \
         "$@" \
-        ::: ${pkgs.lib.concatStringsSep " " test_scripts}
+        ::: "''${selected_scripts[@]}"
     '';
 in
 hex // { inherit deps docsIndex test; }
