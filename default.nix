@@ -12,13 +12,13 @@ let
     let
       heval = "${hex.hex}/bin/hex -r -e";
       mktemp = "${pkgs.coreutils}/bin/mktemp --suffix=.yaml";
-      tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "[$name] not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
+      tests = let num_docs = num: ''[ "$num_docs" -ne ${toString num} ] && echo "not the correct number of docs! expected ${toString num}, but got $num_docs" && exit 1''; in [
         { name = "cronjob"; spec = ''hex.k8s.cron.build {name = "test"; extra={spec.timeZone ="America/Chicago";};}''; check = num_docs 1; }
         { name = "litellm"; spec = "hex.k8s.svc.litellm {}"; check = num_docs 6; }
         { name = "lobe-chat"; spec = "hex.k8s.svc.lobe-chat {}"; check = num_docs 5; }
         { name = "metabase"; spec = ''hex.k8s.svc.metabase {domain = "meme.com";}''; check = num_docs 5; }
-        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.v0-17-0 {}"; check = num_docs 39; }
-        { name = "external-secrets"; spec = "hex.k8s.external-secrets.version.v0-18-0 {}"; check = num_docs 40; }
+        { name = "external-secrets-v0-17-0"; spec = "hex.k8s.external-secrets.version.v0-17-0 {}"; check = num_docs 39; }
+        { name = "external-secrets-v0-18-0"; spec = "hex.k8s.external-secrets.version.v0-18-0 {}"; check = num_docs 40; }
         { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 81; }
         { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 20; }
         { name = "semaphore"; spec = "hex.k8s.semaphore.version.latest {}"; check = num_docs 9; }
@@ -44,8 +44,8 @@ let
         { name = "sentry"; spec = "hex.k8s.sentry.version.v30-4-0 {}"; check = num_docs 101; }
         { name = "sentry-latest"; spec = ''hex.k8s.sentry.version.latest { valuesAttrs.user.existingSecret = "user-secret"; }''; check = num_docs 106; }
         { name = "redpanda"; spec = "hex.k8s.redpanda.version.latest {}"; check = num_docs 13; }
-        { name = "questdb"; spec = "hex.k8s.questdb.version.latest {}"; check = num_docs 5; }
-        { name = "questdb"; spec = "hex.k8s.questdb.version.v1-0-17 {}"; check = num_docs 5; }
+        { name = "questdb-latest"; spec = "hex.k8s.questdb.version.latest {}"; check = num_docs 5; }
+        { name = "questdb-v1-0-17"; spec = "hex.k8s.questdb.version.v1-0-17 {}"; check = num_docs 5; }
         { name = "jupyterhub"; spec = "hex.k8s.jupyterhub.version.v4-3-1 {}"; check = num_docs 30; }
         { name = "prefect-server"; spec = "hex.k8s.prefect.server.version.latest {}"; check = num_docs 8; }
         { name = "prefect-worker"; spec = ''hex.k8s.prefect.worker.version.latest { valuesAttrs.worker = { apiConfig = "selfHostedServer"; config.workPool = "test"; selfHostedServerApiConfig.apiUrl="127.0.0.1"; }; }''; check = num_docs 4; }
@@ -63,37 +63,95 @@ let
         { name = "prometheus-exporters-postgres"; spec = ''hex.k8s.prometheus.exporters.postgres.version.latest { valuesAttrs.config.datasource.passwordSecret = { name = "pg-pass-secret"; key = "PGPASS"; }; }''; check = num_docs 5; }
         { name = "prometheus-exporters-redis"; spec = ''hex.k8s.prometheus.exporters.redis.version.latest {}''; check = num_docs 5; }
         { name = "dremio"; spec = ''hex.k8s.dremio.version.latest {valuesAttrs.distStorage={type="aws"; aws={bucketName= "test"; region="us-east-2";};};}''; check = num_docs 106; }
+        { name = "keda"; spec = ''hex.k8s.keda.version.latest {}''; check = num_docs 29; }
       ];
       test_case = x:
         let
-          log = text: ''echo "[${x.name}] ${text}"'';
+          log = text: ''echo "${text}"'';
         in
         ''
-          name=${x.name}
-          ${log "test"}
-          rendered="$(${mktemp})"
-          # shellcheck disable=SC2064
-          trap "rm -f $rendered" EXIT
-          ${heval} '${x.spec}' >$rendered
-          exit_code=$?
-          ${log "rendered to $rendered"}
-          num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index + 1' $rendered | ${pkgs.coreutils}/bin/tail -n 1)"
-          ${log "exit code: $exit_code"}
-          ${log "num docs: $num_docs"}
-          ${x.check or ""}
-          rm "$rendered"
-          exit $exit_code
+          ${x.name})
+            rendered="$(${mktemp})"
+            # shellcheck disable=SC2064
+            trap "rm -f $rendered" EXIT
+            ${heval} '${x.spec}' >$rendered
+            exit_code=$?
+            ${log "rendered to $rendered"}
+            num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index + 1' $rendered | ${pkgs.coreutils}/bin/tail -n 1)"
+            ${log "exit code: $exit_code"}
+            ${log "num docs: $num_docs"}
+            ${x.check or ""}
+            rm "$rendered"
+            exit $exit_code
+            ;;
         '';
-      test_scripts = map (x: pkgs.writeShellScript "test-${x.name}" (test_case x)) tests;
+      test_names = map (x: x.name) tests;
+      unique_test_names = pkgs.lib.unique test_names;
+      duplicate_test_names = builtins.filter
+        (name: builtins.length (builtins.filter (test_name: test_name == name) test_names) > 1)
+        unique_test_names;
+      test_names_are_unique = test_names == unique_test_names;
+      all_test_name_args = pkgs.lib.concatMapStringsSep " " (name: ''"${name}"'') test_names;
+      run_test_cases = pkgs.lib.concatMapStringsSep "\n" test_case tests;
+      selected_test_cases = pkgs.lib.concatMapStringsSep "\n"
+        (name: ''
+          ${name})
+            selected_tests+=("${name}")
+            ;;
+        '')
+        test_names;
+      available_tests = pkgs.lib.concatStringsSep "," test_names;
     in
+    assert test_names_are_unique || builtins.throw "duplicate test names: ${pkgs.lib.concatStringsSep ", " duplicate_test_names}";
     pkgs.writers.writeBashBin "test" ''
+      if [ "''${1:-}" = "--run-test" ]; then
+        test_name="''${2:-}"
+        case "$test_name" in
+          ${run_test_cases}
+          *)
+            echo "unknown test: $test_name" >&2
+            echo "available tests: ${available_tests}" >&2
+            exit 2
+            ;;
+        esac
+      fi
+
+      selected_tests=(${all_test_name_args})
+
+      if [ "$#" -gt 0 ] && [[ "$1" != -* ]]; then
+        requested_tests="$1"
+        shift
+        selected_tests=()
+
+        IFS=',' read -r -a test_names <<< "$requested_tests"
+        for test_name in "''${test_names[@]}"; do
+          test_name="$(${pkgs.coreutils}/bin/printf '%s' "$test_name" | ${pkgs.gnused}/bin/sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+          [ -z "$test_name" ] && continue
+
+          case "$test_name" in
+            ${selected_test_cases}
+            *)
+              echo "unknown test: $test_name" >&2
+              echo "available tests: ${available_tests}" >&2
+              exit 2
+              ;;
+          esac
+        done
+
+        if [ "''${#selected_tests[@]}" -eq 0 ]; then
+          echo "no tests selected" >&2
+          exit 2
+        fi
+      fi
+
       ${pkgs.parallel}/bin/parallel \
         --will-cite \
         --keep-order \
         --line-buffer \
-        --color \
+        --tagstring $'\033[36m|\033[0m [{}]' \
         "$@" \
-        ::: ${pkgs.lib.concatStringsSep " " test_scripts}
+        "$0" --run-test {} \
+        ::: "''${selected_tests[@]}"
     '';
 in
 hex // { inherit deps docsIndex test; }

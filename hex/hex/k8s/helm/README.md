@@ -42,6 +42,10 @@ This module contains helm charts under the [grafana](https://grafana.com/) obser
 
 [jupyterhub](https://github.com/jupyterhub/jupyterhub) is a platform for hosting Jupyter notebooks for many users
 
+### [keda/](./keda/)
+
+[keda](https://github.com/kedacore/keda) is a Kubernetes-based Event Driven Autoscaling component
+
 ### [netbox/](./netbox/)
 
 [netbox](https://netboxlabs.com/products/netbox/) is an IP address management (IPAM) and data center infrastructure management (DCIM) tool

@@ -121,6 +121,9 @@ jobs:
           - attr: dremio
             cmd: chart_scan_dremio
             vfile: ./hex/hex/k8s/helm/dremio/dremio.json
+          - attr: keda
+            cmd: chart_scan_keda
+            vfile: ./hex/hex/k8s/helm/keda/keda.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
