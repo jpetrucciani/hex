@@ -35,7 +35,7 @@ let
         }
         { name = "coroot-node-agent"; spec = ''hex.k8s.coroot.node-agent.version.latest {}''; check = num_docs 1; }
         { name = "open-webui"; spec = "hex.k8s.open-webui.version.latest {}"; check = num_docs 14; }
-        { name = "cert-manager"; spec = "hex.k8s.cert-manager.version.latest {}"; check = num_docs 46; }
+        { name = "cert-manager"; spec = "hex.k8s.cert-manager.version.latest {}"; check = num_docs 44; }
         { name = "argocd"; spec = "hex.k8s.argocd.version.latest {}"; check = num_docs 53; }
         { name = "argo-workflows"; spec = "hex.k8s.argo-workflows.version.latest {}"; check = num_docs 27; }
         { name = "flipt"; spec = "hex.k8s.flipt.version.latest {}"; check = num_docs 5; }
