@@ -33,6 +33,7 @@
               with pkgs; [
                 bun
                 deadnix
+                kubeconform
                 nixpkgs-fmt
                 statix
 

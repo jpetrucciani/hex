@@ -147,6 +147,12 @@ hex comes with a rich set of pre-built modules for common Kubernetes application
 # only render and print to stdout
 hex --render -t specs.nix
 
+# render and validate against the default Kubernetes schema version
+hex --render --validate -t specs.nix
+
+# validate against a different Kubernetes version
+hex --render --validate --kubeversion 1.34.0 -t specs.nix
+
 # eval a sring instead of using a file (useful for testing hex itself, or deploying things one-off!)
 # '{hex}:' is prepended to the eval string
 hex --evaluate --render 'hex [hex.k8s.svc.litellm]'
@@ -170,6 +176,38 @@ hex --clientside -t specs.nix
 - **hex**: Main command-line tool for applying configurations to clusters. Written with [pog](https://pog.gemologic.dev/)!
 - **hexcast**: Core rendering engine that transforms Nix configurations into Kubernetes resources
 - **nixrender**: Low-level tool for rendering Nix expressions
+
+## Testing
+
+Build and run the integration test suite with:
+
+```bash
+nix build .#test
+./result/bin/test
+```
+
+The test binary is a single derivation, so building it once also supports quick,
+focused feedback loops:
+
+```bash
+./result/bin/test --suite fast      # CLI, services, and other non-Helm tests
+./result/bin/test --suite cli       # hex --validate behavior
+./result/bin/test --suite services  # service abstraction and built-in services
+./result/bin/test --suite charts    # Helm and chart integrations
+./result/bin/test --list-suites
+```
+
+The default remains the complete suite. Individual tests can also be selected
+with a comma-separated list, for example
+`./result/bin/test cli-validate-target,service-lifecycle`.
+
+Every successful render is checked with
+[kubeconform](https://github.com/yannh/kubeconform) in strict mode against the
+pinned Kubernetes 1.35 schemas. Tests for `hex.k8s.services` require a schema
+for every rendered resource. Helm-oriented tests validate all known resources
+and report custom resources without an available schema as skipped.
+
+Set `KUBECONFORM_CACHE` to choose where downloaded schemas are cached.
 
 ## Demo
 
