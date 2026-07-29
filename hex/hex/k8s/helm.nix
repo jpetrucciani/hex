@@ -92,6 +92,7 @@ let
           ${_if forceNamespace ''${yq} e -i 'with (.items[]; .metadata.namespace = "${namespace}")' $out''}
           ${_if forceNamespace ''${yq} e -i 'del(.items | select(length==0))' $out''}
           ${_if forceNamespace ''${sed} -E -z -i 's#---(\n+\{\}\n+---)*#---#g' $out''}
+          ${_if forceNamespace ''${sed} -E -z -i 's#---\n+\{\}\n*$##' $out''}
           ${postRenderText}
           ${_if sortYaml ''${yaml_sort} <$out >$out.tmp''}
           ${_if sortYaml ''mv $out.tmp $out''}

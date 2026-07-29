@@ -1948,6 +1948,71 @@ function renderServicesBuildPage(serviceArgs) {
   }
 
   lines.push('');
+  lines.push('## Lifecycle Actions');
+  lines.push('');
+  lines.push('Use `hex.k8s.services.actions` to construct validated Kubernetes action fragments:');
+  lines.push('');
+  lines.push('- `actions.exec [ "command" "arg" ]`');
+  lines.push('- `actions.httpGet { port = 8080; path = "/healthz"; }`');
+  lines.push('- `actions.sleep 5`');
+  lines.push('');
+  lines.push('Each `postStart` or `preStop` hook must contain exactly one action. The pod termination grace period is the total budget for the `preStop` hook and normal process shutdown.');
+  lines.push('');
+  lines.push('```nix');
+  lines.push('let');
+  lines.push('  actions = hex.k8s.services.actions;');
+  lines.push('  probes = hex.k8s.services.probes;');
+  lines.push('in');
+  lines.push('hex.k8s.services.build {');
+  lines.push('  # required service arguments omitted');
+  lines.push('  terminationGracePeriodSeconds = 60;');
+  lines.push('  lifecycle.preStop = actions.exec [ "/app/bin/drain" ];');
+  lines.push('  startupProbe = probes.httpGet {');
+  lines.push('    path = "/healthz";');
+  lines.push('    port = 8080;');
+  lines.push('    failureThreshold = 30;');
+  lines.push('    periodSeconds = 2;');
+  lines.push('  };');
+  lines.push('}');
+  lines.push('```');
+  lines.push('');
+  lines.push('`extraPodSpec` adds uncommon PodSpec fields, but cannot replace fields managed directly by `services.build`.');
+
+  lines.push('');
+  lines.push('## Validated Service Policies');
+  lines.push('');
+  lines.push('The service namespace provides constructors for Kubernetes shapes with unions, derived selectors, or cross-resource behavior:');
+  lines.push('');
+  lines.push('- `disruptions.{minAvailable,maxUnavailable}` for PodDisruptionBudgets');
+  lines.push('- `spread.{zones,nodes,constraint}` for topology spread constraints');
+  lines.push('- `containers.build` for additional sidecar containers');
+  lines.push('- `probes.{exec,httpGet,tcpSocket,grpc}` for container probes');
+  lines.push('- `rollouts.{rolling,recreate}` for Deployment rollout policy');
+  lines.push('- `autoscaling.{cpu,v2}` and `autoscaling.metrics.*` for `autoscaling/v2` HPAs');
+  lines.push('- `ports.*` and `exposures.*` for typed Services');
+  lines.push('- `volumes.{emptyDir,pvc,secret,configMap,hostPath,projected,downwardAPI}` for exactly-one-source volumes');
+  lines.push('');
+  lines.push('```nix');
+  lines.push('let');
+  lines.push('  services = hex.k8s.services;');
+  lines.push('in');
+  lines.push('services.build {');
+  lines.push('  # required service arguments omitted');
+  lines.push('  replicas = 3;');
+  lines.push('  disruptionBudget = services.disruptions.maxUnavailable 1;');
+  lines.push('  topologySpread = [');
+  lines.push('    (services.spread.zones { mode = "hard"; })');
+  lines.push('  ];');
+  lines.push('  rollout = services.rollouts.rolling {');
+  lines.push('    maxUnavailable = 0;');
+  lines.push('    maxSurge = "25%";');
+  lines.push('    minReadySeconds = 10;');
+  lines.push('    progressDeadlineSeconds = 600;');
+  lines.push('  };');
+  lines.push('}');
+  lines.push('```');
+
+  lines.push('');
   lines.push('## Example');
   lines.push('');
   lines.push('```nix');
@@ -1990,16 +2055,27 @@ function main() {
   const chartRows = buildChartData(meta);
   const svcRows = buildSvcData(meta);
   const helperModules = buildHelperData(meta);
-  const servicesBuildArgs = parseArgsFromBlock(
-    (() => {
-      const source = fs.readFileSync(servicesFile, 'utf8');
-      const marker = 'build =';
-      const idx = source.indexOf(marker);
-      const braceStart = source.indexOf('{', idx);
-      const braceEnd = findBraceEnd(source, braceStart);
-      return source.slice(braceStart + 1, braceEnd);
-    })(),
+  const servicesSource = fs.readFileSync(servicesFile, 'utf8');
+  const servicesScope = findScopeRangeByMarker(
+    servicesSource,
+    'services = rec',
+    { start: 0, end: servicesSource.length },
   );
+  const servicesBuildArgs = servicesScope
+    ? extractFunctionArgsByMarker(servicesSource, '\n    build =', servicesScope)
+    : null;
+  if (!servicesBuildArgs) {
+    throw new Error('could not locate the top-level hex.k8s.services.build function');
+  }
+  const serviceArgNames = new Set(servicesBuildArgs.map((arg) => arg.name));
+  const missingRequiredServiceArgs = ['name', 'labels', 'image'].filter(
+    (arg) => !serviceArgNames.has(arg),
+  );
+  if (missingRequiredServiceArgs.length > 0) {
+    throw new Error(
+      `services.build parser missed required args: ${missingRequiredServiceArgs.join(', ')}`,
+    );
+  }
 
   writeFile(path.join(docsRefDir, 'index.md'), renderReferenceHome());
   writeFile(path.join(docsRefDir, 'chart-index.md'), renderChartIndex(chartRows));

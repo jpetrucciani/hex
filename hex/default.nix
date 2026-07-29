@@ -8,6 +8,11 @@ let
   core = "${pkgs.coreutils}/bin";
   oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${../.oxfmtrc.json}";
   nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
+  kubernetesValidation = rec {
+    defaultVersion = "1.35.0";
+    schemaRevision = "05eeed51991935dd1f47cd3b3682de4e8af233f3";
+    schemaLocation = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/${schemaRevision}/{{.NormalizedKubernetesVersion}}-standalone{{.StrictSuffix}}/{{.ResourceKind}}{{.KindSuffix}}.json";
+  };
   hexcast =
     let
       _ = {
@@ -58,7 +63,7 @@ let
     };
 in
 {
-  inherit hexcast;
+  inherit hexcast kubernetesValidation;
   nixrender =
     pog {
       name = "nixrender";
@@ -76,7 +81,7 @@ in
 
   hex =
     let
-      version = "0.0.11";
+      version = "0.0.12";
     in
     pog {
       inherit version;
@@ -102,6 +107,18 @@ in
           name = "render";
           description = "only render and patch, do not diff or apply";
           bool = true;
+        }
+        {
+          name = "validate";
+          description = "validate rendered Kubernetes manifests with kubeconform";
+          short = "";
+          bool = true;
+        }
+        {
+          name = "kubeversion";
+          description = "Kubernetes schema version used by --validate";
+          short = "";
+          default = kubernetesValidation.defaultVersion;
         }
         # {
         #   name = "check";
@@ -150,12 +167,14 @@ in
         let
           steps = {
             render = "render";
+            validate = "validate";
             patch = "patch";
             diff = "diff";
             apply = "apply";
           };
           _ = {
             k = getExe' pkgs.kubectl "kubectl";
+            kc = getExe pkgs.kubeconform;
             hc = getExe hexcast;
             delta = getExe' pkgs.delta "delta";
             mktemp = "${pkgs.coreutils}/bin/mktemp";
@@ -215,6 +234,25 @@ in
           fi
           if ${flag "prettify"}; then
             ${oxfmt} "$rendered" >/dev/null || die "oxfmt failed!" 2
+          fi
+          if ${flag "validate"}; then
+            schema_cache="''${KUBECONFORM_CACHE:-''${XDG_CACHE_HOME:-''${HOME:-/tmp}/.cache}/kubeconform}"
+            ${core}/mkdir -p "$schema_cache"
+            ${timer.start steps.validate}
+            ${_.kc} \
+              -cache "$schema_cache" \
+              -ignore-missing-schemas \
+              -kubernetes-version "$kubeversion" \
+              -schema-location ${pkgs.lib.escapeShellArg kubernetesValidation.schemaLocation} \
+              -strict \
+              -summary \
+              - <"$rendered" >&2
+            validation_exit_code=$?
+            validation_runtime=${timer.stop steps.validate}
+            debug "''${GREEN}validated '$rendered' against Kubernetes $kubeversion in $validation_runtime [exit code $validation_exit_code]''${RESET}"
+            if [ "$validation_exit_code" -ne 0 ]; then
+              die "rendered manifests failed Kubernetes $kubeversion schema validation" 4
+            fi
           fi
           if ${flag "render"}; then
             cat "$rendered"
