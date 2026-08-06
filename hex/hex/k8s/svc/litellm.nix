@@ -6,7 +6,6 @@ let
     , namespace ? "default"
     , image_registry ? "ghcr.io/berriai"
     , image_base ? "litellm-database"
-    , image_suffix ? ""
     , image_tag ? version
     , image ? "${image_registry}/${image_base}:${image_tag}"
     , replicas ? 1
