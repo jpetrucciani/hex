@@ -2,12 +2,12 @@
 let
   litellm =
     { name ? "litellm"
-    , version ? "v1.82.3"
+    , version ? "1.95.0"
     , namespace ? "default"
     , image_registry ? "ghcr.io/berriai"
     , image_base ? "litellm-database"
     , image_suffix ? ""
-    , image_tag ? "main-${version}-stable${image_suffix}"
+    , image_tag ? version
     , image ? "${image_registry}/${image_base}:${image_tag}"
     , replicas ? 1
     , cpuRequest ? "0.5"
