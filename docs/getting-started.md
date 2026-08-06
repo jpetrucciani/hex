@@ -34,7 +34,7 @@ pkgs.buildEnv {
 }
 ```
 
-or if you want to add it as an overlay to nixpkgs, you can add `pog.overlays.${system}.default` in your overlays for nixpkgs!
+or if you want to add it as an overlay to nixpkgs, you can add `pog.overlays.default` in your overlays for nixpkgs!
 
 ### flake
 

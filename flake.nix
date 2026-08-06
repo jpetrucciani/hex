@@ -13,7 +13,7 @@
   outputs = { nixpkgs, flake-utils, pog, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; overlays = [ pog.overlays.${system}.default ]; };
+        pkgs = import nixpkgs { inherit system; overlays = [ pog.overlays.default ]; };
         hex = import ./. { inherit pkgs system; };
         hexpkgs = { inherit (hex) hex hexcast nixrender deps test; };
       in
