@@ -6,6 +6,7 @@ let
   hasAttrKey = key: value: (isAttrSet value) && (builtins.hasAttr key value);
   isFunctor = hasAttrKey "__functor";
   core = "${pkgs.coreutils}/bin";
+  nixFileCompletion = pog.completions.files { extensions = [ ".nix" ]; };
   oxfmt = "${pkgs.oxfmt}/bin/oxfmt --write --config ${../.oxfmtrc.json}";
   nix = "${pkgs.nixVersions.nix_2_34}/bin/nix";
   kubernetesValidation = rec {
@@ -38,7 +39,13 @@ let
           bool = true;
         }
       ];
-      arguments = [{ name = "nix_file"; }];
+      arguments = [
+        {
+          name = "nix_file";
+          description = "Nix file to render";
+          completion = nixFileCompletion;
+        }
+      ];
       script = helpers: with helpers; ''
         ${var.notEmpty "1"} && spell="$1"
         ${var.empty "spell"} && spell="$(${_.mktemp})" && cp /dev/stdin "$spell"
@@ -92,6 +99,7 @@ in
           name = "target";
           description = "the file to render specs from";
           default = "./specs.nix";
+          completion = nixFileCompletion;
         }
         {
           name = "all";
