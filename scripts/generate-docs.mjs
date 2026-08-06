@@ -1956,7 +1956,9 @@ function renderServicesBuildPage(serviceArgs) {
   lines.push('- `actions.httpGet { port = 8080; path = "/healthz"; }`');
   lines.push('- `actions.sleep 5`');
   lines.push('');
-  lines.push('Each `postStart` or `preStop` hook must contain exactly one action. The pod termination grace period is the total budget for the `preStop` hook and normal process shutdown.');
+  lines.push(
+    'Each `postStart` or `preStop` hook must contain exactly one action. The pod termination grace period is the total budget for the `preStop` hook and normal process shutdown.',
+  );
   lines.push('');
   lines.push('```nix');
   lines.push('let');
@@ -1976,12 +1978,16 @@ function renderServicesBuildPage(serviceArgs) {
   lines.push('}');
   lines.push('```');
   lines.push('');
-  lines.push('`extraPodSpec` adds uncommon PodSpec fields, but cannot replace fields managed directly by `services.build`.');
+  lines.push(
+    '`extraPodSpec` adds uncommon PodSpec fields, but cannot replace fields managed directly by `services.build`.',
+  );
 
   lines.push('');
   lines.push('## Validated Service Policies');
   lines.push('');
-  lines.push('The service namespace provides constructors for Kubernetes shapes with unions, derived selectors, or cross-resource behavior:');
+  lines.push(
+    'The service namespace provides constructors for Kubernetes shapes with unions, derived selectors, or cross-resource behavior:',
+  );
   lines.push('');
   lines.push('- `disruptions.{minAvailable,maxUnavailable}` for PodDisruptionBudgets');
   lines.push('- `spread.{zones,nodes,constraint}` for topology spread constraints');
@@ -1990,7 +1996,9 @@ function renderServicesBuildPage(serviceArgs) {
   lines.push('- `rollouts.{rolling,recreate}` for Deployment rollout policy');
   lines.push('- `autoscaling.{cpu,v2}` and `autoscaling.metrics.*` for `autoscaling/v2` HPAs');
   lines.push('- `ports.*` and `exposures.*` for typed Services');
-  lines.push('- `volumes.{emptyDir,pvc,secret,configMap,hostPath,projected,downwardAPI}` for exactly-one-source volumes');
+  lines.push(
+    '- `volumes.{emptyDir,pvc,secret,configMap,hostPath,projected,downwardAPI}` for exactly-one-source volumes',
+  );
   lines.push('');
   lines.push('```nix');
   lines.push('let');
@@ -2056,11 +2064,10 @@ function main() {
   const svcRows = buildSvcData(meta);
   const helperModules = buildHelperData(meta);
   const servicesSource = fs.readFileSync(servicesFile, 'utf8');
-  const servicesScope = findScopeRangeByMarker(
-    servicesSource,
-    'services = rec',
-    { start: 0, end: servicesSource.length },
-  );
+  const servicesScope = findScopeRangeByMarker(servicesSource, 'services = rec', {
+    start: 0,
+    end: servicesSource.length,
+  });
   const servicesBuildArgs = servicesScope
     ? extractFunctionArgsByMarker(servicesSource, '\n    build =', servicesScope)
     : null;
@@ -2068,13 +2075,9 @@ function main() {
     throw new Error('could not locate the top-level hex.k8s.services.build function');
   }
   const serviceArgNames = new Set(servicesBuildArgs.map((arg) => arg.name));
-  const missingRequiredServiceArgs = ['name', 'labels', 'image'].filter(
-    (arg) => !serviceArgNames.has(arg),
-  );
+  const missingRequiredServiceArgs = ['name', 'labels', 'image'].filter((arg) => !serviceArgNames.has(arg));
   if (missingRequiredServiceArgs.length > 0) {
-    throw new Error(
-      `services.build parser missed required args: ${missingRequiredServiceArgs.join(', ')}`,
-    );
+    throw new Error(`services.build parser missed required args: ${missingRequiredServiceArgs.join(', ')}`);
   }
 
   writeFile(path.join(docsRefDir, 'index.md'), renderReferenceHome());
