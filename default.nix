@@ -499,7 +499,13 @@ let
         { name = "external-secrets-v0-17-0"; spec = "hex.k8s.external-secrets.version.v0-17-0 {}"; check = num_docs 39; }
         { name = "external-secrets-v0-18-0"; spec = "hex.k8s.external-secrets.version.v0-18-0 {}"; check = num_docs 40; }
         { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 81; }
-        { name = "tempo"; spec = "hex.k8s.grafana.tempo.version.latest {}"; check = num_docs 20; }
+        {
+          name = "tempo";
+          spec = ''hex.k8s.grafana.tempo.version.latest {
+            valuesAttrs.ingest.kafka.address = "kafka.kafka.svc.cluster.local:9092";
+          }'';
+          check = num_docs 24;
+        }
         { name = "semaphore"; spec = "hex.k8s.semaphore.version.latest {}"; check = num_docs 9; }
         { name = "netbox"; spec = "hex.k8s.netbox.version.latest {}"; check = num_docs 33; }
         {
