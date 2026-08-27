@@ -526,8 +526,9 @@ let
         { name = "flipt"; spec = "hex.k8s.flipt.version.latest {}"; check = num_docs 5; }
         { name = "livekit"; spec = "hex.k8s.livekit.version.latest {}"; check = num_docs 3; }
         { name = "retool"; spec = ''hex.k8s.retool.version.latest {valuesAttrs = {config.encryptionKey = "meme"; image.tag = "3.284.7-stable";};}''; check = num_docs 16; }
-        { name = "sentry"; spec = "hex.k8s.sentry.version.v30-4-0 {}"; check = num_docs 101; }
-        { name = "sentry-latest"; spec = ''hex.k8s.sentry.version.latest { valuesAttrs.user.existingSecret = "user-secret"; }''; check = num_docs 106; }
+        { name = "sentry-30"; spec = "hex.k8s.sentry.version.v30-4-0 {}"; check = num_docs 101; }
+        { name = "sentry-31"; spec = ''hex.k8s.sentry.version.latest { valuesAttrs.user.existingSecret = "user-secret"; }''; check = num_docs 106; }
+        { name = "sentry-latest"; spec = ''hex.k8s.sentry.version.latest { valuesAttrs.user.existingSecret = "user-secret"; }''; check = num_docs 98; }
         { name = "redpanda"; spec = "hex.k8s.redpanda.version.latest {}"; check = num_docs 14; }
         { name = "questdb-latest"; spec = "hex.k8s.questdb.version.latest {}"; check = num_docs 5; }
         { name = "questdb-v1-0-17"; spec = "hex.k8s.questdb.version.v1-0-17 {}"; check = num_docs 5; }
