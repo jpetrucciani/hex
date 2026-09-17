@@ -507,7 +507,7 @@ let
           check = num_docs 24;
         }
         { name = "semaphore"; spec = "hex.k8s.semaphore.version.latest {}"; check = num_docs 9; }
-        { name = "netbox"; spec = "hex.k8s.netbox.version.latest {}"; check = num_docs 33; }
+        { name = "netbox"; spec = "hex.k8s.netbox.version.latest {}"; check = num_docs 32; }
         {
           name = "loki";
           spec = ''hex.k8s.grafana.loki.version.latest {
