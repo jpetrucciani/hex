@@ -68,6 +68,7 @@ let
             ${yq_assert ''select(.kind == "Service") | .metadata.name == "${name}-service" and .spec.ports[0].port == ${toString port}'' "${name} did not render its expected Service port"}
           '';
         };
+      envoyGatewayTests = import ./tests/envoy-gateway.nix { inherit deps pkgs yq_assert; };
       cliValidationTests = import ./tests/cli-validation.nix { inherit hex pkgs; };
       testSuites = testCase:
         testCase.suites or
@@ -553,7 +554,7 @@ let
       ];
       tests = map
         (testCase: testCase // { suites = testSuites testCase; })
-        (cliValidationTests ++ baseTests);
+        (cliValidationTests ++ envoyGatewayTests ++ baseTests);
       test_case = x:
         let
           log = text: ''echo "${text}"'';

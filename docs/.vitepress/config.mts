@@ -126,6 +126,7 @@ export default defineConfig({
         items: [
           { text: 'ArgoCD', link: '/integration-argocd' },
           { text: 'Helm', link: '/integration-helm' },
+          { text: 'Envoy Gateway', link: '/integration-envoy-gateway' },
         ],
       },
       {

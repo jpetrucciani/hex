@@ -45,7 +45,9 @@ rec {
   '';
   toYAML = _toYAML "";
   _toYAML = indent: value:
-    if isAttrs value
+    if value == { } then "{}"
+    else if value == [ ] then "[]"
+    else if isAttrs value
     then unlines indent (map (n: "${n}: ${_toYAML (indent + " ") value.${n}}") (attrNames value))
     else if isList value
     then unlines indent (map (v: "- ${_toYAML "${indent} " v}") value)
@@ -58,7 +60,7 @@ rec {
     else if (isBool value && (! value))
     then "false"
     # isString value
-    else ''"${replaceStrings [ ''"'' "\n" ] [ ''\"'' ''\n'' ] value}"'';
+    else builtins.toJSON (toString value);
 
   _if = optionalString;
   attrIf = check: name: if check then name else null;

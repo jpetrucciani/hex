@@ -16,6 +16,8 @@
 - **Development Friendly**: Built-in support for dry runs and partial deployments
 - **[beta] ArgoCD plugin**: ArgoCD plugin is WIP! Deploying ArgoCD with `hex` will auto-configure the hex plugin
 
+Runnable configurations live in [examples/](examples/), starting with [Envoy Gateway](examples/envoy-gateway.nix).
+
 ## 🚀 Quick Start
 
 1. Install hex:
