@@ -33,6 +33,7 @@ let
     addons = import ./k8s/addons.nix params;
     cron = import ./k8s/cron.nix params;
     helm = import ./k8s/helm.nix params;
+    gateway-api = import ./k8s/gateway-api.nix params;
     nginx-ingress = import ./k8s/nginx-ingress.nix params;
     storage = import ./k8s/storage.nix params;
     tailscale = import ./k8s/tailscale.nix params;

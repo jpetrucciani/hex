@@ -13,6 +13,7 @@ let
     "aws"
     "cron"
     "helm"
+    "gateway-api"
     "nginx-ingress"
     "services"
     "storage"
