@@ -29,6 +29,27 @@ hex [
 ]
 ```
 
+#### include a small Valkey instance
+
+LiteLLM recommends Redis-compatible shared state when it runs multiple workers or replicas. The bundled Valkey instance is off by default. Enable it like this:
+
+```nix
+{hex}:
+hex [
+  (hex.k8s.svc.litellm {
+    namespace = "ai";
+    replicas = 3;
+    valkey.enable = true;
+  })
+]
+```
+
+Add a strong random `REDIS_PASSWORD` key to the existing `litellm-secret` in the same namespace before applying this spec. Set `valkey.passwordSecretName` and `valkey.passwordSecretKey` to use another Secret. Both pods read that key at startup; Hex does not write the password into the rendered config.
+
+This option adds a single-replica Valkey StatefulSet, a 1Gi PVC, a headless Service, and a NetworkPolicy that admits traffic from the LiteLLM pods. It enables LiteLLM router coordination and Redis response caching with a 600-second TTL, configurable with `valkey.cacheTtl`. Valkey uses AOF persistence and `noeviction` so its shared coordination keys are not silently discarded. The default memory cap is 256mb; size `valkey.maxmemory`, `valkey.memoryLimit`, and `valkey.storage` for your workload. Use `valkey.storageClass` if the cluster has no suitable default StorageClass.
+
+This is a single point of failure. Use an external managed Redis-compatible service for high availability. Choose `valkey.storage` before the first deployment; changing a StatefulSet's claim template later needs a separate PVC migration or expansion procedure. StatefulSet PVCs are retained by Kubernetes when the bundled option is removed; preserve or remove the claim deliberately. Restart both workloads after changing the password Secret.
+
 ### simple eval example
 
 You can also use the `--evaluate` flag (with or without `--render`) to do one-liner bash commands that can output templates!
