@@ -482,6 +482,22 @@ let
           port = 4000;
           documents = 6;
         })
+        {
+          name = "litellm-valkey";
+          suites = [ "fast" "services" ];
+          allowMissingSchemas = false;
+          spec = ''hex.k8s.svc.litellm { name = "gateway"; namespace = "ai"; valkey.enable = true; }'';
+          check = ''
+            ${num_docs 9}
+            ${yq_assert ''select(.kind == "StatefulSet") | (.metadata.name == "gateway-valkey" and .metadata.namespace == "ai" and .spec.replicas == 1 and .spec.serviceName == "gateway-valkey" and .spec.volumeClaimTemplates[0].spec.resources.requests.storage == "1Gi")'' "bundled Valkey StatefulSet and PVC were not rendered"}
+            ${yq_assert ''select(.kind == "StatefulSet") | (.spec.persistentVolumeClaimRetentionPolicy.whenDeleted == "Retain" and .spec.template.spec.containers[0].env[0].name == "REDISCLI_AUTH" and .spec.template.spec.containers[0].env[0].valueFrom.secretKeyRef.name == "litellm-secret")'' "Valkey PVC retention or authenticated probe was not configured"}
+            ${yq_assert ''select(.kind == "Service" and .metadata.name == "gateway-valkey") | (.spec.clusterIP == "None" and .spec.ports[0].port == 6379)'' "bundled Valkey Service was not rendered"}
+            ${yq_assert ''select(.kind == "NetworkPolicy" and .metadata.name == "gateway-valkey-policy") | (.spec.ingress[0].from[0].podSelector.matchLabels.name == "gateway" and (.spec.egress | length) == 0)'' "Valkey NetworkPolicy did not restrict access to LiteLLM"}
+            ${yq_assert ''select(.kind == "Deployment") | .spec.template.spec.containers[0].env[] | select(.name == "REDIS_PASSWORD") | (.valueFrom.secretKeyRef.name == "litellm-secret" and .valueFrom.secretKeyRef.key == "REDIS_PASSWORD")'' "LiteLLM Redis password was not sourced from its Secret"}
+            ${yq_assert ''select(.kind == "Deployment") | .spec.template.spec.containers[0].env[] | select(.name == "REDIS_HOST") | .value == "gateway-valkey"'' "LiteLLM did not point to the bundled Valkey Service"}
+            ${yq_assert ''select(.kind == "Secret") | (.stringData."config.yaml" | from_yaml) | (.router_settings.redis_host == "os.environ/REDIS_HOST" and .litellm_settings.cache == true and .litellm_settings.cache_params.type == "redis" and .litellm_settings.cache_params.ttl == 600)'' "LiteLLM config did not enable router state and response caching"}
+          '';
+        }
         (svcTest {
           name = "lobe-chat";
           port = 3210;
