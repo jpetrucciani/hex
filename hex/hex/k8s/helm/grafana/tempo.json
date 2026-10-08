@@ -1,5 +1,10 @@
 [
   {
+    "version": "3.11.1",
+    "date": "2026-10-07T19:16:26Z",
+    "sha256": "13bsdl6vvfzm40rz1296rdap719acqh7f4rxfypsi6ykxaq2jwsi"
+  },
+  {
     "version": "3.11.0",
     "date": "2026-10-06T09:18:53Z",
     "sha256": "0ibins9rxl9rx12jvhzg79br6v5h1h65sbqvbdk9pr0dxb0ss5aj"
