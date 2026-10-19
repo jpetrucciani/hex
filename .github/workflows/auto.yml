@@ -124,6 +124,10 @@ jobs:
           - attr: keda
             cmd: chart_scan_keda
             vfile: ./hex/hex/k8s/helm/keda/keda.json
+          - attr: opencost
+            cmd: chart_scan_opencost
+            flake: .
+            vfile: ./hex/hex/k8s/helm/opencost/opencost.json
     runs-on: ubuntu-24.04
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -136,7 +140,7 @@ jobs:
           extra_nix_config: |
             extra-substituters = https://cache.g7c.us
             extra-trusted-public-keys = cache.g7c.us:dSWpE2B5zK/Fahd7npIQWM4izRnVL+a4LiCAnrjdoFY=
-      - run: nix run github:jpetrucciani/nix#${{ matrix.attrs.cmd }} -- -u ${{ matrix.attrs.vfile }}
+      - run: nix run ${{ matrix.attrs.flake || 'github:jpetrucciani/nix' }}#${{ matrix.attrs.cmd }} -- -u ${{ matrix.attrs.vfile }}
       - uses: peter-evans/create-pull-request@v8.1.1
         id: pr
         with:

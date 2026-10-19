@@ -8,17 +8,31 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
     pog.url = "github:jpetrucciani/pog";
+    # Reuse the standard scanner generator without importing its whole package set.
+    chart-scanners = {
+      url = "github:jpetrucciani/nix/345a263bb1d9db8f119584842415c07910ea2358";
+      flake = false;
+    };
   };
 
-  outputs = { nixpkgs, flake-utils, pog, ... }:
+  outputs = { nixpkgs, flake-utils, pog, chart-scanners, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; overlays = [ pog.overlays.default ]; };
         hex = import ./. { inherit pkgs system; };
         hexpkgs = { inherit (hex) hex hexcast nixrender deps test; };
+        scannerTools = import "${chart-scanners}/mods/pog/helm.nix"
+          (pkgs // { inherit (pkgs.pog) pog; })
+          pkgs;
+        chart_scan_opencost = scannerTools._chart_scan {
+          name = "opencost";
+          base_url = "https://opencost.github.io/opencost-helm-chart";
+          chart_url = hex.deps.hex.k8s.opencost.chart_url "{1}";
+          last = 3;
+        };
       in
       {
-        packages = hexpkgs;
+        packages = hexpkgs // { inherit chart_scan_opencost; };
         defaultPackage = hex.hex;
         lib = {
           inherit (hex) docsIndex;
