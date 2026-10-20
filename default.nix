@@ -69,6 +69,7 @@ let
           '';
         };
       envoyGatewayTests = import ./tests/envoy-gateway.nix { inherit deps pkgs yq_assert; };
+      opencostTests = import ./tests/opencost.nix { inherit yq_assert; };
       cliValidationTests = import ./tests/cli-validation.nix { inherit hex pkgs; };
       testSuites = testCase:
         testCase.suites or
@@ -570,7 +571,7 @@ let
       ];
       tests = map
         (testCase: testCase // { suites = testSuites testCase; })
-        (cliValidationTests ++ envoyGatewayTests ++ baseTests);
+        (cliValidationTests ++ envoyGatewayTests ++ opencostTests ++ baseTests);
       test_case = x:
         let
           log = text: ''echo "${text}"'';

@@ -58,6 +58,10 @@ TODO
 
 [otf](https://github.com/jpetrucciani/otf) is an open source terraform cloud alternative
 
+### [opencost/](./opencost/)
+
+[OpenCost](https://github.com/opencost/opencost) measures and allocates Kubernetes and cloud costs.
+
 ### [open-webui/](./open-webui/)
 
 [open-webui](https://github.com/open-webui/open-webui) is a user-friendly AI interface

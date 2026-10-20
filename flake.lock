@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "chart-scanners": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792427447,
+        "narHash": "sha256-MlG1qekFSddgQW6+hYce7tzLn1hkTBZAmaUGpdI8LJk=",
+        "owner": "jpetrucciani",
+        "repo": "nix",
+        "rev": "345a263bb1d9db8f119584842415c07910ea2358",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jpetrucciani",
+        "repo": "nix",
+        "rev": "345a263bb1d9db8f119584842415c07910ea2358",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -122,6 +139,7 @@
     },
     "root": {
       "inputs": {
+        "chart-scanners": "chart-scanners",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
