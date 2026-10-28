@@ -1,4 +1,4 @@
-{ hex, pkgs, ... }:
+{ hex, pkgs, services, ... }:
 let
   litellm =
     { name ? "litellm"
@@ -153,154 +153,90 @@ let
             securityContext = { privileged = false; };
           }
           extraService);
-      valkeyService = {
-        apiVersion = "v1";
-        kind = "Service";
-        metadata = {
-          name = valkeyName;
-          inherit namespace;
-          labels = valkeyLabels;
-        };
-        spec = {
-          clusterIP = "None";
-          selector = valkeyLabels;
-          ports = [{
-            name = "redis";
-            port = redisPort;
-            targetPort = redisPort;
-            protocol = "TCP";
-          }];
-        };
+      valkeyPing = services.probes.exec {
+        command = [ "/bin/sh" "-ec" "[ \"$(valkey-cli ping)\" = PONG ]" ];
+        periodSeconds = 5;
       };
-      valkeyStatefulSet = {
-        apiVersion = "apps/v1";
-        kind = "StatefulSet";
-        metadata = {
-          name = valkeyName;
-          inherit namespace;
-          labels = valkeyLabels;
-        };
-        spec = {
-          replicas = 1;
-          serviceName = valkeyName;
-          persistentVolumeClaimRetentionPolicy = {
-            whenDeleted = "Retain";
-            whenScaled = "Retain";
-          };
-          selector.matchLabels = valkeyLabels;
-          template = {
-            metadata.labels = valkeyLabels;
-            spec = {
-              automountServiceAccountToken = false;
-              initContainers = [{
-                name = "configure-acl";
-                inherit (bundledValkey) image;
-                command = [ "/bin/sh" "-ec" ];
-                args = [
-                  ''
-                    umask 077
-                    test -n "$REDIS_PASSWORD"
-                    password_hash="$(printf %s "$REDIS_PASSWORD" | sha256sum | cut -d ' ' -f 1)"
-                    printf 'user default on #%s ~* &* +@all\n' "$password_hash" > /run/valkey/users.acl
-                    chown valkey:valkey /run/valkey/users.acl
-                  ''
-                ];
-                env = [{ name = "REDIS_PASSWORD"; valueFrom = passwordRef; }];
-                securityContext.allowPrivilegeEscalation = false;
-                volumeMounts = [{
-                  name = "acl";
-                  mountPath = "/run/valkey";
-                }];
-              }];
-              containers = [{
-                name = "valkey";
-                inherit (bundledValkey) image;
-                args = [
-                  "valkey-server"
-                  "--aclfile"
-                  "/run/valkey/users.acl"
-                  "--appendonly"
-                  "yes"
-                  "--appendfsync"
-                  "everysec"
-                  "--maxmemory"
-                  bundledValkey.maxmemory
-                  "--maxmemory-policy"
-                  "noeviction"
-                  "--dir"
-                  "/data"
-                ];
-                env = [{ name = "REDISCLI_AUTH"; valueFrom = passwordRef; }];
-                securityContext.allowPrivilegeEscalation = false;
-                ports = [{ name = "redis"; containerPort = redisPort; }];
-                resources = {
-                  requests = {
-                    cpu = bundledValkey.cpuRequest;
-                    memory = bundledValkey.memoryRequest;
-                  };
-                  limits.memory = bundledValkey.memoryLimit;
-                };
-                startupProbe = {
-                  exec.command = [ "/bin/sh" "-ec" "[ \"$(valkey-cli ping)\" = PONG ]" ];
-                  periodSeconds = 5;
-                  failureThreshold = 60;
-                };
-                readinessProbe = {
-                  exec.command = [ "/bin/sh" "-ec" "[ \"$(valkey-cli ping)\" = PONG ]" ];
-                  periodSeconds = 5;
-                };
-                livenessProbe = {
-                  exec.command = [ "/bin/sh" "-ec" "[ \"$(valkey-cli ping)\" = PONG ]" ];
-                  periodSeconds = 10;
-                };
-                volumeMounts = [
-                  { name = "data"; mountPath = "/data"; }
-                  { name = "acl"; mountPath = "/run/valkey"; readOnly = true; }
-                ];
-              }];
-              volumes = [{
-                name = "acl";
-                emptyDir.medium = "Memory";
-              }];
-            };
-          };
-          volumeClaimTemplates = [{
-            apiVersion = "v1";
-            kind = "PersistentVolumeClaim";
-            metadata.name = "data";
-            spec = {
-              accessModes = [ "ReadWriteOnce" ];
-              resources.requests.storage = bundledValkey.storage;
-              ${if bundledValkey.storageClass != null then "storageClassName" else null} = bundledValkey.storageClass;
-            };
+      valkeyWorkload = services.stateful.build {
+        name = valkeyName;
+        inherit namespace;
+        inherit (bundledValkey) image cpuRequest memoryRequest memoryLimit;
+        labels = valkeyLabels;
+        containerName = "valkey";
+        stsSuffix = "";
+        headlessSuffix = "";
+        publishNotReadyAddresses = false;
+        serviceAccount = false;
+        appArmor = null;
+        imagePullPolicy = null;
+        ports = [ (services.ports.tcp { name = "redis"; port = redisPort; }) ];
+        claims = [
+          (services.claims.build {
+            name = "data";
+            mountPath = "/data";
+            inherit (bundledValkey) storage storageClass;
+          })
+        ];
+        volumes = [
+          (services.volumes.emptyDir {
+            name = "acl";
+            mountPath = "/run/valkey";
+            readOnly = true;
+            medium = "Memory";
+          })
+        ];
+        initContainers = [{
+          name = "configure-acl";
+          inherit (bundledValkey) image;
+          command = [ "/bin/sh" "-ec" ];
+          args = [
+            ''
+              umask 077
+              test -n "$REDIS_PASSWORD"
+              password_hash="$(printf %s "$REDIS_PASSWORD" | sha256sum | cut -d ' ' -f 1)"
+              printf 'user default on #%s ~* &* +@all\n' "$password_hash" > /run/valkey/users.acl
+              chown valkey:valkey /run/valkey/users.acl
+            ''
+          ];
+          env = [{ name = "REDIS_PASSWORD"; valueFrom = passwordRef; }];
+          securityContext.allowPrivilegeEscalation = false;
+          volumeMounts = [{
+            name = "acl";
+            mountPath = "/run/valkey";
           }];
-        };
-      };
-      valkeyNetworkPolicy = {
-        apiVersion = "networking.k8s.io/v1";
-        kind = "NetworkPolicy";
-        metadata = {
-          name = "${valkeyName}-policy";
-          inherit namespace;
-        };
-        spec = {
-          podSelector.matchLabels = valkeyLabels;
-          policyTypes = [ "Ingress" "Egress" ];
-          ingress = [{
-            from = [{ podSelector.matchLabels = labels; }];
-            ports = [{ port = redisPort; protocol = "TCP"; }];
-          }];
-          egress = [ ];
-        };
+        }];
+        args = [
+          "valkey-server"
+          "--aclfile"
+          "/run/valkey/users.acl"
+          "--appendonly"
+          "yes"
+          "--appendfsync"
+          "everysec"
+          "--maxmemory"
+          bundledValkey.maxmemory
+          "--maxmemory-policy"
+          "noeviction"
+          "--dir"
+          "/data"
+        ];
+        env = [{ name = "REDISCLI_AUTH"; valueFrom = passwordRef; }];
+        securityContext.allowPrivilegeEscalation = false;
+        startupProbe = valkeyPing // { failureThreshold = 60; };
+        readinessProbe = valkeyPing;
+        livenessProbe = valkeyPing // { periodSeconds = 10; };
+        extraPodSpec.automountServiceAccountToken = false;
+        ingressPolicy = [
+          (services.policies.ingress.fromLabels { inherit labels; ports = [ redisPort ]; })
+        ];
+        egressPolicy = [ ];
       };
     in
     ''
       ${toYAMLDoc config}
       ${service}
       ${if bundledValkey.enable then ''
-        ${toYAMLDoc valkeyService}
-        ${toYAMLDoc valkeyStatefulSet}
-        ${toYAMLDoc valkeyNetworkPolicy}
+        ${valkeyWorkload}
       '' else ""}
     '';
 in

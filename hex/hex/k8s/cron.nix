@@ -1,7 +1,44 @@
 # This hex spell allows concise cron job declaration in Kubernetes.
-{ hex, ... }:
+{ hex, pkgs, services, jobs, ... }:
 let
-  inherit (hex) ifNotNull ifNotEmptyList toYAMLDoc recursiveUpdate;
+  inherit (hex) concatMapStrings ifNotEmptyAttr toYAMLDoc recursiveUpdate;
+  inherit (pkgs.lib.asserts) assertMsg;
+
+  hexEnv = with hex.defaults.env; [
+    pod_ip
+    pod_name
+    { name = "HEX"; value = "true"; }
+  ];
+
+  cronJob =
+    { context
+    , name
+    , namespace
+    , labels
+    , schedule
+    , timeZone
+    , concurrencyPolicy
+    , failedJobsHistoryLimit
+    , successfulJobsHistoryLimit
+    , jobSpec
+    }:
+      assert assertMsg (builtins.isAttrs labels)
+        "${context}: labels must be an attribute set";
+      assert assertMsg (builtins.elem concurrencyPolicy [ "Allow" "Forbid" "Replace" ])
+        "${context}: concurrencyPolicy must be Allow, Forbid, or Replace";
+      {
+        apiVersion = "batch/v1";
+        kind = "CronJob";
+        metadata = {
+          inherit name namespace;
+          annotations = { } // hex.annotations;
+          ${ifNotEmptyAttr labels "labels"} = labels;
+        };
+        spec = {
+          inherit concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
+          jobTemplate.spec = jobs.components.spec (jobSpec // { inherit context; });
+        };
+      };
 
   cron = {
     enum = {
@@ -16,10 +53,13 @@ let
       , image ? "curlimages/curl:8.5.0"
       , schedule ? "0 * * * *"  # hourly at :00
       , timeZone ? "UTC"        # UTC - use tz like "America/New_York" for EST
-      , labels ? [ ]
+      , labels ? { }
       , namespace ? "default"
       , failedJobsHistoryLimit ? 3
       , successfulJobsHistoryLimit ? 3
+      , backoffLimit ? null
+      , activeDeadlineSeconds ? null
+      , ttlSecondsAfterFinished ? null
       , cpuRequest ? "100m"
       , cpuLimit ? null
       , memoryRequest ? "100Mi"
@@ -35,81 +75,29 @@ let
       , restartPolicy ? "Never"
       , imagePullPolicy ? "Always"
       , imagePullSecrets ? [ ]
-      , volumes ? [ ]
+      , volumes ? [ ]           # services.volumes entries or the legacy volume format
       , concurrencyPolicy ? "Allow" # Allow, Forbid, Replace
-      , securityContext ? { }
+      , securityContext ? { }   # PodSpec securityContext
+      , security ? null         # services.security profile
       , extra ? { } # extra escape hatch to use any other options!
       }:
       let
-        volumeDef = { name, secret ? null, hostPath ? null, configMap ? null, emptyDir ? false, items ? null, pvc ? null, ... }: {
-          inherit name;
-          ${ifNotNull pvc "persistentVolumeClaim"} = {
-            claimName = pvc;
-          };
-          ${ifNotNull secret "secret"} = {
-            secretName = secret;
-            ${ifNotNull items "items"} = items;
-          };
-          ${ifNotNull configMap "configMap"}.name = configMap;
-          ${ifNotNull hostPath "hostPath"}.path = hostPath;
-          ${if emptyDir then "emptyDir" else null} = { };
+        context = "hex.k8s.cron.build";
+        template = services.components.podTemplate {
+          inherit context name namespace labels image imagePullPolicy imagePullSecrets volumes security restartPolicy;
+          inherit cpuRequest cpuLimit memoryRequest memoryLimit ephemeralStorageRequest ephemeralStorageLimit command args envAttrs envFrom;
+          env = hexEnv ++ env;
+          serviceAccountName = sa;
+          podSecurityContext = securityContext;
+          appArmor = null;
         };
-        volumeMountDef = { name, mountPath, readOnly ? true, ... }: {
-          inherit name mountPath readOnly;
-        };
-        cron = recursiveUpdate
-          {
-            apiVersion = "batch/v1";
-            kind = "CronJob";
-            metadata = {
-              inherit name namespace;
-              annotations = { } // hex.annotations;
-              ${ifNotEmptyList labels "labels"} = labels;
-            };
-            spec = {
-              inherit concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
-              jobTemplate = {
-                spec = {
-                  template = {
-                    spec = {
-                      serviceAccountName = sa;
-                      inherit restartPolicy securityContext;
-                      containers = [
-                        {
-                          inherit name image imagePullPolicy;
-                          env = with hex.defaults.env; [
-                            pod_ip
-                            pod_name
-                          ] ++ [{ name = "HEX"; value = "true"; }] ++ env ++ (hex.envAttrToNVP envAttrs);
-                          ${ifNotEmptyList envFrom "envFrom"} = envFrom;
-                          ${ifNotNull command "command"} = if builtins.isString command then [ command ] else command;
-                          ${ifNotNull args "args"} = args;
-                          resources = {
-                            ${if (memoryLimit != null || cpuLimit != null || ephemeralStorageLimit != null) then "limits" else null} = {
-                              ${ifNotNull memoryLimit "memory"} = memoryLimit;
-                              ${ifNotNull cpuLimit "cpu"} = cpuLimit;
-                              ${ifNotNull ephemeralStorageLimit "ephemeral-storage"} = ephemeralStorageLimit;
-                            };
-                            ${if (memoryRequest != null || cpuRequest != null || ephemeralStorageRequest != null) then "requests" else null} = {
-                              ${ifNotNull cpuRequest "cpu"} = cpuRequest;
-                              ${ifNotNull memoryRequest "memory"} = memoryRequest;
-                              ${ifNotNull ephemeralStorageRequest "ephemeral-storage"} = ephemeralStorageRequest;
-                            };
-                          };
-                          ${ifNotEmptyList volumes "volumeMounts"} = map volumeMountDef volumes;
-                        }
-                      ];
-                      ${if imagePullSecrets != [ ] then "imagePullSecrets" else null} = imagePullSecrets;
-                      ${ifNotEmptyList volumes "volumes"} = map volumeDef volumes;
-                    };
-                  };
-                };
-              };
-            };
-          }
-          extra;
       in
-      toYAMLDoc cron;
+      toYAMLDoc (recursiveUpdate
+        (cronJob {
+          inherit context name namespace labels schedule timeZone concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit;
+          jobSpec = { inherit template backoffLimit activeDeadlineSeconds ttlSecondsAfterFinished; };
+        })
+        extra);
 
     kube_cron = {
       build =
@@ -117,10 +105,13 @@ let
         , image ? "ghcr.io/jpetrucciani/k8s-aws:latest"
         , schedule ? "0 * * * *"  # hourly at :00
         , timeZone ? "UTC"        # UTC - use tz like "America/New_York" for EST
-        , labels ? [ ]
+        , labels ? { }
         , namespace ? "default"
         , failedJobsHistoryLimit ? 3
         , successfulJobsHistoryLimit ? 3
+        , backoffLimit ? null
+        , activeDeadlineSeconds ? null
+        , ttlSecondsAfterFinished ? null
         , cpuRequest ? "100m"
         , cpuLimit ? null
         , memoryRequest ? "100Mi"
@@ -145,98 +136,29 @@ let
         , extraCronContainer ? { } # extra escape hatch to use any other options!
         }:
         let
-          sa_name = "${name}-sa";
-          role_name = "${name}-role";
-          sa = {
-            apiVersion = "v1";
-            kind = "ServiceAccount";
-            metadata = {
-              inherit namespace;
-              name = sa_name;
-            };
+          context = "hex.k8s.cron.kube_cron.build";
+          saName = "${name}-sa";
+          template = services.components.podTemplate {
+            inherit context name namespace labels image restartPolicy;
+            inherit cpuRequest cpuLimit memoryRequest memoryLimit ephemeralStorageRequest ephemeralStorageLimit command args envAttrs envFrom;
+            env = hexEnv ++ env;
+            serviceAccountName = saName;
+            imagePullPolicy = null;
+            appArmor = null;
           };
-          role = {
-            apiVersion = "rbac.authorization.k8s.io/v1";
-            kind = "Role";
-            metadata = {
-              inherit namespace;
-              name = role_name;
-            };
-            rules = roleRules;
-          };
-          role_binding = {
-            apiVersion = "rbac.authorization.k8s.io/v1";
-            kind = "RoleBinding";
-            metadata = {
-              inherit namespace;
-              name = "${name}-rb";
-            };
-            roleRef = {
-              apiGroup = "rbac.authorization.k8s.io";
-              kind = "Role";
-              name = role_name;
-            };
-            subjects = [
-              {
-                kind = "ServiceAccount";
-                name = sa_name;
-              }
-            ];
-          };
+          container = recursiveUpdate (builtins.head template.spec.containers) extraCronContainer;
           cron = recursiveUpdate
-            {
-              apiVersion = "batch/v1";
-              kind = "CronJob";
-              metadata = {
-                inherit name namespace;
-                ${ifNotEmptyList labels "labels"} = labels;
+            (cronJob {
+              inherit context name namespace labels schedule timeZone concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit;
+              jobSpec = {
+                inherit backoffLimit activeDeadlineSeconds ttlSecondsAfterFinished;
+                template = recursiveUpdate template { spec.containers = [ container ]; };
               };
-              spec = {
-                inherit concurrencyPolicy failedJobsHistoryLimit successfulJobsHistoryLimit schedule timeZone;
-                jobTemplate = {
-                  spec = {
-                    template = {
-                      spec = {
-                        containers = [
-                          (recursiveUpdate
-                            {
-                              inherit image name;
-                              env = with hex.defaults.env; [
-                                pod_ip
-                                pod_name
-                              ] ++ [{ name = "HEX"; value = "true"; }] ++ env ++ (hex.envAttrToNVP envAttrs);
-                              ${ifNotEmptyList envFrom "envFrom"} = envFrom;
-                              ${ifNotNull command "command"} = if builtins.isString command then [ command ] else command;
-                              ${ifNotNull args "args"} = args;
-                              resources = {
-                                ${if (memoryLimit != null || cpuLimit != null || ephemeralStorageLimit != null) then "limits" else null} = {
-                                  ${ifNotNull memoryLimit "memory"} = memoryLimit;
-                                  ${ifNotNull cpuLimit "cpu"} = cpuLimit;
-                                  ${ifNotNull ephemeralStorageLimit "ephemeral-storage"} = ephemeralStorageLimit;
-                                };
-                                ${if (memoryRequest != null || cpuRequest != null || ephemeralStorageRequest != null) then "requests" else null} = {
-                                  ${ifNotNull cpuRequest "cpu"} = cpuRequest;
-                                  ${ifNotNull memoryRequest "memory"} = memoryRequest;
-                                  ${ifNotNull ephemeralStorageRequest "ephemeral-storage"} = ephemeralStorageRequest;
-                                };
-                              };
-                            }
-                            extraCronContainer)
-                        ];
-                        inherit restartPolicy;
-                        serviceAccountName = sa_name;
-                      };
-                    };
-                  };
-                };
-              };
-            }
+            })
             extraCron;
         in
         ''
-          ${toYAMLDoc sa}
-          ${toYAMLDoc role}
-          ${toYAMLDoc role_binding}
+          ${concatMapStrings toYAMLDoc (jobs.components.rbac { inherit name namespace saName; rules = roleRules; })}
           ${toYAMLDoc cron}
         '';
     };

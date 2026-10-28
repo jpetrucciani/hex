@@ -27,6 +27,38 @@ const helperSpecs = [
     ],
   },
   {
+    moduleName: 'jobs',
+    moduleAttrPath: 'hex.k8s.jobs',
+    sourceFile: path.join(repoRoot, 'hex', 'hex', 'k8s', 'jobs.nix'),
+    functions: [
+      { name: 'build', scopeChain: ['jobs = rec {'], marker: 'build =' },
+    ],
+  },
+  {
+    moduleName: 'namespaces',
+    moduleAttrPath: 'hex.k8s.namespaces',
+    sourceFile: path.join(repoRoot, 'hex', 'hex', 'k8s', 'namespaces.nix'),
+    functions: [
+      { name: 'build', scopeChain: null, marker: 'build =' },
+    ],
+  },
+  {
+    moduleName: 'services.metrics',
+    moduleAttrPath: 'hex.k8s.services.metrics',
+    sourceFile: servicesFile,
+    functions: [
+      { name: 'scrape', scopeChain: ['services = rec {', 'metrics = {'], marker: 'scrape =' },
+    ],
+  },
+  {
+    moduleName: 'services.stateful',
+    moduleAttrPath: 'hex.k8s.services.stateful',
+    sourceFile: servicesFile,
+    functions: [
+      { name: 'build', scopeChain: ['services = rec {', 'stateful = {'], marker: 'build =' },
+    ],
+  },
+  {
     moduleName: 'storage',
     moduleAttrPath: 'hex.k8s.storage',
     sourceFile: path.join(repoRoot, 'hex', 'hex', 'k8s', 'storage.nix'),
@@ -535,7 +567,7 @@ function parseArgsFromBlock(block) {
     }
 
     const match = withoutComments.match(/^([A-Za-z0-9_.+-]+)(?:\s*\?\s*([\s\S]+))?$/);
-    if (!match) {
+    if (!match || match[1] === '...') {
       continue;
     }
 
@@ -622,9 +654,8 @@ function extractFunctionArgsByMarker(source, marker, range) {
   }
 
   let colonIdx = braceEnd + 1;
-  while (colonIdx < source.length && /\s/.test(source[colonIdx])) {
-    colonIdx += 1;
-  }
+  const argsBinding = source.slice(colonIdx).match(/^\s*(@\s*[A-Za-z_][A-Za-z0-9_'-]*)?\s*/);
+  colonIdx += argsBinding[0].length;
   if (source[colonIdx] !== ':') {
     return null;
   }

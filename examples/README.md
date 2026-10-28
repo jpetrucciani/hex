@@ -7,6 +7,7 @@ have a render test using the example file itself.
 | Example | Demonstrates |
 | --- | --- |
 | [envoy-gateway.nix](envoy-gateway.nix) | Controller installation, one hostname with API/web path routing, headers, compression and rate limiting |
+| [ledger.nix](ledger.nix) | Postgres StatefulSet, a content-addressed migration Job, a worker, restricted security profiles, and NetworkPolicy presets |
 
 ## Envoy Gateway
 

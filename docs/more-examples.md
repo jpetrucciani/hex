@@ -294,3 +294,131 @@ corresponding first-class option for those fields.
 
 For the complete argument list and the smaller action-constructor reference,
 see [`hex.k8s.services.build`](/reference/generated-services-build).
+
+## run a StatefulSet with per-replica storage
+
+`services.stateful.build` takes the same pod arguments as `services.build` and
+adds a headless Service, `volumeClaimTemplates`, and StatefulSet rollouts:
+
+```nix
+let services = hex.k8s.services; in
+services.stateful.build {
+  name = "cache";
+  labels = { app = "cache"; };
+  image = "valkey/valkey:8";
+  replicas = 3;
+  ports = [ (services.ports.tcp { name = "redis"; port = 6379; }) ];
+  claims = [
+    (services.claims.build { name = "data"; mountPath = "/data"; storage = "10Gi"; })
+  ];
+  rollout = services.stateful.rollouts.ordered { partition = 2; };
+  disruptionBudget = services.disruptions.maxUnavailable 1;
+}
+```
+
+The headless Service is `<name>-headless` and is always rendered; pass
+`exposure` for a separate client Service. Claims are retained when the
+StatefulSet is deleted or scaled down unless `claimRetention` says otherwise.
+
+## run migrations and one-off jobs
+
+`hex.k8s.jobs.fromService` runs a Job with a service's image, env, volumes, and
+ServiceAccount. Pass it the same argument set you give `services.build`:
+
+```nix
+let
+  api = { name = "api"; labels = { app = "api"; }; image = "example/api:1.2.3"; envFrom = [ { secretRef.name = "api"; } ]; };
+in
+''
+  ${hex.k8s.services.build api}
+  ${hex.k8s.jobs.fromService api { name = "api-migrate"; command = [ "/app/migrate" ]; }}
+''
+```
+
+Job pod templates are immutable, so by default the Job name ends with a hash of
+its spec: a new image or command creates a new Job instead of failing to apply.
+With `hook = "argo-presync"` (or another entry of `hex.k8s.jobs.hooks`) the Job
+keeps a stable name and runs as an Argo CD or Helm hook instead. Old hashed Jobs
+are not deleted unless you set `ttlSecondsAfterFinished`; a GitOps tool that
+still renders the Job will recreate it after the TTL, so keep migrations
+idempotent. `hex.k8s.jobs.shell api { }` renders an idle pod with the same
+config for `kubectl exec`, and `hex.k8s.jobs.build` takes the arguments directly.
+
+## roll pods when config changes
+
+ConfigMaps and Secrets passed as `configs` are rendered with the workload and
+hashed into the pod template's `checksum/config` annotation:
+
+```nix
+configs = [
+  (services.configs.configMap { name = "api-config"; data."app.toml" = builtins.readFile ./app.toml; })
+];
+```
+
+## lock down pods and traffic
+
+`services.security.restricted { }` applies a pod and container securityContext
+that meets the restricted Pod Security Standard to every container. Your
+`securityContext` still overrides the main container's fields. Add an
+`emptyDir` for any path the app writes to, or pass
+`readOnlyRootFilesystem = false`.
+
+`services.policies` builds `ingressPolicy` and `egressPolicy` rules; an empty
+list denies that direction:
+
+```nix
+ingressPolicy = [ (services.policies.ingress.fromLabels { labels = { app = "web"; }; ports = [ 8080 ]; }) ];
+egressPolicy = [
+  (services.policies.egress.dns { })
+  (services.policies.egress.toInternet { ports = [ 443 ]; })
+];
+```
+
+`services.worker` is `services.build` with no Service, container port, or
+inbound traffic, for queue consumers and other background processes.
+
+## set up a namespace with guardrails
+
+`hex.k8s.namespaces.build` renders a Namespace with Pod Security Standards
+labels. By default it only warns and audits against `restricted`; set
+`enforce` to reject pods. `defaultDeny`, `quota`, and `limits` add a
+namespace-wide NetworkPolicy, ResourceQuota, and LimitRange:
+
+```nix
+hex.k8s.namespaces.build {
+  name = "shop";
+  enforce = "restricted";
+  defaultDeny = [ "Ingress" "Egress" ]; # DNS egress stays open unless dns = null
+  quota = { "requests.cpu" = "8"; pods = "50"; };
+  limits.defaultRequest = { cpu = "100m"; memory = "128Mi"; };
+}
+```
+
+Workload NetworkPolicies add to the default deny, so each workload's
+`ingressPolicy` and `egressPolicy` become its allow-list. `services.build`
+sets an `Unconfined` AppArmor profile by default, which both `baseline` and
+`restricted` reject: pass `security = services.security.restricted { }` (or at
+least `appArmor = null`) before enforcing either level.
+
+## scrape metrics
+
+`metrics` on `services.build`, `services.worker`, and `services.stateful.build`
+renders a prometheus-operator `PodMonitor` for the workload's pods. An integer
+`port` adds a container port named `metrics`; a string references an existing
+container port by name:
+
+```nix
+metrics = services.metrics.scrape {
+  port = 9090;
+  path = "/metrics";
+  interval = "15s";
+  monitorLabels.release = "prometheus"; # match your Prometheus podMonitorSelector
+  allowFrom = [ (services.policies.ingress.fromNamespaces { namespaces = [ "monitoring" ]; }) ];
+};
+```
+
+`allowFrom` rules are added to the workload's NetworkPolicy, limited to the
+metrics port; workers deny ingress by default, so they need it, and Hex prints
+an evaluation warning when they are missing. Pass `warnings = false` to the
+builder to silence Hex warnings for that workload. Use
+`kind = "PodMonitoring"` for Google Managed Prometheus.

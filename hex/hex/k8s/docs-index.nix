@@ -14,6 +14,8 @@ let
     "cron"
     "helm"
     "gateway-api"
+    "jobs"
+    "namespaces"
     "nginx-ingress"
     "services"
     "storage"
