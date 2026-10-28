@@ -543,7 +543,7 @@ let
         { name = "argo-workflows"; spec = "hex.k8s.argo-workflows.version.latest {}"; check = num_docs 27; }
         { name = "flipt"; spec = "hex.k8s.flipt.version.latest {}"; check = num_docs 5; }
         { name = "livekit"; spec = "hex.k8s.livekit.version.latest {}"; check = num_docs 3; }
-        { name = "retool"; spec = ''hex.k8s.retool.version.latest {valuesAttrs = {config.encryptionKey = "meme"; image.tag = "3.284.7-stable";};}''; check = num_docs 16; }
+        { name = "retool"; spec = ''hex.k8s.retool.version.latest {valuesAttrs = {config.encryptionKey = "meme"; image.tag = "3.284.7-stable";};}''; check = num_docs 21; }
         { name = "sentry-30"; spec = "hex.k8s.sentry.version.v30-4-0 {}"; check = num_docs 101; }
         { name = "sentry-33-3-1"; spec = ''hex.k8s.sentry.version.v33-3-1 { valuesAttrs.user.existingSecret = "user-secret"; }''; check = num_docs 106; }
         { name = "sentry-latest"; spec = ''hex.k8s.sentry.version.latest { valuesAttrs.user.existingSecret = "user-secret"; }''; check = num_docs 98; }
