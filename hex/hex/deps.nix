@@ -7,6 +7,7 @@ let
   params = { inherit hex pkgs; };
   aws = import ./k8s/aws.nix (params // { inherit services; });
   services = import ./k8s/services.nix params;
+  jobs = import ./k8s/jobs.nix (params // { inherit services; });
   hex = (import ./hex.nix pkgs) // { inherit k8s; };
   helm = (
     fn:
@@ -31,7 +32,9 @@ let
     inherit aws;
     inherit services svc;
     addons = import ./k8s/addons.nix params;
-    cron = import ./k8s/cron.nix params;
+    inherit jobs;
+    namespaces = import ./k8s/namespaces.nix (params // { inherit services; });
+    cron = import ./k8s/cron.nix (params // { inherit services jobs; });
     helm = import ./k8s/helm.nix params;
     gateway-api = import ./k8s/gateway-api.nix params;
     nginx-ingress = import ./k8s/nginx-ingress.nix params;

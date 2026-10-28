@@ -71,6 +71,7 @@ let
       envoyGatewayTests = import ./tests/envoy-gateway.nix { inherit deps pkgs yq_assert; };
       opencostTests = import ./tests/opencost.nix { inherit yq_assert; };
       cliValidationTests = import ./tests/cli-validation.nix { inherit hex pkgs; };
+      workloadTests = import ./tests/workloads.nix { inherit yq_assert; };
       testSuites = testCase:
         testCase.suites or
           (if pkgs.lib.hasPrefix "service-" testCase.name then
@@ -492,11 +493,23 @@ let
             ${num_docs 9}
             ${yq_assert ''select(.kind == "StatefulSet") | (.metadata.name == "gateway-valkey" and .metadata.namespace == "ai" and .spec.replicas == 1 and .spec.serviceName == "gateway-valkey" and .spec.volumeClaimTemplates[0].spec.resources.requests.storage == "1Gi")'' "bundled Valkey StatefulSet and PVC were not rendered"}
             ${yq_assert ''select(.kind == "StatefulSet") | (.spec.persistentVolumeClaimRetentionPolicy.whenDeleted == "Retain" and .spec.template.spec.containers[0].env[0].name == "REDISCLI_AUTH" and .spec.template.spec.containers[0].env[0].valueFrom.secretKeyRef.name == "litellm-secret")'' "Valkey PVC retention or authenticated probe was not configured"}
-            ${yq_assert ''select(.kind == "Service" and .metadata.name == "gateway-valkey") | (.spec.clusterIP == "None" and .spec.ports[0].port == 6379)'' "bundled Valkey Service was not rendered"}
-            ${yq_assert ''select(.kind == "NetworkPolicy" and .metadata.name == "gateway-valkey-policy") | (.spec.ingress[0].from[0].podSelector.matchLabels.name == "gateway" and (.spec.egress | length) == 0)'' "Valkey NetworkPolicy did not restrict access to LiteLLM"}
+            ${yq_assert ''select(.kind == "Service" and .metadata.name == "gateway-valkey") | (.spec.clusterIP == "None" and .spec.ports[0].port == 6379 and .spec.publishNotReadyAddresses == false)'' "bundled Valkey Service was not rendered"}
+            ${yq_assert ''select(.kind == "StatefulSet") | .spec.template.spec | (.automountServiceAccountToken == false and .containers[0].name == "valkey" and .initContainers[0].name == "configure-acl" and .volumes[0].emptyDir.medium == "Memory" and (.containers[0].securityContext | has("appArmorProfile") | not) and (.containers[0] | has("imagePullPolicy") | not))'' "Valkey pod spec drifted from its pre-stateful.build shape"}
+            ${yq_assert ''select(.kind == "StatefulSet") | .spec.volumeClaimTemplates[0] | (.kind == "PersistentVolumeClaim" and .apiVersion == "v1" and .metadata.name == "data" and (.spec | has("storageClassName") | not))'' "Valkey volumeClaimTemplate changed; it is immutable on existing StatefulSets"}
+            ${yq_assert ''select(.kind == "NetworkPolicy" and .metadata.name == "gateway-valkey-policy") | (.spec.ingress[0].from[0].podSelector.matchLabels.name == "gateway" and (.spec | has("egress") | not) and .spec.policyTypes[1] == "Egress")'' "Valkey NetworkPolicy did not restrict access to LiteLLM"}
             ${yq_assert ''select(.kind == "Deployment") | .spec.template.spec.containers[0].env[] | select(.name == "REDIS_PASSWORD") | (.valueFrom.secretKeyRef.name == "litellm-secret" and .valueFrom.secretKeyRef.key == "REDIS_PASSWORD")'' "LiteLLM Redis password was not sourced from its Secret"}
             ${yq_assert ''select(.kind == "Deployment") | .spec.template.spec.containers[0].env[] | select(.name == "REDIS_HOST") | .value == "gateway-valkey"'' "LiteLLM did not point to the bundled Valkey Service"}
             ${yq_assert ''select(.kind == "Secret") | (.stringData."config.yaml" | from_yaml) | (.router_settings.redis_host == "os.environ/REDIS_HOST" and .litellm_settings.cache == true and .litellm_settings.cache_params.type == "redis" and .litellm_settings.cache_params.ttl == 600)'' "LiteLLM config did not enable router state and response caching"}
+          '';
+        }
+        {
+          name = "litellm-valkey-storage";
+          suites = [ "fast" "services" ];
+          allowMissingSchemas = false;
+          spec = ''hex.k8s.svc.litellm { valkey = { enable = true; storage = "5Gi"; storageClass = "fast"; }; }'';
+          expectedDocuments = 9;
+          check = ''
+            ${yq_assert ''select(.kind == "StatefulSet") | .spec.volumeClaimTemplates[0].spec | (.storageClassName == "fast" and .resources.requests.storage == "5Gi")'' "Valkey storage options were not applied"}
           '';
         }
         (svcTest {
@@ -572,7 +585,7 @@ let
       ];
       tests = map
         (testCase: testCase // { suites = testSuites testCase; })
-        (cliValidationTests ++ envoyGatewayTests ++ opencostTests ++ baseTests);
+        (cliValidationTests ++ envoyGatewayTests ++ opencostTests ++ workloadTests ++ baseTests);
       test_case = x:
         let
           log = text: ''echo "${text}"'';
@@ -598,6 +611,18 @@ let
               if [ -s "$errors" ]; then
                 ${pkgs.coreutils}/bin/cat "$errors" >&2
               fi
+              ${pkgs.lib.optionalString (x ? expectWarning) ''
+                if ! ${pkgs.gnugrep}/bin/grep -F -- ${pkgs.lib.escapeShellArg x.expectWarning} "$errors" >/dev/null; then
+                  echo "expected evaluation warning: ${x.expectWarning}" >&2
+                  exit 1
+                fi
+              ''}
+              ${pkgs.lib.optionalString (x ? expectNoWarning) ''
+                if ${pkgs.gnugrep}/bin/grep -F -- ${pkgs.lib.escapeShellArg x.expectNoWarning} "$errors" >/dev/null; then
+                  echo "unexpected evaluation warning: ${x.expectNoWarning}" >&2
+                  exit 1
+                fi
+              ''}
               num_docs="$(${pkgs.yq-go}/bin/yq e 'document_index + 1' "$rendered" | ${pkgs.coreutils}/bin/tail -n 1)"
               ${log "num docs: $num_docs"}
               ${pkgs.lib.optionalString (expectedDocuments != null) (num_docs expectedDocuments)}
