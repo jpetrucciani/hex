@@ -529,7 +529,7 @@ let
         (svcTest { name = "web-check"; port = 3000; })
         { name = "external-secrets-v0-17-0"; spec = "hex.k8s.external-secrets.version.v0-17-0 {}"; check = num_docs 39; }
         { name = "external-secrets-v0-18-0"; spec = "hex.k8s.external-secrets.version.v0-18-0 {}"; check = num_docs 40; }
-        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 81; }
+        { name = "mimir"; spec = "hex.k8s.grafana.mimir.version.latest {}"; check = num_docs 66; }
         {
           name = "tempo";
           spec = ''hex.k8s.grafana.tempo.version.latest {
