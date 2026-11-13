@@ -78,10 +78,6 @@ Helpers for [prometheus](https://github.com/prometheus/prometheus) related thing
 
 This module contains a [questdb](https://github.com/questdb/questdb) chart
 
-### [redpanda/](./redpanda/)
-
-This module contains a [redpanda](https://github.com/redpanda-data/redpanda) chart
-
 ### [semaphore/](./semaphore/)
 
 This module contains a [semaphore](https://github.com/semaphoreui/semaphore) chart
