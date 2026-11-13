@@ -88,9 +88,6 @@ jobs:
           - attr: questdb
             cmd: chart_scan_questdb
             vfile: ./hex/hex/k8s/helm/questdb/questdb.json
-          - attr: redpanda
-            cmd: chart_scan_redpanda
-            vfile: ./hex/hex/k8s/helm/redpanda/redpanda.json
           - attr: semaphore
             cmd: chart_scan_semaphore
             vfile: ./hex/hex/k8s/helm/semaphore/semaphore.json
