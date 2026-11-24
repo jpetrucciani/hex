@@ -5,17 +5,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@v32
       - run: nix develop -c nixpkgs-fmt --check .
   statix:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@v32
       - run: nix develop -c statix check
   deadnix:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@v32
       - run: nix develop -c deadnix -f -_ -l .
